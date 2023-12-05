@@ -55,6 +55,8 @@
             swal('Yeay !', data, 'success');
         }
 
+        $(".js-example-basic-single").select2({ width: '100%' }); 
+
     });
 </script>
 </body>
