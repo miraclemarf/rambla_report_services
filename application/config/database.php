@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	// 'dsn'	=> '',
-	'hostname' => '192.168.8.99',
-	'username' => 'report',
-	'password' => 'Toshiba25',
-	'database' => 'dbcentral',
+	'hostname' => $_ENV['DB_HOST'],
+	'username' => $_ENV['DB_USERNAME'],
+	'password' => $_ENV['DB_PASSWORD'],
+	'database' => $_ENV['DB_NAME'],
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
