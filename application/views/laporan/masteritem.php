@@ -23,7 +23,7 @@
                         <thead class="table-rambla">
                             <tr>
                             <th>#</th>
-                            <th><nobr>Store</nobr></th>
+                            <th><nobr>Store</nobr></th>   
                             <th><nobr>Number Artikel</nobr></th>
                             <th><nobr>Kode Artikel</nobr></th>
                             <th><nobr>Barcode</nobr></th>
@@ -37,7 +37,12 @@
                             <th><nobr>Varian Option1</nobr></th>
                             <th><nobr>Option1</nobr></th>
                             <th><nobr>Varian Option2</nobr></th>
+                            <th><nobr>DIVISION</nobr></th>
+                            <th><nobr>SUB DIVISION</nobr></th>
+                            <th><nobr>DEPT</nobr></th>
+                            <th><nobr>SUB DEPT</nobr></th>
                             <th><nobr>Normal Price</nobr></th>
+                            <th><nobr>Current Price</nobr></th>
                             <th><nobr>Tag 5</nobr></th>
                             </tr>
                         </thead>
@@ -52,15 +57,29 @@
 <script>
     var tabel = null;
     $(document).ready(function() {
-        load_data_masteritem(null,null,null);
+        
         get_user_brand();
-        get_list_barcode();
-        var brand_code  = null;
-        var barcode     = null;
-        var params1     = '';
-        var params2     = '';
-        var params3     = '';
-        var format      = null;
+        get_division();
+        get_sub_division();
+        get_dept();
+        get_list_dept();
+        get_store();
+
+        var brand_code      = null;
+        var division        = null;
+        var sub_division    = null;
+        var dept            = null;
+        var sub_dept        = null;
+        var store           = null;
+        var params1         = null;
+        var params2         = null;
+        var params3         = null;
+        var params4         = null;
+        var params5         = null;
+        var params6         = null;
+        var format          = null;
+
+        load_data_masteritem(params1,params2,params3,params4,params5,params6);
     
 
         $('.btn-export-masteritem').on("click", function(){
@@ -83,27 +102,46 @@
             format = this.value;
         });
 
+
         $('.btn-export').on("click", function(){
-            if(brand_code == null){
-                brand_code = '';
-            }else{
-                brand_code = brand_code;
-            }
             if(format == "csv"){
-                window.location.href = "<?= base_url('Laporan/export_csv_masteritem/'); ?>"+brand_code;
+                window.location.href = "<?= base_url('Laporan/export_csv_masteritem/'); ?>"+params1+'/'+params2+'/'+params3+'/'+params4+'/'+params5+'/'+params6;
             }else if(format == "xls"){
-                window.location.href = "<?= base_url('Laporan/export_excel_masteritem/'); ?>"+brand_code;
+                window.location.href = "<?= base_url('Laporan/export_excel_masteritem/'); ?>"+params1+'/'+params2+'/'+params3+'/'+params4+'/'+params5+'/'+params6;
             }
         });
 
         $('.btn-submit-filter').on("click", function(){
             params1 = brand_code;
-            params2 = barcode;
-            // console.log(params1,params2);
-            load_data_masteritem(params1,params2,null);
+            params2 = division;
+            params3 = sub_division;
+            params4 = dept;
+            params5 = sub_dept;
+            params6 = store;
+
+            if (params1 === "") {
+                params1 = null;
+            }
+            if (params2 === "") {
+                params2 = null;
+            }
+            if (params3 === "") {
+                params3 = null;
+            }
+            if (params4 === "") {
+                params4 = null;
+            }
+            if (params5 === "") {
+                params5 = null;
+            }
+            if (params6 === "") {
+                params6 = null;
+            }
+
+            load_data_masteritem(params1,params2,params3,params4,params5,params6);
         });
 
-        function load_data_masteritem(params1, params2, params3){
+        function load_data_masteritem(params1,params2,params3,params4,params5,params6){
             tabel = $('#tb_masteritem_list').DataTable({
                 "processing": true,
                 "responsive":true,
@@ -115,7 +153,7 @@
                 {
                     "url": "<?= base_url('Laporan/masteritem_where');?>", // URL file untuk proses select datanya
                     "type": "POST",
-                    "data":  { "params1": params1,"params2": params2,"params3": params3 }, 
+                    "data":  { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6 }, 
                 },
                 "deferRender": true,
                 "aLengthMenu": [[10, 25, 50],[ 10, 25, 50]], // Combobox Limit
@@ -134,6 +172,7 @@
                                 return '<nobr>'+data+'</nobr>';
                         },
                     },
+                   
                     { "data": "article_number",
                         "render": function ( data, type, row ) {
                                 return '<nobr>'+data+'</nobr>';
@@ -199,7 +238,32 @@
                                 return '<nobr>'+data+'</nobr>';
                         },
                     },
+                    { "data": "DIVISION",
+                        "render": function ( data, type, row ) {
+                                return '<nobr>'+data+'</nobr>';
+                        },
+                    }, // Tampilkan judul
+                    { "data": "SUB_DIVISION",
+                        "render": function ( data, type, row ) {
+                                return '<nobr>'+data+'</nobr>';
+                        },
+                    }, // Tampilkan judul
+                    { "data": "DEPT",
+                        "render": function ( data, type, row ) {
+                                return '<nobr>'+data+'</nobr>';
+                        },
+                    }, // Tampilkan judul
+                    { "data": "SUB_DEPT",
+                        "render": function ( data, type, row ) {
+                                return '<nobr>'+data+'</nobr>';
+                        },
+                    }, // Tampilkan judul
                     { "data": "normal_price",
+                        "render": function ( data, type, row ) {
+                                return '<nobr>RP '+rupiahjs(data)+'</nobr>';
+                        },
+                    },
+                    { "data": "current_price",
                         "render": function ( data, type, row ) {
                                 return '<nobr>RP '+rupiahjs(data)+'</nobr>';
                         },
@@ -233,26 +297,194 @@
             });
         }
 
-        function get_list_barcode(){
+        // START STORE
+        function get_store(){
             $.ajax({
                 type: "GET",
-                url: "<?= base_url('Masterdata'); ?>/get_list_barcode",
+                url: "<?= base_url('Masterdata'); ?>/get_store",
                 dataType: "html",
                 success: function(data) {
-                    // console.log(data);
+                    console.log(data);
                     $(".loading").hide();
-                    $("#export-masteritem").show();
-                    $("#filter-masteritem").show();
-                    $('.list_barcode').html(data);
+                    $("#export-penjualanartikel").show();
+                    $("#filter-penjualanartikel").show();
+                    $('.list_store').html(data);
+                },
+                beforeSend: function( xhr ) {
+                    console.log(xhr);
+                    $(".loading").show();
+                    $("#filter-penjualanartikel").hide();
+                    $("#export-penjualanartikel").hide();
+                }
+            });
+        }
+
+        $('.list_store').on('change', function (e) {
+            store = this.value;
+        })
+        // END STORE
+
+        // START DIVISION
+        function get_division(){
+            $.ajax({
+                type: "GET",
+                url: "<?= base_url('Masterdata'); ?>/get_list_division",
+                dataType: "html",
+                success: function(data) {
+                    //console.log(data);
+                    $(".loading").hide();
+                    $("#export-penjualanartikel").show();
+                    $("#filter-penjualanartikel").show();
+                    $('.list_division').html(data);
                 },
                 beforeSend: function( xhr ) {
                     // console.log(xhr);
                     $(".loading").show();
-                    $("#filter-masteritem").hide();
-                    $("#export-masteritem").hide();
+                    $("#filter-penjualanartikel").hide();
+                    $("#export-penjualanartikel").hide();
                 }
             });
         }
+
+        $('.list_division').on('change', function (e) {
+            division = this.value;
+            if(division != ''){
+                $.ajax({
+                    url: "<?= base_url('Masterdata'); ?>/get_list_sub_division",
+                    data: {
+                        division : division
+                    },
+                    type: 'POST',
+                    dataType: 'html',
+                    success: function(data) {
+                        $(".loading").hide();
+                        $('.list_sub_division').html(data);
+                    },
+                    beforeSend: function( xhr ) {
+                        // console.log(xhr);
+                        $(".loading").show();
+                    }
+                });
+            }
+        })
+        // END DIVISION
+
+        // START SUB DIVISION
+        function get_sub_division(){
+            $.ajax({
+                type: "GET",
+                url: "<?= base_url('Masterdata'); ?>/get_list_sub_division",
+                dataType: "html",
+                success: function(data) {
+                    //console.log(data);
+                    $(".loading").hide();
+                    $("#export-penjualanartikel").show();
+                    $("#filter-penjualanartikel").show();
+                    $('.list_sub_division').html(data);
+                },
+                beforeSend: function( xhr ) {
+                    // console.log(xhr);
+                    $(".loading").show();
+                    $("#filter-penjualanartikel").hide();
+                    $("#export-penjualanartikel").hide();
+                }
+            });
+        }
+
+        $('.list_sub_division').on('change', function (e) {
+            sub_division = this.value;
+            if(sub_division != ''){
+                $.ajax({
+                    url: "<?= base_url('Masterdata'); ?>/get_list_dept",
+                    data: {
+                        sub_division : sub_division
+                    },
+                    type: 'POST',
+                    dataType: 'html',
+                    success: function(data) {
+                        //console.log(data);
+                        $(".loading").hide();
+                        $('.list_dept').html(data);
+                    },
+                    beforeSend: function( xhr ) {
+                        // console.log(xhr);
+                        $(".loading").show();
+                    }
+                });
+            }
+        })
+        // END SUB DIVISION
+
+        // START DEPT
+        function get_dept(){
+            $.ajax({
+                type: "GET",
+                url: "<?= base_url('Masterdata'); ?>/get_list_dept",
+                dataType: "html",
+                success: function(data) {
+                    $(".loading").hide();
+                    $("#export-penjualanartikel").show();
+                    $("#filter-penjualanartikel").show();
+                    $('.list_dept').html(data);
+                },
+                beforeSend: function( xhr ) {
+                    // console.log(xhr);
+                    $(".loading").show();
+                    $("#filter-penjualanartikel").hide();
+                    $("#export-penjualanartikel").hide();
+                }
+            });
+        }
+
+        $('.list_dept').on('change', function (e) {
+            dept = this.value;
+            if(dept != ''){
+                $.ajax({
+                    url: "<?= base_url('Masterdata'); ?>/get_list_sub_dept",
+                    data: {
+                        dept : dept
+                    },
+                    type: 'POST',
+                    dataType: 'html',
+                    success: function(data) {
+                        //console.log(data);
+                        $(".loading").hide();
+                        $('.list_sub_dept').html(data);
+                    },
+                    beforeSend: function( xhr ) {
+                        // console.log(xhr);
+                        $(".loading").show();
+                    }
+                });
+            }
+        })
+        // END DEPT
+
+        // START SUB DEPT
+        function get_list_dept(){
+            $.ajax({
+                type: "GET",
+                url: "<?= base_url('Masterdata'); ?>/get_list_sub_dept",
+                dataType: "html",
+                success: function(data) {
+                    $(".loading").hide();
+                    $("#export-penjualanartikel").show();
+                    $("#filter-penjualanartikel").show();
+                    $('.list_sub_dept').html(data);
+                },
+                beforeSend: function( xhr ) {
+                    // console.log(xhr);
+                    $(".loading").show();
+                    $("#filter-penjualanartikel").hide();
+                    $("#export-penjualanartikel").hide();
+                }
+            });
+        }
+
+        $('.list_sub_dept').on('change', function (e) {
+            sub_dept = this.value;
+        });
+        // END SUB DEPT
     });
 </script>
 

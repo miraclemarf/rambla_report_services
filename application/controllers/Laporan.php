@@ -317,14 +317,30 @@ class Laporan extends My_Controller
         }else{
             $filter = "error";
         }
-        if($params1 || $params2 || $params3){
+        if($params1 || $params2 || $params3 || $params4 || $params5 || $params6){
             if($params1){
                 $filter1 = " AND brand = '".$params1."'";
                 $filter.= $filter1;
             }
             if($params2){
-                $filter2 = "AND barcode = '".$params2."'";
+                $filter2 = " AND DIVISION = '".$params2."'";
                 $filter.=$filter2;
+            }
+            if($params3){
+                $filter3 = " AND SUB_DIVISION = '".$params3."'";
+                $filter.=$filter3;
+            }
+            if($params4){
+                $filter4 = " AND DEPT = '".$params4."'";
+                $filter.=$filter4;
+            }
+            if($params5){
+                $filter5 = " AND SUB_DEPT = '".$params5."'";
+                $filter.=$filter5;
+            }
+            if($params6){
+                $filter6 = " AND branch_id = '".$params6."'";
+                $filter.=$filter6;
             }
             $isWhere = $filter;
         }else{
@@ -338,6 +354,11 @@ class Laporan extends My_Controller
 	{
         /* Data */
         $data['username']      = $this->input->cookie('cookie_invent_user');
+
+        $division       = str_replace("%20"," ",$division);
+        $sub_division   = str_replace("%20"," ",$sub_division);
+        $dept           = str_replace("%20"," ",$dept);
+        $sub_dept       = str_replace("%20"," ",$sub_dept); 
 
         if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
             $where = " AND brand_code in (
@@ -574,10 +595,15 @@ class Laporan extends My_Controller
         $writer->save('php://output');
     }
 
-    function export_excel_masteritem($brand_code = null)
+    function export_excel_masteritem($brand_code, $division, $sub_division, $dept, $sub_dept, $store)
 	{
         /* Data */
         $data['username']      = $this->input->cookie('cookie_invent_user');
+
+        $division       = str_replace("%20"," ",$division);
+        $sub_division   = str_replace("%20"," ",$sub_division);
+        $dept           = str_replace("%20"," ",$dept);
+        $sub_dept       = str_replace("%20"," ",$sub_dept); 
 
         if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
             $where = " AND brand in (
@@ -590,9 +616,30 @@ class Laporan extends My_Controller
             $where = "error";
         }
 
-        if($brand_code !== null){
-            $where.=" and brand = '".$brand_code."'";
+        if($brand_code !== "null"){
+            $where.=" AND brand = '".$brand_code."'";
         }
+        
+        if($division !== "null"){
+            $where.=" AND DIVISION = '".$division."'";
+        }
+
+        if($sub_division !== "null"){
+            $where.=" AND SUB_DIVISION = '".$sub_division."'";
+        }
+
+        if($dept !== "null"){
+            $where.=" AND DEPT = '".$dept."'";
+        }
+
+        if($sub_dept !== "null"){
+            $where.=" AND SUB_DEPT = '".$sub_dept."'";
+        }
+
+        if($store !== "null"){
+            $where.=" AND branch_id = '".$store."'";
+        }
+
         $data         = $this->db->query("SELECT * FROM r_item_master WHERE 1=1 $where")->result_array();
 
         /* Spreadsheet Init */
@@ -615,8 +662,12 @@ class Laporan extends My_Controller
         $sheet->setCellValue('M1', 'Varian Option1');
         $sheet->setCellValue('N1', 'Option2');
         $sheet->setCellValue('O1', 'Varian Option2');
-        $sheet->setCellValue('P1', 'Normal Price');
-        $sheet->setCellValue('Q1', 'Tag 5');
+        $sheet->setCellValue('P1', 'Division');
+        $sheet->setCellValue('Q1', 'Sub Division');
+        $sheet->setCellValue('R1', 'Dept');
+        $sheet->setCellValue('S1', 'Sub Dept');
+        $sheet->setCellValue('T1', 'Normal Price');
+        $sheet->setCellValue('U1', 'Tag 5');
         
         /* Excel Data */
         $row_number = 2;
@@ -637,8 +688,12 @@ class Laporan extends My_Controller
             $sheet->setCellValue('M'.$row_number, $row['varian_option1']);
             $sheet->setCellValue('N'.$row_number, $row['option2']);
             $sheet->setCellValue('O'.$row_number, $row['varian_option2']);
-            $sheet->setCellValue('P'.$row_number, $row['normal_price']);
-            $sheet->setCellValue('Q'.$row_number, $row['tag_5']);
+            $sheet->setCellValue('P'.$row_number, $row['DIVISION']);
+            $sheet->setCellValue('Q'.$row_number, $row['SUB_DIVISION']);
+            $sheet->setCellValue('R'.$row_number, $row['DEPT']);
+            $sheet->setCellValue('S'.$row_number, $row['SUB_DEPT']);
+            $sheet->setCellValue('T'.$row_number, $row['normal_price']);
+            $sheet->setCellValue('U'.$row_number, $row['tag_5']);
         
             $row_number++;
         }
@@ -944,6 +999,12 @@ class Laporan extends My_Controller
 
     function export_csv_stock($brand_code, $division, $sub_division, $dept, $sub_dept, $store){
         $filename = 'stock_report.csv';
+
+        $division       = str_replace("%20"," ",$division);
+        $sub_division   = str_replace("%20"," ",$sub_division);
+        $dept           = str_replace("%20"," ",$dept);
+        $sub_dept       = str_replace("%20"," ",$sub_dept); 
+
         header("Content-Description: File Transfer");
         header("Content-Disposition: attachment; filename=".$filename);
         header("Content-Type: application/csv;");
@@ -999,8 +1060,14 @@ class Laporan extends My_Controller
         exit;
     }
 
-    function export_csv_masteritem($brand_code = null){
+    function export_csv_masteritem($brand_code, $division, $sub_division, $dept, $sub_dept, $store){
         $filename = 'masteritem_report.csv';
+
+        $division       = str_replace("%20"," ",$division);
+        $sub_division   = str_replace("%20"," ",$sub_division);
+        $dept           = str_replace("%20"," ",$dept);
+        $sub_dept       = str_replace("%20"," ",$sub_dept); 
+
         header("Content-Description: File Transfer");
         header("Content-Disposition: attachment; filename=".$filename);
         header("Content-Type: application/csv;");
@@ -1017,13 +1084,34 @@ class Laporan extends My_Controller
             $where = "error";
         }
 
-        if($brand_code !== null){
-            $where.=" and brand = '".$brand_code."'";
+        if($brand_code !== "null"){
+            $where.=" AND brand = '".$brand_code."'";
         }
-        $data   = $this->db->query("SELECT branch_id,article_number,article_code,barcode,supplier_pcode,category_code, article_name,supplier_pname, brand,brand_name, option1,varian_option1,option2,varian_option2, normal_price, tag_5 FROM r_item_master where 1=1 $where")->result_array();
+        
+        if($division !== "null"){
+            $where.=" AND DIVISION = '".$division."'";
+        }
+
+        if($sub_division !== "null"){
+            $where.=" AND SUB_DIVISION = '".$sub_division."'";
+        }
+
+        if($dept !== "null"){
+            $where.=" AND DEPT = '".$dept."'";
+        }
+
+        if($sub_dept !== "null"){
+            $where.=" AND SUB_DEPT = '".$sub_dept."'";
+        }
+
+        if($store !== "null"){
+            $where.=" AND branch_id = '".$store."'";
+        }
+
+        $data   = $this->db->query("SELECT branch_id,article_number,article_code,barcode,supplier_pcode,category_code, article_name,supplier_pname, brand,brand_name, option1,varian_option1,option2,varian_option2, division, sub_division, dept, sub_dept, normal_price, current_price, tag_5 FROM r_item_master where 1=1 $where")->result_array();
         $file   = fopen('php://output','w');
 
-        $header = array('branch_id','article_number','article_code','barcode','supplier_pcode','category_code','article_name','supplier pname','brand','brand name','option1','varian_option1','option2','varian_option2','normal price','tag 5');
+        $header = array('branch_id','article_number','article_code','barcode','supplier_pcode','category_code','article_name','supplier pname','brand','brand name','option1','varian_option1','option2','varian_option2','division', 'sub_division', 'dept', 'sub_dept', 'normal_price', 'current_price','tag 5');
 
         fputcsv($file,$header);
 
@@ -1036,6 +1124,7 @@ class Laporan extends My_Controller
 
     function export_csv_promo($brand_code, $promo, $fromdate, $todate,$division, $sub_division, $dept, $sub_dept){
         $filename = 'promo_report.csv';
+
         $division       = str_replace("%20"," ",$division);
         $sub_division   = str_replace("%20"," ",$sub_division);
         $dept           = str_replace("%20"," ",$dept);

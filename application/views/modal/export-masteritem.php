@@ -12,16 +12,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <p class="text-center loading">Loading</p>
-                        <div id="filter-masteritem">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="mt-1">Pilih Brand</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select class="js-example-basic-single list_user_brand">
-                                    </select>
-                                </div>
-                            </div>
+                        <div id="export-masteritem">
                             <div class="row mt-2">
                                 <div class="col-md-4">
                                     <label class="mt-1">Pilih Format</label>

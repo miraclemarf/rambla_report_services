@@ -13,21 +13,57 @@
                     <div class="col-md-12">
                         <p class="text-center loading">Loading</p>
                         <div id="filter-masteritem">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="mt-1">Pilih Brand</label>
+                        <div class="row mt-2">
+                            <div class="col-md-4">
+                                    <label class="mt-1">Store</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <select class="js-example-basic-single list_user_brand">
+                                    <select class="js-example-basic-single list_store">
                                     </select>
                                 </div>
                             </div>
                             <div class="row mt-2">
                                 <div class="col-md-4">
-                                    <label class="mt-1">Pilih Barcode</label>
+                                    <label class="mt-1">Division</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <select class="js-example-basic-single list_barcode">
+                                    <select class="js-example-basic-single list_division">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-4">
+                                    <label class="mt-1">Sub Division</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="js-example-basic-single list_sub_division">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-4">
+                                    <label class="mt-1">Dept</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="js-example-basic-single list_dept">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-4">
+                                    <label class="mt-1">Sub Dept</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="js-example-basic-single list_sub_dept">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-4">
+                                    <label class="mt-1">Pilih Brand</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="js-example-basic-single list_user_brand">
                                     </select>
                                 </div>
                             </div>
