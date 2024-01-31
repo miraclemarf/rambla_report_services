@@ -49,16 +49,29 @@
 <script>
     var tabel = null;
     $(document).ready(function() {
-        load_data_stock(null,null,null);
         get_user_brand();
-        get_list_barcode();
-        var brand_code  = null;
-        var barcode     = null;
-        var params1     = '';
-        var params2     = '';
-        var params3     = '';
-        var format      = null;
-    
+        get_division();
+        get_sub_division();
+        get_dept();
+        get_list_dept();
+        get_store();
+
+        var brand_code      = null;
+        var division        = null;
+        var sub_division    = null;
+        var dept            = null;
+        var sub_dept        = null;
+        var store           = null;
+        var params1         = null;
+        var params2         = null;
+        var params3         = null;
+        var params4         = null;
+        var params5         = null;
+        var params6         = null;
+        var format          = null;
+
+        load_data_stock(params1,params2,params3,params4,params5,params6);
+
 
         $('.btn-export-stock').on("click", function(){
             $('#modal-export-stock').modal('show');
@@ -81,25 +94,45 @@
         });
 
         $('.btn-export').on("click", function(){
-            if(brand_code == null){
-                brand_code = '';
-            }else{
-                brand_code = brand_code;
-            }
             if(format == "csv"){
-                window.location.href = "<?= base_url('Laporan/export_csv_stock/'); ?>"+brand_code;
+                window.location.href = "<?= base_url('Laporan/export_csv_stock/'); ?>"+params1+'/'+params2+'/'+params3+'/'+params4+'/'+params5+'/'+params6;
             }else if(format == "xls"){
-                window.location.href = "<?= base_url('Laporan/export_excel_stock/'); ?>"+brand_code;
+                window.location.href = "<?= base_url('Laporan/export_excel_stock/'); ?>"+params1+'/'+params2+'/'+params3+'/'+params4+'/'+params5+'/'+params6;
             }
         });
+
 
         $('.btn-submit-filter').on("click", function(){
             params1 = brand_code;
-            params2 = barcode;
-            load_data_stock(params1,params2,null);
+            params2 = division;
+            params3 = sub_division;
+            params4 = dept;
+            params5 = sub_dept;
+            params6 = store;
+
+            if (params1 === "") {
+                params1 = null;
+            }
+            if (params2 === "") {
+                params2 = null;
+            }
+            if (params3 === "") {
+                params3 = null;
+            }
+            if (params4 === "") {
+                params4 = null;
+            }
+            if (params5 === "") {
+                params5 = null;
+            }
+            if (params6 === "") {
+                params6 = null;
+            }
+
+            load_data_stock(params1,params2,params3,params4,params5,params6);
         });
 
-        function load_data_stock(params1, params2, params3){
+        function load_data_stock(params1,params2,params3,params4,params5,params6){
             tabel = $('#tb_stock_list').DataTable({
                 "processing": true,
                 "responsive":true,
@@ -111,7 +144,7 @@
                 {
                     "url": "<?= base_url('Laporan/stock_where');?>", // URL file untuk proses select datanya
                     "type": "POST",
-                    "data":  { "params1": params1,"params2": params2,"params3": params3 }, 
+                    "data":  { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6 }, 
                 },
                 "deferRender": true,
                 "aLengthMenu": [[10, 25, 50],[ 10, 25, 50]], // Combobox Limit
@@ -214,26 +247,194 @@
             });
         }
 
-        function get_list_barcode(){
+        // START STORE
+        function get_store(){
             $.ajax({
                 type: "GET",
-                url: "<?= base_url('Masterdata'); ?>/get_list_barcode",
+                url: "<?= base_url('Masterdata'); ?>/get_store",
                 dataType: "html",
                 success: function(data) {
-                    // console.log(data);
+                    console.log(data);
                     $(".loading").hide();
-                    $("#export-stock").show();
-                    $("#filter-stock").show();
-                    $('.list_barcode').html(data);
+                    $("#export-penjualanartikel").show();
+                    $("#filter-penjualanartikel").show();
+                    $('.list_store').html(data);
+                },
+                beforeSend: function( xhr ) {
+                    console.log(xhr);
+                    $(".loading").show();
+                    $("#filter-penjualanartikel").hide();
+                    $("#export-penjualanartikel").hide();
+                }
+            });
+        }
+
+        $('.list_store').on('change', function (e) {
+            store = this.value;
+        })
+        // END STORE
+
+        // START DIVISION
+        function get_division(){
+            $.ajax({
+                type: "GET",
+                url: "<?= base_url('Masterdata'); ?>/get_list_division",
+                dataType: "html",
+                success: function(data) {
+                    //console.log(data);
+                    $(".loading").hide();
+                    $("#export-penjualanartikel").show();
+                    $("#filter-penjualanartikel").show();
+                    $('.list_division').html(data);
                 },
                 beforeSend: function( xhr ) {
                     // console.log(xhr);
                     $(".loading").show();
-                    $("#filter-stock").hide();
-                    $("#export-stock").hide();
+                    $("#filter-penjualanartikel").hide();
+                    $("#export-penjualanartikel").hide();
                 }
             });
         }
+
+        $('.list_division').on('change', function (e) {
+            division = this.value;
+            if(division != ''){
+                $.ajax({
+                    url: "<?= base_url('Masterdata'); ?>/get_list_sub_division",
+                    data: {
+                        division : division
+                    },
+                    type: 'POST',
+                    dataType: 'html',
+                    success: function(data) {
+                        $(".loading").hide();
+                        $('.list_sub_division').html(data);
+                    },
+                    beforeSend: function( xhr ) {
+                        // console.log(xhr);
+                        $(".loading").show();
+                    }
+                });
+            }
+        })
+        // END DIVISION
+
+        // START SUB DIVISION
+        function get_sub_division(){
+            $.ajax({
+                type: "GET",
+                url: "<?= base_url('Masterdata'); ?>/get_list_sub_division",
+                dataType: "html",
+                success: function(data) {
+                    //console.log(data);
+                    $(".loading").hide();
+                    $("#export-penjualanartikel").show();
+                    $("#filter-penjualanartikel").show();
+                    $('.list_sub_division').html(data);
+                },
+                beforeSend: function( xhr ) {
+                    // console.log(xhr);
+                    $(".loading").show();
+                    $("#filter-penjualanartikel").hide();
+                    $("#export-penjualanartikel").hide();
+                }
+            });
+        }
+
+        $('.list_sub_division').on('change', function (e) {
+            sub_division = this.value;
+            if(sub_division != ''){
+                $.ajax({
+                    url: "<?= base_url('Masterdata'); ?>/get_list_dept",
+                    data: {
+                        sub_division : sub_division
+                    },
+                    type: 'POST',
+                    dataType: 'html',
+                    success: function(data) {
+                        //console.log(data);
+                        $(".loading").hide();
+                        $('.list_dept').html(data);
+                    },
+                    beforeSend: function( xhr ) {
+                        // console.log(xhr);
+                        $(".loading").show();
+                    }
+                });
+            }
+        })
+        // END SUB DIVISION
+
+        // START DEPT
+        function get_dept(){
+            $.ajax({
+                type: "GET",
+                url: "<?= base_url('Masterdata'); ?>/get_list_dept",
+                dataType: "html",
+                success: function(data) {
+                    $(".loading").hide();
+                    $("#export-penjualanartikel").show();
+                    $("#filter-penjualanartikel").show();
+                    $('.list_dept').html(data);
+                },
+                beforeSend: function( xhr ) {
+                    // console.log(xhr);
+                    $(".loading").show();
+                    $("#filter-penjualanartikel").hide();
+                    $("#export-penjualanartikel").hide();
+                }
+            });
+        }
+
+        $('.list_dept').on('change', function (e) {
+            dept = this.value;
+            if(dept != ''){
+                $.ajax({
+                    url: "<?= base_url('Masterdata'); ?>/get_list_sub_dept",
+                    data: {
+                        dept : dept
+                    },
+                    type: 'POST',
+                    dataType: 'html',
+                    success: function(data) {
+                        //console.log(data);
+                        $(".loading").hide();
+                        $('.list_sub_dept').html(data);
+                    },
+                    beforeSend: function( xhr ) {
+                        // console.log(xhr);
+                        $(".loading").show();
+                    }
+                });
+            }
+        })
+        // END DEPT
+
+        // START SUB DEPT
+        function get_list_dept(){
+            $.ajax({
+                type: "GET",
+                url: "<?= base_url('Masterdata'); ?>/get_list_sub_dept",
+                dataType: "html",
+                success: function(data) {
+                    $(".loading").hide();
+                    $("#export-penjualanartikel").show();
+                    $("#filter-penjualanartikel").show();
+                    $('.list_sub_dept').html(data);
+                },
+                beforeSend: function( xhr ) {
+                    // console.log(xhr);
+                    $(".loading").show();
+                    $("#filter-penjualanartikel").hide();
+                    $("#export-penjualanartikel").hide();
+                }
+            });
+        }
+
+        $('.list_sub_dept').on('change', function (e) {
+            sub_dept = this.value;
+        });
+        // END SUB DEPT
     });
 </script>
 

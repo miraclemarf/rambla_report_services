@@ -58,6 +58,17 @@ class Masterdata extends My_Controller
         }
     }
 
+    public function get_store(){
+        extract(populateform());
+
+        $data['hasil']          = $this->Models->showdata("SELECT branch_id, branch_name from m_branches");
+ 
+        echo "<option value=''>-- Pilih Data --</option>";
+        foreach ($data['hasil'] as $row) {
+            echo "<option value='" . $row->branch_id . "'>".$row->branch_name." (".$row->branch_id .")</option>";
+        }
+    }
+
     public function get_list_division(){
         extract(populateform());
         $data['username']       = $this->input->cookie('cookie_invent_user');

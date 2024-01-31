@@ -23,6 +23,15 @@
                                 </div>
                                 <div class="row mt-2">
                                     <div class="col-md-4">
+                                        <label class="mt-1">Store</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select class="js-example-basic-single list_store">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
                                         <label class="mt-1">Division</label>
                                     </div>
                                     <div class="col-md-8">

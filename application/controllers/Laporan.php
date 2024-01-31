@@ -169,6 +169,10 @@ class Laporan extends My_Controller
                 $filter7 = " AND SUB_DEPT = '".$params7."'";
                 $filter.=$filter7;
             }
+            if($params8){
+                $filter8 = " AND branch_id = '".$params8."'";
+                $filter.=$filter8;
+            }
             $isWhere = $filter;
         }else{
             $isWhere = $filter;
@@ -194,19 +198,36 @@ class Laporan extends My_Controller
         }else{
             $filter = "error";
         }
-        if($params1 || $params2 || $params3){
+        if($params1 || $params2 || $params3 || $params4 || $params5 || $params6){
             if($params1){
                 $filter1 = " AND brand_code = '".$params1."'";
                 $filter.= $filter1;
             }
             if($params2){
-                $filter2 = "AND barcode = '".$params2."'";
+                $filter2 = " AND DIVISION = '".$params2."'";
                 $filter.=$filter2;
+            }
+            if($params3){
+                $filter3 = " AND SUB_DIVISION = '".$params3."'";
+                $filter.=$filter3;
+            }
+            if($params4){
+                $filter4 = " AND DEPT = '".$params4."'";
+                $filter.=$filter4;
+            }
+            if($params5){
+                $filter5 = " AND SUB_DEPT = '".$params5."'";
+                $filter.=$filter5;
+            }
+            if($params6){
+                $filter6 = " AND branch_id = '".$params6."'";
+                $filter.=$filter6;
             }
             $isWhere = $filter;
         }else{
             $isWhere = $filter;
         }
+
         header('Content-Type: application/json');
         echo $this->M_Datatables->get_tables_where($tables,$search,$where,$isWhere);
     }
@@ -313,7 +334,7 @@ class Laporan extends My_Controller
         echo $this->M_Datatables->get_tables_where($tables,$search,$where,$isWhere);
     }
 
-    function export_excel_stock($brand_code = null)
+    function export_excel_stock($brand_code, $division, $sub_division, $dept, $sub_dept, $store)
 	{
         /* Data */
         $data['username']      = $this->input->cookie('cookie_invent_user');
@@ -329,9 +350,30 @@ class Laporan extends My_Controller
             $where = "error";
         }
        
-        if($brand_code !== null){
-            $where.=" and brand_code = '".$brand_code."'";
+        if($brand_code !== "null"){
+            $where.=" AND brand_code = '".$brand_code."'";
         }
+        
+        if($division !== "null"){
+            $where.=" AND DIVISION = '".$division."'";
+        }
+
+        if($sub_division !== "null"){
+            $where.=" AND SUB_DIVISION = '".$sub_division."'";
+        }
+
+        if($dept !== "null"){
+            $where.=" AND DEPT = '".$dept."'";
+        }
+
+        if($sub_dept !== "null"){
+            $where.=" AND SUB_DEPT = '".$sub_dept."'";
+        }
+
+        if($store !== "null"){
+            $where.=" AND branch_id = '".$store."'";
+        }
+
         $data         = $this->db->query("SELECT * FROM r_s_item_stok WHERE 1=1 $where")->result_array();
 
         /* Spreadsheet Init */
@@ -613,7 +655,7 @@ class Laporan extends My_Controller
         $writer->save('php://output');
     }
 
-    function export_excel_penjualanartikel($fromdate, $todate, $source, $brand_code, $division, $sub_division, $dept, $sub_dept)
+    function export_excel_penjualanartikel($fromdate, $todate, $source, $brand_code, $division, $sub_division, $dept, $sub_dept, $store)
 	{
         $data['username']      = $this->input->cookie('cookie_invent_user');
         /* Data */
@@ -655,6 +697,10 @@ class Laporan extends My_Controller
 
         if($sub_dept !== "null"){
             $where.=" AND SUB_DEPT = '".$sub_dept."'";
+        }
+
+        if($store !== "null"){
+            $where.=" AND branch_id = '".$store."'";
         }
 
         if($fromdate !== null AND $todate !== null){
@@ -754,7 +800,7 @@ class Laporan extends My_Controller
         $writer->save('php://output');
     }
 
-    function export_excel_penjualanartikel_operation($fromdate, $todate, $source, $brand_code, $division, $sub_division, $dept, $sub_dept)
+    function export_excel_penjualanartikel_operation($fromdate, $todate, $source, $brand_code, $division, $sub_division, $dept, $sub_dept, $store)
 	{
         /* Data */
         $data['username']      = $this->input->cookie('cookie_invent_user');
@@ -797,6 +843,10 @@ class Laporan extends My_Controller
 
         if($sub_dept !== "null"){
             $where.=" AND SUB_DEPT = '".$sub_dept."'";
+        }
+
+        if($store !== "null"){
+            $where.=" AND branch_id = '".$store."'";
         }
 
         if($fromdate !== null AND $todate !== null){
@@ -892,7 +942,7 @@ class Laporan extends My_Controller
         $writer->save('php://output');
     }
 
-    function export_csv_stock($brand_code = null){
+    function export_csv_stock($brand_code, $division, $sub_division, $dept, $sub_dept, $store){
         $filename = 'stock_report.csv';
         header("Content-Description: File Transfer");
         header("Content-Disposition: attachment; filename=".$filename);
@@ -911,9 +961,30 @@ class Laporan extends My_Controller
             $where = "error";
         }
 
-        if($brand_code !== null){
-            $where.=" and brand_code = '".$brand_code."'";
+        if($brand_code !== "null"){
+            $where.=" AND brand_code = '".$brand_code."'";
         }
+        
+        if($division !== "null"){
+            $where.=" AND DIVISION = '".$division."'";
+        }
+
+        if($sub_division !== "null"){
+            $where.=" AND SUB_DIVISION = '".$sub_division."'";
+        }
+
+        if($dept !== "null"){
+            $where.=" AND DEPT = '".$dept."'";
+        }
+
+        if($sub_dept !== "null"){
+            $where.=" AND SUB_DEPT = '".$sub_dept."'";
+        }
+
+        if($store !== "null"){
+            $where.=" AND branch_id = '".$store."'";
+        }
+
         $data   = $this->db->query("SELECT branch_id,brand_code,brand_name,barcode,varian_option1,varian_option2,periode,DIVISION,SUB_DIVISION,DEPT,SUB_DEPT,article_name,last_stock FROM r_s_item_stok where 1=1 $where")->result_array();
         $file   = fopen('php://output','w');
 
@@ -1042,7 +1113,7 @@ class Laporan extends My_Controller
         echo json_encode($data);
     }
 
-    function export_csv_penjualanartikel($fromdate, $todate, $source_data, $brand_code, $division, $sub_division, $dept, $sub_dept){
+    function export_csv_penjualanartikel($fromdate, $todate, $source_data, $brand_code, $division, $sub_division, $dept, $sub_dept, $store){
         extract(populateform());
 
         $division       = str_replace("%20"," ",$division);
@@ -1090,6 +1161,10 @@ class Laporan extends My_Controller
 
         if($sub_dept !== "null"){
             $where.=" AND SUB_DEPT = '".$sub_dept."'";
+        }
+
+        if($store !== "null"){
+            $where.=" AND branch_id = '".$store."'";
         }
 
         if($fromdate !== null AND $todate !== null){
@@ -1110,7 +1185,7 @@ class Laporan extends My_Controller
         exit;
     }
 
-    function export_csv_penjualanartikel_operation($fromdate, $todate, $source_data, $brand_code, $division, $sub_division, $dept, $sub_dept){
+    function export_csv_penjualanartikel_operation($fromdate, $todate, $source_data, $brand_code, $division, $sub_division, $dept, $sub_dept, $store){
         extract(populateform());
 
         $division       = str_replace("%20"," ",$division);
@@ -1158,6 +1233,10 @@ class Laporan extends My_Controller
 
         if($sub_dept !== "null"){
             $where.=" AND SUB_DEPT = '".$sub_dept."'";
+        }
+
+        if($store !== "null"){
+            $where.=" AND branch_id = '".$store."'";
         }
 
         if($fromdate !== null AND $todate !== null){

@@ -69,6 +69,7 @@
         get_sub_division();
         get_dept();
         get_list_dept();
+        get_store();
         
         // get_list_barcode();
         var brand_code      = null;
@@ -84,9 +85,10 @@
         var params5         = null;
         var params6         = null;
         var params7         = null;
+        var params8         = null;
         var format          = null;
 
-        load_data_penjualanartikel(params1,params2,params3,params4,params5,params6,params7);
+        load_data_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8);
 
         $('.btn-export-penjualanartikel').on("click", function(){
             $('#modal-export-penjualanartikel').modal('show');
@@ -117,6 +119,7 @@
             params5 = sub_division;
             params6 = dept;
             params7 = sub_dept;
+            params8 = store;
 
             if (params1 === "") {
                 params1 = null;
@@ -139,15 +142,19 @@
             if (params7 === "") {
                 params7 = null;
             }
+            if (params8 === "") {
+                params8 = null;
+            }
 
-            load_data_penjualanartikel(params1,params2,params3,params4,params5,params6,params7);
+            load_data_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8);
         });
 
         $('.btn-export').on("click", function(){
-            export_penjualanartikel(params1,params2,params3,params4,params5,params6,params7);
+            export_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8);
         });
 
-        function export_penjualanartikel(params1,params2,params3,params4,params5,params6,params7) {
+
+        function export_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8) {
           $.ajax({
             type: "POST",
             url: "<?= base_url('Laporan/generate_date');?>",
@@ -155,9 +162,9 @@
             data: {"periode": params3},
             success: function(data) {
               if(format == "csv"){
-                window.location.href = "<?= base_url('Laporan/export_csv_penjualanartikel_operation/'); ?>"+data.fromdate+'/'+data.todate+'/'+params2+'/'+params1+'/'+params4+'/'+params5+'/'+params6+'/'+params7;
+                window.location.href = "<?= base_url('Laporan/export_csv_penjualanartikel_operation/'); ?>"+data.fromdate+'/'+data.todate+'/'+params2+'/'+params1+'/'+params4+'/'+params5+'/'+params6+'/'+params7+'/'+params8;
               }else if(format == "xls"){
-                window.location.href = "<?= base_url('Laporan/export_excel_penjualanartikel_operation/'); ?>"+data.fromdate+'/'+data.todate+'/'+params2+'/'+params1+'/'+params4+'/'+params5+'/'+params6+'/'+params7;
+                window.location.href = "<?= base_url('Laporan/export_excel_penjualanartikel_operation/'); ?>"+data.fromdate+'/'+data.todate+'/'+params2+'/'+params1+'/'+params4+'/'+params5+'/'+params6+'/'+params7+'/'+params8;
               }
               
             }
@@ -188,7 +195,7 @@
                 {
                     "url": "<?= base_url('Laporan/penjualan_artikel_where');?>", // URL file untuk proses select datanya
                     "type": "POST",
-                    "data":  { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6,"params7": params7 }, 
+                    "data":  { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6,"params7": params7,"params8": params8 }, 
                 },
                 "deferRender": true,
                 "aLengthMenu": [[10, 25, 50],[ 10, 25, 50]], // Combobox Limit
@@ -365,6 +372,33 @@
                 }
             });
         }
+
+        // START STORE
+        function get_store(){
+            $.ajax({
+                type: "GET",
+                url: "<?= base_url('Masterdata'); ?>/get_store",
+                dataType: "html",
+                success: function(data) {
+                    console.log(data);
+                    $(".loading").hide();
+                    $("#export-penjualanartikel").show();
+                    $("#filter-penjualanartikel").show();
+                    $('.list_store').html(data);
+                },
+                beforeSend: function( xhr ) {
+                    console.log(xhr);
+                    $(".loading").show();
+                    $("#filter-penjualanartikel").hide();
+                    $("#export-penjualanartikel").hide();
+                }
+            });
+        }
+
+        $('.list_store').on('change', function (e) {
+            store = this.value;
+        })
+        // END STORE
 
         // START DIVISION
         function get_division(){

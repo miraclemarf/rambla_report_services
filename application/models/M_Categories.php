@@ -23,7 +23,8 @@
                 'Koper',
                 'Gaya Hidup Cute',
                 'Olah Raga',
-                'Bayi'
+                'Bayi',
+                'Kecantikan'
                 )
                 )";
                 return $data;
