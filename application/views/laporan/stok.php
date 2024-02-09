@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex flex-wrap justify-content-between mb-3">
-                        <h4 class="card-title mb-3">Laporan Stock</h4>
+                        <h4 class="card-title mb-3">Laporan Stock (Pcs)</h4>
                         <div class="align-self-end">
                             <button type="button" class="btn btn-success btn-sm btn-icon-text btn-export-stock ml-2" style="float:right">
                             <i class="typcn typcn-download btn-icon-prepend"></i>                                                    
@@ -24,17 +24,20 @@
                             <tr>
                             <th>#</th>
                             <th><nobr>Store</nobr></th>
-                            <th><nobr>Kode Brand</nobr></th>
-                            <th><nobr>Nama Brand</nobr></th>
+                            <th><nobr>Periode</nobr></th>
                             <th><nobr>Barcode</nobr></th>
+                            <th><nobr>Article Code</nobr></th>
+                            <th><nobr>Article Name</nobr></th>
                             <th><nobr>Varian Option1</nobr></th>
                             <th><nobr>Varian Option2</nobr></th>
-                            <th><nobr>Periode</nobr></th>
+                            <th><nobr>Vendor Code</nobr></th>
+                            <th><nobr>Vendor Name</nobr></th>
+                            <th><nobr>Kode Brand</nobr></th>
+                            <th><nobr>Nama Brand</nobr></th>
                             <th><nobr>DIVISION</nobr></th>
                             <th><nobr>SUB DIVISION</nobr></th>
                             <th><nobr>DEPT</nobr></th>
                             <th><nobr>SUB DEPT</nobr></th>
-                            <th><nobr>Article Name</nobr></th>
                             <th><nobr>Last Stock</nobr></th>
                             </tr>
                         </thead>
@@ -163,21 +166,26 @@
                                 return '<nobr>'+data+'</nobr>';
                         },
                     },
-                    { "data": "brand_code",
+                    { "data": "periode",
                         "render": function ( data, type, row ) {
                                 return '<nobr>'+data+'</nobr>';
                         },
-                    },
-                    { "data": "brand_name",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
-                        },
-                    }, // Tampilkan judul
+                    }, 
                     { "data": "barcode",
                         "render": function ( data, type, row ) {
                                 return '<nobr>'+data+'</nobr>';
                         },
                     },  // Tampilkan kategori
+                    { "data": "article_code",
+                        "render": function ( data, type, row ) {
+                                return '<nobr>'+data+'</nobr>';
+                        },
+                    },  // Tampilkan kategori
+                    { "data": "article_name",
+                        "render": function ( data, type, row ) {
+                                return '<nobr>'+data+'</nobr>';
+                        },
+                    },
                     { "data": "varian_option1",
                         "render": function ( data, type, row ) {
                                 return '<nobr>'+data+'</nobr>';
@@ -188,11 +196,27 @@
                                 return '<nobr>'+data+'</nobr>';
                         },
                     },  // Tampilkan tgl posting
-                    { "data": "periode",
+                    { "data": "vendor_code",
                         "render": function ( data, type, row ) {
                                 return '<nobr>'+data+'</nobr>';
                         },
-                    },  // Tampilkan tgl posting
+                    },
+                    { "data": "vendor_name",
+                        "render": function ( data, type, row ) {
+                                return '<nobr>'+data+'</nobr>';
+                        },
+                    }, // Tampilkan judul
+                    { "data": "brand_code",
+                        "render": function ( data, type, row ) {
+                                return '<nobr>'+data+'</nobr>';
+                        },
+                    },
+                    { "data": "brand_name",
+                        "render": function ( data, type, row ) {
+                                return '<nobr>'+data+'</nobr>';
+                        },
+                    }, // Tampilkan judul
+                    // Tampilkan tgl posting
                     { "data": "DIVISION",
                         "render": function ( data, type, row ) {
                                 return '<nobr>'+data+'</nobr>';
@@ -209,11 +233,6 @@
                         },
                     },
                     { "data": "SUB_DEPT",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
-                        },
-                    },
-                    { "data": "article_name",
                         "render": function ( data, type, row ) {
                                 return '<nobr>'+data+'</nobr>';
                         },

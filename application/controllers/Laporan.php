@@ -404,18 +404,21 @@ class Laporan extends My_Controller
         /* Excel Header */
         $sheet->setCellValue('A1', '#');
         $sheet->setCellValue('B1', 'store');
-        $sheet->setCellValue('C1', 'brand_code');
-        $sheet->setCellValue('D1', 'brand_name');
-        $sheet->setCellValue('E1', 'barcode');
-        $sheet->setCellValue('F1', 'varian_option1');
-        $sheet->setCellValue('G1', 'varian_option2');
-        $sheet->setCellValue('H1', 'periode');
-        $sheet->setCellValue('I1', 'DIVISION');
-        $sheet->setCellValue('J1', 'SUB_DIVISION');
-        $sheet->setCellValue('K1', 'DEPT');
-        $sheet->setCellValue('L1', 'SUB_DEPT');
-        $sheet->setCellValue('M1', 'article_name');
-        $sheet->setCellValue('N1', 'last_stock');
+        $sheet->setCellValue('C1', 'periode');
+        $sheet->setCellValue('D1', 'barcode');
+        $sheet->setCellValue('E1', 'article_code');
+        $sheet->setCellValue('F1', 'article_name');
+        $sheet->setCellValue('G1', 'varian_option1');
+        $sheet->setCellValue('H1', 'varian_option2');
+        $sheet->setCellValue('I1', 'vendor_code');
+        $sheet->setCellValue('J1', 'vendor_name');
+        $sheet->setCellValue('K1', 'brand_code');
+        $sheet->setCellValue('L1', 'brand_name');
+        $sheet->setCellValue('M1', 'DIVISION');
+        $sheet->setCellValue('N1', 'SUB_DIVISION');
+        $sheet->setCellValue('O1', 'DEPT');
+        $sheet->setCellValue('P1', 'SUB_DEPT');
+        $sheet->setCellValue('Q1', 'last_stock');
         
         /* Excel Data */
         $row_number = 2;
@@ -423,18 +426,21 @@ class Laporan extends My_Controller
         {
             $sheet->setCellValue('A'.$row_number, $key+1);
             $sheet->setCellValue('B'.$row_number, $row['branch_id']);
-            $sheet->setCellValue('C'.$row_number, $row['brand_code']);
-            $sheet->setCellValue('D'.$row_number, $row['brand_name']);
-            $sheet->setCellValue('E'.$row_number, $row['barcode']);
-            $sheet->setCellValue('F'.$row_number, $row['varian_option1']);
-            $sheet->setCellValue('G'.$row_number, $row['varian_option2']);
-            $sheet->setCellValue('H'.$row_number, $row['periode']);
-            $sheet->setCellValue('I'.$row_number, $row['DIVISION']);
-            $sheet->setCellValue('J'.$row_number, $row['SUB_DIVISION']);
-            $sheet->setCellValue('K'.$row_number, $row['DEPT']);
-            $sheet->setCellValue('L'.$row_number, $row['SUB_DEPT']);
-            $sheet->setCellValue('M'.$row_number, $row['article_name']);
-            $sheet->setCellValue('N'.$row_number, $row['last_stock']);
+            $sheet->setCellValue('C'.$row_number, $row['periode']);
+            $sheet->setCellValue('D'.$row_number, $row['barcode']);
+            $sheet->setCellValue('E'.$row_number, $row['article_code']);
+            $sheet->setCellValue('F'.$row_number, $row['article_name']);
+            $sheet->setCellValue('G'.$row_number, $row['varian_option1']);
+            $sheet->setCellValue('H'.$row_number, $row['varian_option2']);
+            $sheet->setCellValue('I'.$row_number, $row['vendor_code']);
+            $sheet->setCellValue('J'.$row_number, $row['vendor_name']);
+            $sheet->setCellValue('K'.$row_number, $row['brand_code']);
+            $sheet->setCellValue('L'.$row_number, $row['brand_name']);
+            $sheet->setCellValue('M'.$row_number, $row['DIVISION']);
+            $sheet->setCellValue('N'.$row_number, $row['SUB_DIVISION']);
+            $sheet->setCellValue('O'.$row_number, $row['DEPT']);
+            $sheet->setCellValue('P'.$row_number, $row['SUB_DEPT']);
+            $sheet->setCellValue('Q'.$row_number, $row['last_stock']);
         
             $row_number++;
         }
@@ -1046,10 +1052,10 @@ class Laporan extends My_Controller
             $where.=" AND branch_id = '".$store."'";
         }
 
-        $data   = $this->db->query("SELECT branch_id,brand_code,brand_name,barcode,varian_option1,varian_option2,periode,DIVISION,SUB_DIVISION,DEPT,SUB_DEPT,article_name,last_stock FROM r_s_item_stok where 1=1 $where")->result_array();
+        $data   = $this->db->query("SELECT branch_id,periode,barcode, article_code, article_name,varian_option1,varian_option2, vendor_code, vendor_name, brand_code,brand_name,DIVISION,SUB_DIVISION,DEPT,SUB_DEPT,last_stock FROM r_s_item_stok where 1=1 $where")->result_array();
         $file   = fopen('php://output','w');
 
-        $header = array('branch_id','brand_code','brand_name','barcode','varian_option1','varian_option2','periode','DIVISION','SUB_DIVISION','DEPT','SUB_DEPT','article_name','last_stock');
+        $header = array('branch_id','periode','barcode','article_code','article_name','varian_option1','varian_option2','vendor_code','vendor_name','brand_code','brand_name','DIVISION','SUB_DIVISION','DEPT','SUB_DEPT','last_stock');
 
         fputcsv($file,$header);
 

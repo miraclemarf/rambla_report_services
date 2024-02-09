@@ -34,7 +34,7 @@
                 return $data;
             }
 
-            if($username == "HERMIEN" or $username == "HENDRIK" or $username == "SENJAYA" or $username == "KIYATONO" or $username == "ARIF" or $username == "SYAHRONI"){
+            if($username == "HERMIEN" or $username == "HENDRIK" or $username == "SENJAYA" or $username == "KIYATONO" or $username == "ARIF" or $username == "SYAHRONI" or $username == "TEGUH" or $username == "LENA"){
                 $data = "AND left(category_code,2) in ('RS')";
                 return $data;
             }
