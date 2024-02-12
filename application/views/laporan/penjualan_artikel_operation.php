@@ -93,7 +93,7 @@
         var areatrx         = null;
 
         //load_data_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8,params9);
-
+        $('#modal-filter-penjualanartikel').modal('show');
         $('.btn-export-penjualanartikel').on("click", function(){
             $('#modal-export-penjualanartikel').modal('show');
         });
