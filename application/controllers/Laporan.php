@@ -173,6 +173,16 @@ class Laporan extends My_Controller
                 $filter8 = " AND branch_id = '".$params8."'";
                 $filter.=$filter8;
             }
+            if($params9){
+                $arrParams9 = explode(',', $params9);
+                if(count($arrParams9) > 1){
+                    $filter9 = " AND substring(trans_no,9,1) in ('".$arrParams9[0]."', '".$arrParams9[1]."')";
+                }
+                else{
+                    $filter9 = " AND substring(trans_no,9,1) in ('".$params9."')";
+                }
+                $filter.=$filter9;
+            }
             $isWhere = $filter;
         }else{
             $isWhere = $filter;
@@ -716,7 +726,7 @@ class Laporan extends My_Controller
         $writer->save('php://output');
     }
 
-    function export_excel_penjualanartikel($fromdate, $todate, $source, $brand_code, $division, $sub_division, $dept, $sub_dept, $store)
+    function export_excel_penjualanartikel($fromdate, $todate, $source, $brand_code, $division, $sub_division, $dept, $sub_dept, $store, $areatrx)
 	{
         $data['username']      = $this->input->cookie('cookie_invent_user');
         /* Data */
@@ -767,6 +777,16 @@ class Laporan extends My_Controller
         if($fromdate !== null AND $todate !== null){
             $where.= " AND DATE_FORMAT(periode,'%Y-%m-%d') BETWEEN '".$fromdate."' and '".$todate."'";
         }
+        
+        if($areatrx !== "null"){
+            $arrAreatrx = explode(',', $areatrx);
+            if(count($arrAreatrx) > 1){
+                $where .= " AND substring(trans_no,9,1) in ('".$arrAreatrx[0]."', '".$arrAreatrx[1]."')";
+            }
+            else{
+                $where .= " AND substring(trans_no,9,1) in ('".$areatrx."')";
+            }
+        }
       
         $data         = $this->db->query("SELECT * FROM r_sales WHERE 1=1 $where order by periode")->result_array();
 
@@ -805,12 +825,14 @@ class Laporan extends My_Controller
         $sheet->setCellValue('AB1', 'Gross After Margin');
         $sheet->setCellValue('AC1', 'Gross(Rp)');
         $sheet->setCellValue('AD1', 'Net(Rp)');
-        $sheet->setCellValue('AR1', 'Source Data');
-        $sheet->setCellValue('AF1', 'Trans No'); 
-        $sheet->setCellValue('AG1', 'No Ref'); 
+        $sheet->setCellValue('AE1', 'Area Transaksi');
+        $sheet->setCellValue('AF1', 'Source Data');
+        $sheet->setCellValue('AG1', 'Trans No'); 
+        $sheet->setCellValue('AH1', 'No Ref'); 
         
         /* Excel Data */
         $row_number = 2;
+        $data_areatrx = '';
         foreach($data as $key => $row)
         {
             $sheet->setCellValue('A'.$row_number, $key+1);
@@ -843,9 +865,13 @@ class Laporan extends My_Controller
             $sheet->setCellValue('AB'.$row_number, $row['gross_after_margin']);
             $sheet->setCellValue('AC'.$row_number, $row['gross']);
             $sheet->setCellValue('AD'.$row_number, $row['net']);
-            $sheet->setCellValue('AE'.$row_number, $row['source_data']);
-            $sheet->setCellValue('AF'.$row_number, $row['trans_no']);
-            $sheet->setCellValue('AG'.$row_number, $row['no_ref']);
+            if(substr($row['trans_no'], 8,1) != '5'){
+                $data_areatrx = substr($row['trans_no'], 8,1) == '3' ? 'BAZZAR' : 'FLOOR';
+            }
+            $sheet->setCellValue('AE'.$row_number, $data_areatrx);
+            $sheet->setCellValue('AF'.$row_number, $row['source_data']);
+            $sheet->setCellValue('AG'.$row_number, $row['trans_no']);
+            $sheet->setCellValue('AH'.$row_number, $row['no_ref']);
             $row_number++;
         }
 
@@ -1208,7 +1234,7 @@ class Laporan extends My_Controller
         echo json_encode($data);
     }
 
-    function export_csv_penjualanartikel($fromdate, $todate, $source_data, $brand_code, $division, $sub_division, $dept, $sub_dept, $store){
+    function export_csv_penjualanartikel($fromdate, $todate, $source_data, $brand_code, $division, $sub_division, $dept, $sub_dept, $store, $areatrx){
         extract(populateform());
 
         $division       = str_replace("%20"," ",$division);
@@ -1262,18 +1288,34 @@ class Laporan extends My_Controller
             $where.=" AND branch_id = '".$store."'";
         }
 
+        if($areatrx !== "null"){
+            $arrAreatrx = explode(',', $areatrx);
+            if(count($arrAreatrx) > 1){
+                $where .= " AND substring(trans_no,9,1) in ('".$arrAreatrx[0]."', '".$arrAreatrx[1]."')";
+            }
+            else{
+                $where .= " AND substring(trans_no,9,1) in ('".$areatrx."')";
+            }
+        }
+
         if($fromdate !== null AND $todate !== null){
             $where.= " AND DATE_FORMAT(periode,'%Y-%m-%d') BETWEEN '".$fromdate."' and '".$todate."'";
         }
 
-        $data   = $this->db->query("SELECT branch_id, SUBSTRING(periode, 1, 10) as periode,SUBSTRING(periode, 6, 2) as bulan, DIVISION,SUB_DIVISION,tag_5,category_code,DEPT,SUB_DEPT,article_code,barcode,brand_code,brand_name,article_name,varian_option1,varian_option2,price,vendor_code,vendor_name, tot_qty,tot_berat, disc_pct,total_disc_amt,total_moredisc_amt,moredisc_pct,margin,gross_after_margin,gross,net,source_data,trans_no, no_ref FROM r_sales where 1=1 $where order by periode")->result_array();
+        $data   = $this->db->query("SELECT branch_id, SUBSTRING(periode, 1, 10) as periode,SUBSTRING(periode, 6, 2) as bulan, DIVISION,SUB_DIVISION,tag_5,category_code,DEPT,SUB_DEPT,article_code,barcode,brand_code,brand_name,article_name,varian_option1,varian_option2,price,vendor_code,vendor_name, tot_qty,tot_berat, disc_pct,total_disc_amt,total_moredisc_amt,moredisc_pct,margin,gross_after_margin,gross,net,trans_no as areatrx,source_data,trans_no, no_ref FROM r_sales where 1=1 $where order by periode")->result_array();
         $file   = fopen('php://output','w');
 
-        $header = array('Store','Periode','Bulan','DIVISION','SUB DIVISION','Tipe Artikel','Kode Kategori','DEPT','SUB DEPT','Article Code','Barcode','Kode Brand','Nama Brand','Nama Produk','Varian Option1','Varian Option2','Harga','Kode Vendor','Nama Vendor','Total Qty(Pcs)','Total Berat(Kg)','Disc(%)','Total Disc','Disc. Tambahan(Rp)','Disc. Tambahan(%)','Margin','Gross After Margin','Gross(Rp)','Net(Rp)','Source Data','Trans No','No Ref');
+        $header = array('Store','Periode','Bulan','DIVISION','SUB DIVISION','Tipe Artikel','Kode Kategori','DEPT','SUB DEPT','Article Code','Barcode','Kode Brand','Nama Brand','Nama Produk','Varian Option1','Varian Option2','Harga','Kode Vendor','Nama Vendor','Total Qty(Pcs)','Total Berat(Kg)','Disc(%)','Total Disc','Disc. Tambahan(Rp)','Disc. Tambahan(%)','Margin','Gross After Margin','Gross(Rp)','Net(Rp)','Area Transaksi','Source Data','Trans No','No Ref');
 
         fputcsv($file,$header);
 
         foreach($data as $key => $value){
+            if(substr($value['areatrx'], 8,1) != '5'){
+                $value['areatrx']= substr($value['areatrx'], 8,1) == '3' ? 'BAZZAR' : 'FLOOR';
+            }
+            else{
+                $value['areatrx'] = '';
+            }
             fputcsv($file, $value);
         }
         fclose($file);
