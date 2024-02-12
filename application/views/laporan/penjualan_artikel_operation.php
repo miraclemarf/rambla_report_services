@@ -48,6 +48,7 @@
                             <th><nobr>Disc. Tambahan(%)</nobr></th>
                             <th><nobr>Gross(Rp)</nobr></th>
                             <th><nobr>Net(Rp)</nobr></th>
+                            <th><nobr>Area Transaksi</nobr></th> 
                             <th><nobr>Source Data</nobr></th>
                             <th><nobr>Trans No</nobr></th> 
                             <th><nobr>No Ref</nobr></th> 
@@ -78,6 +79,7 @@
         var sub_division    = null;
         var dept            = null;
         var sub_dept        = null;
+        var store           = null;
         var params1         = null;
         var params2         = null;
         var params3         = periode;
@@ -86,9 +88,11 @@
         var params6         = null;
         var params7         = null;
         var params8         = null;
+        var params9         = null;
         var format          = null;
+        var areatrx         = null;
 
-        load_data_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8);
+        //load_data_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8,params9);
 
         $('.btn-export-penjualanartikel').on("click", function(){
             $('#modal-export-penjualanartikel').modal('show');
@@ -120,6 +124,7 @@
             params6 = dept;
             params7 = sub_dept;
             params8 = store;
+            params9 = areatrx;
 
             if (params1 === "") {
                 params1 = null;
@@ -142,19 +147,24 @@
             if (params7 === "") {
                 params7 = null;
             }
-            if (params8 === "") {
+            if (params8 === "" || params8 == null) {
                 params8 = null;
+                alert('Store Harus Dipilih')
+                return false;
+            }
+            if (params9 === "") {
+                params9 = null;
             }
 
-            load_data_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8);
+            load_data_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8,params9);
         });
 
         $('.btn-export').on("click", function(){
-            export_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8);
+            export_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8,params9);
         });
 
 
-        function export_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8) {
+        function export_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8,params9) {
           $.ajax({
             type: "POST",
             url: "<?= base_url('Laporan/generate_date');?>",
@@ -162,9 +172,9 @@
             data: {"periode": params3},
             success: function(data) {
               if(format == "csv"){
-                window.location.href = "<?= base_url('Laporan/export_csv_penjualanartikel_operation/'); ?>"+data.fromdate+'/'+data.todate+'/'+params2+'/'+params1+'/'+params4+'/'+params5+'/'+params6+'/'+params7+'/'+params8;
+                window.location.href = "<?= base_url('Laporan/export_csv_penjualanartikel_operation/'); ?>"+data.fromdate+'/'+data.todate+'/'+params2+'/'+params1+'/'+params4+'/'+params5+'/'+params6+'/'+params7+'/'+params8+'/'+params9;
               }else if(format == "xls"){
-                window.location.href = "<?= base_url('Laporan/export_excel_penjualanartikel_operation/'); ?>"+data.fromdate+'/'+data.todate+'/'+params2+'/'+params1+'/'+params4+'/'+params5+'/'+params6+'/'+params7+'/'+params8;
+                window.location.href = "<?= base_url('Laporan/export_excel_penjualanartikel_operation/'); ?>"+data.fromdate+'/'+data.todate+'/'+params2+'/'+params1+'/'+params4+'/'+params5+'/'+params6+'/'+params7+'/'+params8+'/'+params9;
               }
               
             }
@@ -195,7 +205,7 @@
                 {
                     "url": "<?= base_url('Laporan/penjualan_artikel_where');?>", // URL file untuk proses select datanya
                     "type": "POST",
-                    "data":  { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6,"params7": params7,"params8": params8 }, 
+                    "data":  { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6,"params7": params7,"params8": params8, "params9": params9},  
                 },
                 "deferRender": true,
                 "aLengthMenu": [[10, 25, 50],[ 10, 25, 50]], // Combobox Limit
@@ -333,6 +343,15 @@
                         "render": function ( data, type, row ) {
                                 return '<nobr>Rp '+rupiahjs(data)+'</nobr>';
                         },
+                    },                    
+                    { "data": "trans_no",
+                        "render": function ( data, type, row ) {
+                                var data_areatrx = '';
+                                if(data.substring(8,9) != '5'){
+                                    data_areatrx = data.substring(8,9) == '3' ? 'BAZZAR' : 'FLOOR'
+                                }
+                                return '<nobr>'+data_areatrx+'</nobr>';
+                        },
                     },
                     { "data": "source_data",
                         "render": function ( data, type, row ) {
@@ -397,6 +416,32 @@
 
         $('.list_store').on('change', function (e) {
             store = this.value;
+            if (store == 'R001'){
+                $opt = '<option value="">-- Pilih Data --</option><option value="1,2">FLOOR</option><option value="3">BAZZAR</option>';
+                $('.list_areatrx').html($opt);
+            }
+            else if (store == 'R002'){
+                $opt = '<option value="">-- Pilih Data --</option><option value="0,1">FLOOR</option>';
+                $('.list_areatrx').html($opt);
+            }
+            else if (store == 'V001'){
+                $opt = '<option value="">-- Pilih Data --</option><option value="0">FLOOR</option>';
+                $('.list_areatrx').html($opt);
+            }
+            else{
+                $opt = '<option value="">-- Pilih Data --</option>';
+                $('.list_areatrx').html($opt); 
+            }
+        })
+
+        $('.list_areatrx').on('change', function (e) {           
+            areatrx = this.value;       
+        })
+        $('.list_areatrx').parent().on('click', function (e) {
+            if (store === ''|| store == null){
+                alert('Harap Pilih Store Dahulu')
+                return false;
+            }
         })
         // END STORE
 
