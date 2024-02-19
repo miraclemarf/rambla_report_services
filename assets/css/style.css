@@ -55,6 +55,10 @@ td {
     border-left: solid 1px #ccc;
 }
 
+.table-striped tr td{
+    border: none !important;
+}
+
 .form-check {
     margin-top: 0px;
     margin-bottom: 0px;

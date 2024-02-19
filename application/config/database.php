@@ -71,6 +71,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | the query builder class.
 */
 $active_group = 'default';
+$active_record = TRUE;
 $query_builder = TRUE;
 
 $db['default'] = array(
@@ -79,6 +80,69 @@ $db['default'] = array(
 	'username' => $_ENV['DB_USERNAME'],
 	'password' => $_ENV['DB_PASSWORD'],
 	'database' => $_ENV['DB_NAME'],
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
+$db['storeR001'] = array(
+	// 'dsn'	=> '',
+	'hostname' => $_ENV['DB_HOST_R001'],
+	'username' => $_ENV['DB_USERNAME_STORE'],
+	'password' => $_ENV['DB_PASSWORD_STORE'],
+	'database' => $_ENV['DB_NAME_STORE'],
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
+$db['storeR002'] = array(
+	// 'dsn'	=> '',
+	'hostname' => $_ENV['DB_HOST_R002'],
+	'username' => $_ENV['DB_USERNAME_STORE'],
+	'password' => $_ENV['DB_PASSWORD_STORE'],
+	'database' => $_ENV['DB_NAME_STORE'],
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
+$db['storeV001'] = array(
+	// 'dsn'	=> '',
+	'hostname' => $_ENV['DB_HOST_V001'],
+	'username' => $_ENV['DB_USERNAME_STORE'],
+	'password' => $_ENV['DB_PASSWORD_STORE'],
+	'database' => $_ENV['DB_NAME_STORE'],
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

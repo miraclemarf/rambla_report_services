@@ -6,7 +6,10 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex flex-wrap justify-content-between mb-3">
-                        <h4 class="card-title mb-3">Laporan Penjualan By Artikel</h4>
+                        <div>
+                        <h4 class="card-title mb-0">Laporan Penjualan By Artikel</h4>
+                        <p class="text-muted mb-0">Terapkan filter untuk menampilkan data.</p>
+                        </div>
                         <div class="align-self-end">
                             <button type="button" class="btn btn-success btn-sm btn-icon-text btn-export-penjualanartikel ml-2" style="float:right">
                             <i class="typcn typcn-download btn-icon-prepend"></i>                                                    
@@ -18,8 +21,8 @@
                             </button>
                         </div>
                     </div>
-                    <div class="table-responsive">
-                    <table class="table table-striped table-custom" id="tb_penjualanartikel_list">
+                    <div class="">
+                    <table class="table table-striped table-custom d-none" id="tb_penjualanartikel_list">
                         <thead class="table-rambla">
                             <tr>
                             <th>#</th>
@@ -94,7 +97,7 @@
         var format          = null;
         var areatrx         = null;
 
-        //load_data_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8);
+        //load_data_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8,params9);
 
         $('#modal-filter-penjualanartikel').modal('show');
 
@@ -197,6 +200,7 @@
         // }
 
         function load_data_penjualanartikel(params1, params2, params3, params4, params5, params6,params7,params8,params9){
+            $('#tb_penjualanartikel_list').removeClass('d-none');
             tabel = $('#tb_penjualanartikel_list').DataTable({
                 "processing": true,
                 "responsive":true,
@@ -210,6 +214,8 @@
                     "type": "POST",
                     "data":  { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6,"params7": params7, "params8": params8, "params9": params9}, 
                 },
+                "scrollX": true,
+                "stateSave": true,
                 "deferRender": true,
                 "aLengthMenu": [[10, 25, 50],[ 10, 25, 50]], // Combobox Limit
                 "columns": [

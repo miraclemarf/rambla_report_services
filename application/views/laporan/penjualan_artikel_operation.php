@@ -6,7 +6,10 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex flex-wrap justify-content-between mb-3">
-                        <h4 class="card-title mb-3">Laporan Penjualan By Artikel Operation</h4>
+                    <div>
+                        <h4 class="card-title mb-0">Laporan Penjualan By Artikel Operation</h4>
+                        <p class="text-muted mb-0">Terapkan filter untuk menampilkan data.</p>
+                        </div>
                         <div class="align-self-end">
                             <button type="button" class="btn btn-success btn-sm btn-icon-text btn-export-penjualanartikel ml-2" style="float:right">
                             <i class="typcn typcn-download btn-icon-prepend"></i>                                                    
@@ -207,6 +210,8 @@
                     "type": "POST",
                     "data":  { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6,"params7": params7,"params8": params8, "params9": params9},  
                 },
+                "scrollX": true,
+                "stateSave": true,
                 "deferRender": true,
                 "aLengthMenu": [[10, 25, 50],[ 10, 25, 50]], // Combobox Limit
                 "columns": [
