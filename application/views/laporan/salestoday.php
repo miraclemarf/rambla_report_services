@@ -49,8 +49,8 @@
                     <div class="d-flex justify-content-between">
                         <div class="d-flex flex-column">
                             <div class="card-description h4 mb-1 font-weight-normal">Net Sales</div>
-                            <h2 class="mb-2 mt-2  font-weight-bold">Rp
-                                <?= $result[0]->net ?>
+                            <h2 class="mb-2 mt-2  font-weight-bold">
+                                <?= empty($result[0]->tot_trx) ? '-' : 'Rp'.$result[0]->net ?>
                             </h2>
                         </div>
                         <div class="display-2 text-warning">
@@ -66,8 +66,8 @@
                     <div class="d-flex justify-content-between">
                         <div class="d-flex flex-column">
                             <div class="card-description h4 mb-1 font-weight-normal">Gross Sales</div>
-                            <h2 class="mb-2 mt-2 font-weight-bold">Rp
-                                <?= $result[0]->gross ?>
+                            <h2 class="mb-2 mt-2 font-weight-bold">
+                                <?= empty($result[0]->tot_trx) ? '-' : 'Rp'.$result[0]->gross ?>
                             </h2>
                         </div>
                         <div class="display-2 text-success">
@@ -84,7 +84,7 @@
                         <div class="d-flex flex-column">
                             <div class="card-description h4 mb-1 font-weight-normal">Total Trx</div>
                             <h2 class="mb-2 mt-2 font-weight-bold">
-                                <?= $result[0]->tot_trx ?>
+                                <?= empty($result[0]->tot_trx) ? '-' :  $result[0]->tot_trx?>
                             </h2>
 
                         </div>
@@ -102,7 +102,7 @@
                         <div class="d-flex flex-column">
                             <div class="card-description h4 mb-1 font-weight-normal">Total Qty</div>
                             <h2 class="mb-2 mt-2 font-weight-bold">
-                                <?= $result[0]->tot_qty ?>
+                                <?= empty($result[0]->tot_trx) ? '-' : $result[0]->tot_qty ?>
                             </h2>
                         </div>
                         <div class="display-2" style="color:#f2125e !important;">
