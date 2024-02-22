@@ -95,6 +95,7 @@ $db['default'] = array(
 	'failover' => array(),
 	'save_queries' => TRUE
 );
+
 $db['storeR001'] = array(
 	// 'dsn'	=> '',
 	'hostname' => $_ENV['DB_HOST_R001'],

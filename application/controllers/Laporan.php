@@ -124,16 +124,17 @@ class Laporan extends My_Controller
         $fromdate   = '';
         $todate     = '';
 
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $filter = " AND brand_code in (
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
+            $filter = $this->M_Categories->get_category($data['username']);
+        }else{
+            $filter = "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
             )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
-            $filter = $this->M_Categories->get_category($data['username']);
-        }else{
-            $filter = "error";
         }
+        // END CEK ADA KATEGORINYA NGGA
        
         if($params1 || $params2 || $params3 || $params4 || $params5 || $params6 || $params7){
             if($params1){
@@ -198,16 +199,17 @@ class Laporan extends My_Controller
         $data['username']       = $this->input->cookie('cookie_invent_user');
         $where      = array('');
         
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $filter     = " AND brand_code in (
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
+            $filter = $this->M_Categories->get_category($data['username']);
+        }else{
+            $filter = "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
             )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
-            $filter = $this->M_Categories->get_category($data['username']);
-        }else{
-            $filter = "error";
         }
+        // END CEK ADA KATEGORINYA NGGA
         if($params1 || $params2 || $params3 || $params4 || $params5 || $params6){
             if($params1){
                 $filter1 = " AND brand_code = '".$params1."'";
@@ -256,16 +258,17 @@ class Laporan extends My_Controller
 
         $data['username']       = $this->input->cookie('cookie_invent_user');
         $where      = array('');
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $filter     = " AND brand in (
-                select distinct brand from m_user_brand 
-                where username = '".$data['username']."'
-            )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
             $filter = $this->M_Categories->get_category($data['username']);
         }else{
-            $filter = "error";
+            $filter = "AND brand in (
+            select distinct brand from m_user_brand 
+            where username = '".$data['username']."'
+            )";
         }
+        // END CEK ADA KATEGORINYA NGGA
         if($params1 || $params2 || $params3 || $params4 || $params5 || $params6 || $params7){
             if($params1){
                 $filter1 = " AND brand = '".$params1."'";
@@ -317,16 +320,17 @@ class Laporan extends My_Controller
         // $vendor_code    = $this->input->post('vendor_code');
         $data['username']       = $this->input->cookie('cookie_invent_user');
         $where      = array('');
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $filter     = " AND brand in (
-                select distinct brand from m_user_brand 
-                where username = '".$data['username']."'
-            )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
             $filter = $this->M_Categories->get_category($data['username']);
         }else{
-            $filter = "error";
+            $filter = "AND brand in (
+            select distinct brand from m_user_brand 
+            where username = '".$data['username']."'
+            )";
         }
+        // END CEK ADA KATEGORINYA NGGA
         if($params1 || $params2 || $params3 || $params4 || $params5 || $params6){
             if($params1){
                 $filter1 = " AND brand = '".$params1."'";
@@ -370,16 +374,17 @@ class Laporan extends My_Controller
         $dept           = str_replace("%20"," ",$dept);
         $sub_dept       = str_replace("%20"," ",$sub_dept); 
 
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $where = " AND brand_code in (
-                select distinct brand from m_user_brand 
-                where username = '".$data['username']."'
-            )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
+       // START CEK ADA KATEGORINYA NGGA
+       $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+       if($cek_user_category){
             $where = $this->M_Categories->get_category($data['username']);
-        }else{
-            $where = "error";
-        }
+       }else{
+            $where = "AND brand_code in (
+               select distinct brand from m_user_brand 
+               where username = '".$data['username']."'
+           )";
+       }
+       // END CEK ADA KATEGORINYA NGGA
        
         if($brand_code !== "null"){
             $where.=" AND brand_code = '".$brand_code."'";
@@ -477,16 +482,17 @@ class Laporan extends My_Controller
         $dept           = str_replace("%20"," ",$dept);
         $sub_dept       = str_replace("%20"," ",$sub_dept); 
 
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $where = " AND brand in (
-                select distinct brand from m_user_brand 
-                where username = '".$data['username']."'
-            )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
             $where = $this->M_Categories->get_category($data['username']);
         }else{
-            $where = "error";
+            $where = "AND brand in (
+            select distinct brand from m_user_brand 
+            where username = '".$data['username']."'
+        )";
         }
+        // END CEK ADA KATEGORINYA NGGA
 
         if($brand_code !== "null"){
             $where.=" and brand = '".$brand_code."'";
@@ -621,16 +627,17 @@ class Laporan extends My_Controller
         $dept           = str_replace("%20"," ",$dept);
         $sub_dept       = str_replace("%20"," ",$sub_dept); 
 
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $where = " AND brand in (
-                select distinct brand from m_user_brand 
-                where username = '".$data['username']."'
-            )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
             $where = $this->M_Categories->get_category($data['username']);
         }else{
-            $where = "error";
+            $where = "AND brand in (
+            select distinct brand from m_user_brand 
+            where username = '".$data['username']."'
+            )";
         }
+        // END CEK ADA KATEGORINYA NGGA
 
         if($brand_code !== "null"){
             $where.=" AND brand = '".$brand_code."'";
@@ -735,16 +742,17 @@ class Laporan extends My_Controller
         $dept           = str_replace("%20"," ",$dept);
         $sub_dept       = str_replace("%20"," ",$sub_dept); 
 
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $where = " AND brand_code in (
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
+            $where = $this->M_Categories->get_category($data['username']);
+        }else{
+            $where = "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
             )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
-            $where = $this->M_Categories->get_category($data['username']);
-        }else{
-            $where = "error";
         }
+        // END CEK ADA KATEGORINYA NGGA
         
         if($source !== "null"){
             $where.=" AND source_data = '".$source."'";
@@ -897,16 +905,17 @@ class Laporan extends My_Controller
         $dept           = str_replace("%20"," ",$dept);
         $sub_dept       = str_replace("%20"," ",$sub_dept); 
 
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $where = " AND brand_code in (
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
+            $where = $this->M_Categories->get_category($data['username']);
+        }else{
+            $where = "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
             )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
-            $where = $this->M_Categories->get_category($data['username']);
-        }else{
-            $where = "error";
         }
+        // END CEK ADA KATEGORINYA NGGA
         
         if($source !== "null"){
             $where.=" AND source_data = '".$source."'";
@@ -1043,16 +1052,17 @@ class Laporan extends My_Controller
 
         $data['username']      = $this->input->cookie('cookie_invent_user');
 
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $where = " AND brand_code in (
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
+                $where = $this->M_Categories->get_category($data['username']);
+        }else{
+                $where = "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
             )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
-            $where = $this->M_Categories->get_category($data['username']);
-        }else{
-            $where = "error";
         }
+        // END CEK ADA KATEGORINYA NGGA
 
         if($brand_code !== "null"){
             $where.=" AND brand_code = '".$brand_code."'";
@@ -1105,16 +1115,17 @@ class Laporan extends My_Controller
         header("Content-Type: application/csv;");
 
         $data['username']      = $this->input->cookie('cookie_invent_user');
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $where = " AND brand in (
-                select distinct brand from m_user_brand 
-                where username = '".$data['username']."'
-            )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
             $where = $this->M_Categories->get_category($data['username']);
         }else{
-            $where = "error";
+            $where = "AND brand in (
+            select distinct brand from m_user_brand 
+            where username = '".$data['username']."'
+            )";
         }
+        // END CEK ADA KATEGORINYA NGGA
 
         if($brand_code !== "null"){
             $where.=" AND brand = '".$brand_code."'";
@@ -1167,16 +1178,17 @@ class Laporan extends My_Controller
         header("Content-Type: application/csv;");
 
         $data['username']      = $this->input->cookie('cookie_invent_user');
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $where = " AND brand in (
-                select distinct brand from m_user_brand 
-                where username = '".$data['username']."'
-            )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
             $where = $this->M_Categories->get_category($data['username']);
         }else{
-            $where = "error";
+            $where = "AND brand in (
+            select distinct brand from m_user_brand 
+            where username = '".$data['username']."'
+        )";
         }
+        // END CEK ADA KATEGORINYA NGGA
 
         if($brand_code !== "null"){
             $where.=" AND brand = '".$brand_code."'";
@@ -1249,16 +1261,19 @@ class Laporan extends My_Controller
         header("Content-Type: application/csv;");
 
         $data['username']      = $this->input->cookie('cookie_invent_user');
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $where = " AND brand_code in (
+
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
+            $where = $this->M_Categories->get_category($data['username']);
+        }else{
+            $where = "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
             )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
-            $where = $this->M_Categories->get_category($data['username']);
-        }else{
-            $where = "error";
         }
+        // END CEK ADA KATEGORINYA NGGA
+
 
         if($source_data !== "null"){
             $where.=" AND source_data = '".$source_data."'";
@@ -1337,16 +1352,18 @@ class Laporan extends My_Controller
         header("Content-Type: application/csv;");
 
         $data['username']      = $this->input->cookie('cookie_invent_user');
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $where = " AND brand_code in (
+
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
+            $where = $this->M_Categories->get_category($data['username']);
+        }else{
+            $where = "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
             )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
-            $where = $this->M_Categories->get_category($data['username']);
-        }else{
-            $where = "error";
         }
+        // END CEK ADA KATEGORINYA NGGA
 
         if($source_data !== "null"){
             $where.=" AND source_data = '".$source_data."'";

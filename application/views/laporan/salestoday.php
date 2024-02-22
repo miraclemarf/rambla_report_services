@@ -27,9 +27,12 @@
                             data-x-placement="top-start" x-placement="bottom-start"
                             style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 35px, 0px);">
                             <h6 class="dropdown-header"></h6>
-                            <a class="dropdown-item" style="cursor:pointer" data="R001">Rambla Kelapa Gading</a>
+                            <?php foreach($site as $row) :?>
+                                <a class="dropdown-item" style="cursor:pointer" data="<?= $row->branch_id; ?>"><?= $row->branch_name; ?></a>
+                            <?php endforeach; ?>
+                            <!-- <a class="dropdown-item" style="cursor:pointer" data="R001">Rambla Kelapa Gading</a>
                             <a class="dropdown-item" style="cursor:pointer" data="R002">Rambla Bandung</a>
-                            <a class="dropdown-item" style="cursor:pointer" data="V001">Happy Harvest Bandung</a>
+                            <a class="dropdown-item" style="cursor:pointer" data="V001">Happy Harvest Bandung</a> -->
                             <div id="filter-store" class="d-none">
                                 <form action="<?= base_url(); ?>SalesToday" method="post">
                                     <input type="text" name="storeid" id="">
@@ -114,111 +117,52 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xl-6 grid-margin stretch-card">
+        <div class="col-xl-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Top 10 Sales by Brand</h4>
+                    <h4 class="card-title">Target Today</h4>
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>
-                                        #
+                                       
                                     </th>
                                     <th>
-                                        Brand Name
+                                        Total Trx
                                     </th>
                                     <th>
-                                        Trx
+                                        Total Qty
                                     </th>
                                     <th>
-                                        Qty
+                                        Sales Gross
                                     </th>
                                     <th>
-                                        Gross
-                                    </th>
-                                    <th>
-                                        Net
+                                        Sales Nett
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($resultBrand as $key => $trxBrand) { ?>
-                                    <tr>
-                                        <td><?= $key+1 ?></td>
-                                        <td>
-                                            <?= $trxBrand->brand_name ?>
-                                        </td>
-                                        <td>
-                                            <?= $trxBrand->tot_trx ?>
-                                        </td>
-                                        <td>
-                                            <?= $trxBrand->tot_qty ?>
-                                        </td>
-                                        <td>
-                                            <?= $trxBrand->gross ?>
-                                        </td>
-                                        <td>
-                                            <?= $trxBrand->net ?>
-                                        </td>
-                                    </tr>
-                                <?php } ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-6 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Top 10 Sales by Article</h4>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
                                 <tr>
-                                    <th>
-                                        #
-                                    </th>
-                                    <th>
-                                        Article Name
-                                    </th>
-                                    <th>
-                                        Trx
-                                    </th>
-                                    <th>
-                                        Qty
-                                    </th>
-                                    <th>
-                                        Gross
-                                    </th>
-                                    <th>
-                                        Net
-                                    </th>
+                                    <td><b>Sales Floor</b></td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($resultArticle as $key => $trxArticle) { ?>
-                                    <tr>
-                                        <td><?= $key+1 ?></td>
-                                        <td>
-                                            <?= $trxArticle->article_name ?>
-                                        </td>
-                                        <td>
-                                            <?= $trxArticle->tot_trx ?>
-                                        </td>
-                                        <td>
-                                            <?= $trxArticle->tot_qty ?>
-                                        </td>
-                                        <td>
-                                            <?= $trxArticle->gross ?>
-                                        </td>
-                                        <td>
-                                            <?= $trxArticle->net ?>
-                                        </td>
-                                    </tr>
-                                <?php } ?>
+                                <tr>
+                                    <td><b>Sales Lantai 1</b></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Sales Lantai 2</b></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Sales Deptstore</b></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Sales Supermarket</b></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Sales Bazaar</b></td>
+                                </tr>
                             </tbody>
+                            
                         </table>
                     </div>
                 </div>

@@ -23,172 +23,33 @@ class SalesToday extends My_Controller
         // die;
         $store = !$this->input->post('storeid') ? 'R001' : $this->input->post('storeid');
         $data['storeid']        =  $store;
+
+        $data['site'] = $this->db->query("SELECT a.branch_id, b.branch_name from m_user_site a
+        inner join m_branches b
+        on a.branch_id = b.branch_id
+        where a.flagactv ='1'
+        and username ='".$data['username']."'")->result();
+
+        if(!$data['site']){
+            echo "<script>
+            alert('Anda tidak punya akses site');
+            window.location.href='".base_url('Dashboard')."';
+            </script>";
+        }   
+
+        $store = !$this->input->post('storeid') ? $data['site'][0]->branch_id : $this->input->post('storeid');
+        $data['storeid']        =  $store;
+        
+
         $data['result'] = $this->M_Store->get_sales_today($store);
         $data['resultBrand'] = $this->M_Store->get_top10_brand($store);
-        $data['resultArticle'] = $this->M_Store->get_top10_article($store);
+        // $data['resultArticle'] = $this->M_Store->get_top10_article($store);
 
         $this->load->view('template_member/header', $data);
         $this->load->view('template_member/navbar', $data);
         $this->load->view('template_member/sidebar', $data);
         $this->load->view('laporan/salestoday', $data);
         $this->load->view('template_member/footer', $data);        
-        
     }
 
-    public function get_salesbyday(){
-        extract(populateform());
-        $data['username']       = $this->input->cookie('cookie_invent_user');
-
-        $where = "";
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $where.= "AND brand_code in (
-                select distinct brand from m_user_brand 
-                where username = '".$data['username']."'
-            )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
-            $where.= $this->M_Categories->get_category($data['username']);
-        }else{
-            $where.= "error";
-        }
-        $data['hasil']          = $this->Models->showdata("SELECT
-        date_format(periode, '%Y.%m.%d') AS periode,
-        SUM(tot_qty) AS tot_qty,
-        SUM(net) AS net
-        FROM r_sales
-        WHERE (date_format(periode, '%Y.%m') = date_format(current_date(),'%Y.%m')) 
-        $where
-        GROUP BY date_format(periode, '%Y.%m.%d')
-        ORDER BY date_format(periode, '%Y.%m.%d')");
-        echo json_encode($data);
-    }
-
-    public function get_salesbymonth(){
-        extract(populateform());
-        $data['username']       = $this->input->cookie('cookie_invent_user');
-
-        $where = "";
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $where.= "AND brand_code in (
-                select distinct brand from m_user_brand 
-                where username = '".$data['username']."'
-            )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
-            $where.= $this->M_Categories->get_category($data['username']);
-        }else{
-            $where.= "error";
-        }
-        $data['hasil']          = $this->Models->showdata("SELECT
-        date_format(periode, '%Y.%m') AS periode,
-        SUM(tot_qty) AS tot_qty,
-        SUM(net) AS net
-        FROM r_sales
-        WHERE date_format(periode, '%Y.%m.%d') between '2023.03.01' and date_format(current_date(),'%Y.%m.%d')
-        $where
-        GROUP BY date_format(periode, '%Y.%m')
-        ORDER BY date_format(periode, '%Y.%m')
-        ");
-        echo json_encode($data);
-
-    }
-
-    public function get_top10_rank(){
-        extract(populateform());
-        $data['username']       = $this->input->cookie('cookie_invent_user');
-        $where = "";
-
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
-            $where.= "AND brand_code in (
-                select distinct brand from m_user_brand 
-                where username = '".$data['username']."'
-            )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
-            $where.= $this->M_Categories->get_category($data['username']);
-        }else{
-            $where.= "error";
-        }
-
-        $data['hasil'] = $this->Models->showdata("SELECT * from (
-            select ROW_NUMBER() OVER (order by sum(net) desc) ranking1, date_format(periode , '%Y.%m') periode1, brand_name as brand_name1 , sum(tot_qty) tot_qty1, sum(net) tnet1
-            from r_sales 
-            where date_format(periode , '%Y.%m') = date_format(DATE_ADD(current_date(), INTERVAL -2 MONTH),'%Y.%m') 
-            $where
-            group by date_format(periode , '%Y.%m'), brand_name1
-            order by tnet1 desc
-            limit 10	
-        ) a inner join (
-            select ROW_NUMBER() OVER (order by sum(net) desc) ranking2, date_format(periode , '%Y.%m') periode2, brand_name as brand_name2, sum(tot_qty) tot_qty2, sum(net) tnet2
-            from r_sales 
-            where date_format(periode , '%Y.%m') = date_format(DATE_ADD(current_date(), INTERVAL -1 MONTH),'%Y.%m') 
-            $where
-            group by date_format(periode , '%Y.%m'), brand_name2
-            order by tnet2 desc
-            limit 10
-        ) b on a.ranking1 = b. ranking2 inner join (
-            select ROW_NUMBER() OVER (order by sum(net) desc) ranking3, date_format(periode , '%Y.%m') periode3, brand_name as brand_name3, sum(tot_qty) tot_qty3, sum(net) tnet3
-            from r_sales 
-            where date_format(periode , '%Y.%m') = date_format(DATE_ADD(current_date(), INTERVAL 0 MONTH),'%Y.%m') 
-            $where
-            group by date_format(periode , '%Y.%m'), brand_name3
-            order by tnet3 desc
-            limit 10
-        ) c on a.ranking1 = c.ranking3");
-        echo json_encode($data);
-    }
-
-
-    function fetch_data_omset()
-    {
-        extract(populateform());
-        $data['username']       = $this->input->cookie('cookie_invent_user');
-        $where = "";
-        $from = date('Y-m-01');
-        $to = date('Y-m-d');
-        
-        if(strlen($bulan) == '1'){
-            $bulan = '0'.$bulan;
-        }else{
-            $bulan;
-        }
-        if ($bulan || $tahun || $brand) {
-            $from   = $tahun.'-'.$bulan.'-'.'01';
-            if($bulan == date('m')){
-                $to     = $tahun.'-'.$bulan.'-'.date('d');
-            }else{
-                $to     = $this->db->query("SELECT LAST_DAY('".$from."') as last_day")->row();
-                $to     = $to->last_day; 
-            }
-            
-            if($brand == "all"){
-                $where = "and brand_code in 
-                (
-                select DISTINCT brand from m_user_brand
-                where username ='".$data['username']."'
-                )";
-            }else{
-                $where = "and brand_code ='".$brand."'";
-            }
-            if($fa == 0){
-                $where.= " and substring(trans_no, 9, 1) != '5'";
-            }else if($fa == 1){
-                $where.= " and substring(trans_no, 9, 1) = '5'";
-            }
-            $data = $this->db->query("SELECT IFNULL(net, 0) as net,aa.periode from (
-                SELECT DATE_ADD(DATE_ADD(DATE_ADD(LAST_DAY('".$from."'), INTERVAL 1 DAY), INTERVAL -1 MONTH), INTERVAL help_topic_id DAY) as periode
-                FROM mysql.help_topic order by help_topic_id asc limit 31
-            ) aa left join (
-                SELECT SUM(net) as net, date_format(periode,'%Y-%m-%d') as periode
-                from r_sales
-                WHERE MONTH(periode) ='".$bulan."' 
-                and YEAR(periode) ='".$tahun."' 
-                $where
-                GROUP BY periode
-                order by periode
-            ) bb on aa.periode = bb.periode    
-            where aa.periode between '".$from."' and '".$to."'")->result();
-        } else {
-            $data = array('Data Kosong');
-        }
-
-        echo json_encode($data);
-    }
 }

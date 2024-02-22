@@ -9,36 +9,8 @@
  
         function get_category($username)
         {
-            if($username == "TESSA"){
-                $data = "AND left(category_code,4) = 'RDKC'";
-                return $data;
-            }
-            if($username == "ADITYA"){
-                $data = "AND category_code in (select DISTINCT CATEGORY_CODE from m_kategori_list where SUB_DIVISION in 
-                (
-                'Pria',
-                'Wanita',
-                'Anak',
-                'Rumah tangga',
-                'Koper',
-                'Gaya Hidup Cute',
-                'Olah Raga',
-                'Bayi',
-                'Kecantikan'
-                )
-                )";
-                return $data;
-            }
-            if($username == "ROSITAH"){
-                $data = "AND left(category_code,4) in ('RDGH','RDWA','RDAN','RDBY')";
-                return $data;
-            }
-
-            if($username == "HERMIEN" or $username == "HENDRIK" or $username == "SENJAYA" or $username == "KIYATONO" or $username == "ARIF" or $username == "SYAHRONI" or $username == "TEGUH" or $username == "LENA"){
-                $data = "AND left(category_code,2) in ('RS')";
-                return $data;
-            }
-
+            $user = $this->db->query("SELECT * FROM m_user_category where username ='".$username."'")->row();
+            return $user->category;
         }
 
     }

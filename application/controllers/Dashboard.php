@@ -20,20 +20,19 @@ class Dashboard extends My_Controller
         $data['title']          = 'Rambla | Dashboard Page';
         $data['username']       = $this->input->cookie('cookie_invent_user');
 
-        // echo $this->M_Categories->get_category('tessa');
-        // die;
-
         $where = "";
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
+
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
+            $where.= $this->M_Categories->get_category($data['username']);
+        }else{
             $where.= "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
             )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
-            $where.= $this->M_Categories->get_category($data['username']);
-        }else{
-            $where.= "error";
         }
+        // END CEK ADA KATEGORINYA NGGA
 
         $data['year']           = $this->Models->showdata("SELECT DISTINCT YEAR(periode) as tahun from r_sales");
 
@@ -75,16 +74,27 @@ class Dashboard extends My_Controller
         $data['username']       = $this->input->cookie('cookie_invent_user');
 
         $where = "";
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
+        // if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02) or ($this->input->cookie('cookie_invent_tipe') == 13)){
+        //     $where.= "AND brand_code in (
+        //         select distinct brand from m_user_brand 
+        //         where username = '".$data['username']."'
+        //     )";
+        // }else if($this->input->cookie('cookie_invent_tipe') == 15){
+        //     $where.= $this->M_Categories->get_category($data['username']);
+        // }else{
+        //     $where.= "error";
+        // }
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
+            $where.= $this->M_Categories->get_category($data['username']);
+        }else{
             $where.= "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
             )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
-            $where.= $this->M_Categories->get_category($data['username']);
-        }else{
-            $where.= "error";
         }
+        // END CEK ADA KATEGORINYA NGGA
         $data['hasil']          = $this->Models->showdata("SELECT
         date_format(periode, '%Y.%m.%d') AS periode,
         SUM(tot_qty) AS tot_qty,
@@ -102,16 +112,28 @@ class Dashboard extends My_Controller
         $data['username']       = $this->input->cookie('cookie_invent_user');
 
         $where = "";
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
+        // if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02) or ($this->input->cookie('cookie_invent_tipe') == 13)){
+        //     $where.= "AND brand_code in (
+        //         select distinct brand from m_user_brand 
+        //         where username = '".$data['username']."'
+        //     )";
+        // }else if($this->input->cookie('cookie_invent_tipe') == 15){
+        //     $where.= $this->M_Categories->get_category($data['username']);
+        // }else{
+        //     $where.= "error";
+        // }
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
+            $where.= $this->M_Categories->get_category($data['username']);
+        }else{
             $where.= "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
             )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
-            $where.= $this->M_Categories->get_category($data['username']);
-        }else{
-            $where.= "error";
         }
+        // END CEK ADA KATEGORINYA NGGA
+
         $data['hasil']          = $this->Models->showdata("SELECT
         date_format(periode, '%Y.%m') AS periode,
         SUM(tot_qty) AS tot_qty,
@@ -131,16 +153,27 @@ class Dashboard extends My_Controller
         $data['username']       = $this->input->cookie('cookie_invent_user');
         $where = "";
 
-        if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02)){
+        // if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02) or ($this->input->cookie('cookie_invent_tipe') == 13)){
+        //     $where.= "AND brand_code in (
+        //         select distinct brand from m_user_brand 
+        //         where username = '".$data['username']."'
+        //     )";
+        // }else if($this->input->cookie('cookie_invent_tipe') == 15){
+        //     $where.= $this->M_Categories->get_category($data['username']);
+        // }else{
+        //     $where.= "error";
+        // }
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+        if($cek_user_category){
+            $where.= $this->M_Categories->get_category($data['username']);
+        }else{
             $where.= "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
             )";
-        }else if($this->input->cookie('cookie_invent_tipe') == 15){
-            $where.= $this->M_Categories->get_category($data['username']);
-        }else{
-            $where.= "error";
         }
+        // END CEK ADA KATEGORINYA NGGA
 
         $data['hasil'] = $this->Models->showdata("SELECT * from (
             select ROW_NUMBER() OVER (order by sum(net) desc) ranking1, date_format(periode , '%Y.%m') periode1, brand_name as brand_name1 , sum(tot_qty) tot_qty1, sum(net) tnet1
