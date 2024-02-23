@@ -129,49 +129,49 @@
                                        
                                     </th>
                                     <th>
-                                        Total Trx
+                                        <label class="badge badge-info"><h4 class="m-0">Total Trx</h4></label>
                                     </th>
                                     <th>
-                                        Total Qty
+                                        <label class="badge badge-primary"><h4 class="m-0">Total Qty</h4></label>
                                     </th>
                                     <th>
-                                        Sales Gross
+                                        <label class="badge badge-success"><h4 class="m-0">Sales Gross</h4></label>
                                     </th>
                                     <th>
-                                        Sales Nett
+                                        <label class="badge badge-warning" style="color: #fff"><h4 class="m-0">Sales Nett</h4></label>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><b>Sales Floor</b></td>
-                                    <td><?= $sales_allfl[0]->tot_trx ?> trx</td>
-                                    <td><?= $sales_allfl[0]->tot_qty ?> pcs</td>
-                                    <td>Rp <?= $sales_allfl[0]->gross ?></td>
-                                    <td>Rp <?= $sales_allfl[0]->net ?></td>
+                                    <td style="padding:20px;"><h4 class="m-0"><b><nobr>Sales Floor</nobr></b></h4></td>
+                                    <td><h4 class="m-0"><?= $sales_allfl[0]->tot_trx ?> trx</h4></td>
+                                    <td><h4 class="m-0"><?= $sales_allfl[0]->tot_qty ?> pcs</h4></td>
+                                    <td><nobr><h4 class="m-0">Rp <?= $sales_allfl[0]->gross ?></h4></nobr></td>
+                                    <td><nobr><h4 class="m-0">Rp <?= $sales_allfl[0]->net ?></h4></nobr></td>
                                 </tr>
                                 <tr>
-                                    <td><b>Sales Lantai 1</b></td>
-                                    <td><?= $sales_fl1[0]->tot_trx ?> trx</td>
-                                    <td><?= $sales_fl1[0]->tot_qty ?> pcs</td>
-                                    <td>Rp <?= $sales_fl1[0]->gross ?></td>
-                                    <td>Rp <?= $sales_fl1[0]->net ?></td>
+                                    <td style="padding:20px;"><h4 class="m-0"><b><nobr>Sales Lantai 1</nobr></b></h4></td>
+                                    <td><h4 class="m-0"><?= $sales_fl1[0]->tot_trx ?> trx</h4></td>
+                                    <td><h4 class="m-0"><?= $sales_fl1[0]->tot_qty ?> pcs</h4></td>
+                                    <td><nobr><h4 class="m-0">Rp <?= $sales_fl1[0]->gross ?></h4></nobr></td>
+                                    <td><nobr><h4 class="m-0">Rp <?= $sales_fl1[0]->net ?></h4></nobr></td>
                                 </tr>
                                 <tr>
-                                    <td><b>Sales Lantai 2</b></td>
-                                    <td><?= $sales_fl2[0]->tot_trx ?> trx</td>
-                                    <td><?= $sales_fl2[0]->tot_qty ?> pcs</td>
-                                    <td>Rp <?= $sales_fl2[0]->gross ?></td>
-                                    <td>Rp <?= $sales_fl2[0]->net ?></td>
+                                    <td style="padding:20px;"><h4 class="m-0"><b><nobr>Sales Lantai 2</nobr></b></h4></td>
+                                    <td><h4 class="m-0"><?= $sales_fl2[0]->tot_trx ?> trx</h4></td>
+                                    <td><h4 class="m-0"><?= $sales_fl2[0]->tot_qty ?> pcs</h4></td>
+                                    <td><nobr><h4 class="m-0">Rp <?= $sales_fl2[0]->gross ?></h4></nobr></td>
+                                    <td><nobr><h4 class="m-0">Rp <?= $sales_fl2[0]->net ?></h4></nobr></td>
                                 </tr>
                                 <tr>
-                                    <td><b>Sales Deptstore</b></td>
+                                    <td style="padding:20px;"><h4 class="m-0"><b><nobr>Sales Deptstore</nobr></b></h4></td>
                                 </tr>
                                 <tr>
-                                    <td><b>Sales Supermarket</b></td>
+                                    <td style="padding:20px;"><h4 class="m-0"><b><nobr>Sales Supermarket</nobr></b></h4></td>
                                 </tr>
                                 <tr>
-                                    <td><b>Sales Bazaar</b></td>
+                                    <td style="padding:20px;"><h4 class="m-0"><b><nobr>Sales Bazaar</nobr></b></h4></td>
                                 </tr>
                             </tbody>
                             
