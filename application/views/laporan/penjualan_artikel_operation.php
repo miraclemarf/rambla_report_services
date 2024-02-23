@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                    <table class="table table-striped table-custom" id="tb_penjualanartikel_list">
+                    <table class="table table-striped table-custom d-none" id="tb_penjualanartikel_list">
                         <thead class="table-rambla">
                             <tr>
                             <th>#</th>
@@ -196,7 +196,8 @@
         //   });
         // }
 
-        function load_data_penjualanartikel(params1, params2, params3){
+        function load_data_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8,params9){
+            $('#tb_penjualanartikel_list').removeClass('d-none');
             tabel = $('#tb_penjualanartikel_list').DataTable({
                 "processing": true,
                 "responsive":true,
