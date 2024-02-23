@@ -122,7 +122,7 @@
                 <div class="card-body">
                     <h4 class="card-title">Target Today</h4>
                     <div class="table-responsive">
-                        <table class="table table-striped">
+                        <table class="table table-striped" >
                             <thead>
                                 <tr>
                                     <th>
@@ -145,12 +145,24 @@
                             <tbody>
                                 <tr>
                                     <td><b>Sales Floor</b></td>
+                                    <td><?= $sales_allfl[0]->tot_trx ?> trx</td>
+                                    <td><?= $sales_allfl[0]->tot_qty ?> pcs</td>
+                                    <td>Rp <?= $sales_allfl[0]->gross ?></td>
+                                    <td>Rp <?= $sales_allfl[0]->net ?></td>
                                 </tr>
                                 <tr>
                                     <td><b>Sales Lantai 1</b></td>
+                                    <td><?= $sales_fl1[0]->tot_trx ?> trx</td>
+                                    <td><?= $sales_fl1[0]->tot_qty ?> pcs</td>
+                                    <td>Rp <?= $sales_fl1[0]->gross ?></td>
+                                    <td>Rp <?= $sales_fl1[0]->net ?></td>
                                 </tr>
                                 <tr>
                                     <td><b>Sales Lantai 2</b></td>
+                                    <td><?= $sales_fl2[0]->tot_trx ?> trx</td>
+                                    <td><?= $sales_fl2[0]->tot_qty ?> pcs</td>
+                                    <td>Rp <?= $sales_fl2[0]->gross ?></td>
+                                    <td>Rp <?= $sales_fl2[0]->net ?></td>
                                 </tr>
                                 <tr>
                                     <td><b>Sales Deptstore</b></td>

@@ -42,8 +42,20 @@ class SalesToday extends My_Controller
         
 
         $data['result'] = $this->M_Store->get_sales_today($store);
-        $data['resultBrand'] = $this->M_Store->get_top10_brand($store);
+
+        
         // $data['resultArticle'] = $this->M_Store->get_top10_article($store);
+
+        if($store == "R001"){
+            $data['sales_allfl'] = $this->M_Store->get_sales_today_all($store,'ALLFL');
+            $data['sales_fl1'] = $this->M_Store->get_sales_today_all($store,'FL1');
+            $data['sales_fl2'] = $this->M_Store->get_sales_today_all($store,'FL2');
+        }else if($store == "R002"){
+
+        }else if($store == "V001"){
+
+        }
+ 
 
         $this->load->view('template_member/header', $data);
         $this->load->view('template_member/navbar', $data);
