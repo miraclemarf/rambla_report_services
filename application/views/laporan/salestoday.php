@@ -144,7 +144,7 @@
                             <tbody>
                                 <?php if(isset($sales_allfl)): ?>
                                 <tr>
-                                    <td style="padding:20px;"><h4 class="m-0 text-secondary"><b><nobr>Sales Floor</nobr></b></h4></td>
+                                    <td style="padding:20px;"><label class="badge badge-light"><h4 class="m-0"><b><nobr>Sales Floor</nobr></b></h4></label></td>
                                     <td><h4 class="m-0"><?= $sales_allfl[0]->tot_trx ?> trx</h4></td>
                                     <td><h4 class="m-0"><?= $sales_allfl[0]->tot_qty ?> pcs</h4></td>
                                     <td><nobr><h4 class="m-0">Rp <?= $sales_allfl[0]->gross ?></h4></nobr></td>
@@ -153,7 +153,7 @@
                                 <?php endif; ?>
                                 <?php if(isset($sales_gf)): ?>
                                 <tr>
-                                    <td style="padding:20px;"><h4 class="m-0 text-secondary"><b><nobr>Sales Ground Floor</nobr></b></h4></td>
+                                    <td style="padding:20px;"><label class="badge badge-light"><h4 class="m-0"><b><nobr>Sales Ground Floor</nobr></b></h4></label></td>
                                     <td><h4 class="m-0"><?= $sales_gf[0]->tot_trx ?> trx</h4></td>
                                     <td><h4 class="m-0"><?= $sales_gf[0]->tot_qty ?> pcs</h4></td>
                                     <td><nobr><h4 class="m-0">Rp <?= $sales_gf[0]->gross ?></h4></nobr></td>
@@ -162,7 +162,7 @@
                                 <?php endif; ?>
                                 <?php if(isset($sales_fl1)): ?>
                                 <tr>
-                                    <td style="padding:20px;"><h4 class="m-0 text-secondary"><b><nobr>Sales Lantai 1</nobr></b></h4></td>
+                                    <td style="padding:20px;"><label class="badge badge-light"><h4 class="m-0"><b><nobr>Sales Lantai 1</nobr></b></h4></label></td>
                                     <td><h4 class="m-0"><?= $sales_fl1[0]->tot_trx ?> trx</h4></td>
                                     <td><h4 class="m-0"><?= $sales_fl1[0]->tot_qty ?> pcs</h4></td>
                                     <td><nobr><h4 class="m-0">Rp <?= $sales_fl1[0]->gross ?></h4></nobr></td>
@@ -171,7 +171,7 @@
                                 <?php endif; ?>
                                 <?php if(isset($sales_fl2)): ?>
                                 <tr>
-                                    <td style="padding:20px;"><h4 class="m-0 text-secondary"><b><nobr>Sales Lantai 2</nobr></b></h4></td>
+                                    <td style="padding:20px;"><label class="badge badge-light"><h4 class="m-0"><b><nobr>Sales Lantai 2</nobr></b></h4></label></td>
                                     <td><h4 class="m-0"><?= $sales_fl2[0]->tot_trx ?> trx</h4></td>
                                     <td><h4 class="m-0"><?= $sales_fl2[0]->tot_qty ?> pcs</h4></td>
                                     <td><nobr><h4 class="m-0">Rp <?= $sales_fl2[0]->gross ?></h4></nobr></td>
@@ -180,7 +180,7 @@
                                 <?php endif; ?>
                                 <?php if(isset($sales_rd)): ?>
                                 <tr>
-                                    <td style="padding:20px;"><h4 class="m-0 text-secondary"><b><nobr>Sales Deptstore</nobr></b></h4></td>
+                                    <td style="padding:20px;"><label class="badge badge-light"><h4 class="m-0 "><b><nobr>Sales Deptstore</nobr></b></h4></label></td>
                                     <td><h4 class="m-0"><?= $sales_rd[0]->tot_trx ?> trx</h4></td>
                                     <td><h4 class="m-0"><?= $sales_rd[0]->tot_qty ?> pcs</h4></td>
                                     <td><nobr><h4 class="m-0">Rp <?= $sales_rd[0]->gross ?></h4></nobr></td>
@@ -189,7 +189,7 @@
                                 <?php endif; ?>
                                 <?php if(isset($sales_rs)): ?>
                                 <tr>
-                                    <td style="padding:20px;"><h4 class="m-0 text-secondary"><b><nobr>Sales Supermarket</nobr></b></h4></td>
+                                    <td style="padding:20px;"><label class="badge badge-light"><h4 class="m-0 "><b><nobr>Sales Supermarket</nobr></b></h4></label></td>
                                     <td><h4 class="m-0"><?= $sales_rs[0]->tot_trx ?> trx</h4></td>
                                     <td><h4 class="m-0"><?= $sales_rs[0]->tot_qty ?> pcs</h4></td>
                                     <td><nobr><h4 class="m-0">Rp <?= $sales_rs[0]->gross ?></h4></nobr></td>
@@ -198,7 +198,7 @@
                                 <?php endif; ?>
                                 <?php if(isset($sales_bazaar)): ?>
                                 <tr>
-                                    <td style="padding:20px;"><h4 class="m-0 text-secondary"><b><nobr>Sales Bazaar</nobr></b></h4></td>
+                                    <td style="padding:20px;"><label class="badge badge-light"><h4 class="m-0 "><b><nobr>Sales Bazaar</nobr></b></h4></label></td>
                                     <td><h4 class="m-0"><?= $sales_bazaar[0]->tot_trx ?> trx</h4></td>
                                     <td><h4 class="m-0"><?= $sales_bazaar[0]->tot_qty ?> pcs</h4></td>
                                     <td><nobr><h4 class="m-0">Rp <?= $sales_bazaar[0]->gross ?></h4></nobr></td>
