@@ -41,7 +41,7 @@ class SalesToday extends My_Controller
         $data['storeid']        =  $store;
         
 
-        $data['result'] = $this->M_Store->get_sales_today($store);
+        $data['result'] = $this->M_Store->get_sales_today_all($store,null);
 
         
         // $data['resultArticle'] = $this->M_Store->get_top10_article($store);
