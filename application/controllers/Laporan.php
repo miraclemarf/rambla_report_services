@@ -210,7 +210,7 @@ class Laporan extends My_Controller
             )";
         }
         // END CEK ADA KATEGORINYA NGGA
-        if($params1 || $params2 || $params3 || $params4 || $params5 || $params6){
+        if($params1 || $params2 || $params3 || $params4 || $params5 || $params6 || $params7){
             if($params1){
                 $filter1 = " AND brand_code = '".$params1."'";
                 $filter.= $filter1;
@@ -234,6 +234,14 @@ class Laporan extends My_Controller
             if($params6){
                 $filter6 = " AND branch_id = '".$params6."'";
                 $filter.=$filter6;
+            }
+            if($params7){
+                if($params7 == "pcs"){
+                    $filter7 = " AND tag_5 in ('TIMBANG') is not true";
+                }else{
+                    $filter7 = " AND tag_5 in ('TIMBANG')";
+                }
+                $filter.=$filter7;
             }
             $isWhere = $filter;
         }else{
@@ -364,7 +372,7 @@ class Laporan extends My_Controller
         echo $this->M_Datatables->get_tables_where($tables,$search,$where,$isWhere);
     }
 
-    function export_excel_stock($brand_code, $division, $sub_division, $dept, $sub_dept, $store)
+    function export_excel_stock($brand_code, $division, $sub_division, $dept, $sub_dept, $store, $art_type)
 	{
         /* Data */
         $data['username']      = $this->input->cookie('cookie_invent_user');
@@ -408,6 +416,14 @@ class Laporan extends My_Controller
 
         if($store !== "null"){
             $where.=" AND branch_id = '".$store."'";
+        }
+
+        if($art_type !== "null"){
+            if($art_type == "pcs"){
+                $where.=" AND tag_5 in ('TIMBANG') is not true";
+            }else{
+                $where.=" AND tag_5 in ('TIMBANG')";
+            }
         }
 
         $data         = $this->db->query("SELECT * FROM r_s_item_stok WHERE 1=1 $where")->result_array();
@@ -1038,7 +1054,7 @@ class Laporan extends My_Controller
         $writer->save('php://output');
     }
 
-    function export_csv_stock($brand_code, $division, $sub_division, $dept, $sub_dept, $store){
+    function export_csv_stock($brand_code, $division, $sub_division, $dept, $sub_dept, $store, $art_type){
         $filename = 'stock_report.csv';
 
         $division       = str_replace("%20"," ",$division);
@@ -1086,6 +1102,14 @@ class Laporan extends My_Controller
 
         if($store !== "null"){
             $where.=" AND branch_id = '".$store."'";
+        }
+
+        if($art_type !== "null"){
+            if($art_type == "pcs"){
+                $where.=" AND tag_5 in ('TIMBANG') is not true";
+            }else{
+                $where.=" AND tag_5 in ('TIMBANG')";
+            }
         }
 
         $data   = $this->db->query("SELECT branch_id,periode,barcode, article_code, article_name,varian_option1,varian_option2, vendor_code, vendor_name, brand_code,brand_name,DIVISION,SUB_DIVISION,DEPT,SUB_DEPT,last_stock FROM r_s_item_stok where 1=1 $where")->result_array();

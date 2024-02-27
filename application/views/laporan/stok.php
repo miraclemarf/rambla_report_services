@@ -6,7 +6,11 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex flex-wrap justify-content-between mb-3">
-                        <h4 class="card-title mb-3">Laporan Stock (Pcs)</h4>
+                        <div>
+                            <h4 class="card-title mb-0">Laporan Stock</h4>
+                            <p class="text-muted mb-0">Data Per : <?=
+                            date("l, d F Y",strtotime("-1 days")) ?></p>
+                        </div>
                         <div class="align-self-end">
                             <button type="button" class="btn btn-success btn-sm btn-icon-text btn-export-stock ml-2" style="float:right">
                             <i class="typcn typcn-download btn-icon-prepend"></i>                                                    
@@ -65,16 +69,19 @@
         var dept            = null;
         var sub_dept        = null;
         var store           = null;
+        var art_type        = null;
         var params1         = null;
         var params2         = null;
         var params3         = null;
         var params4         = null;
         var params5         = null;
         var params6         = null;
+        var params7         = null;
         var format          = null;
 
-        load_data_stock(params1,params2,params3,params4,params5,params6);
+        //load_data_stock(params1,params2,params3,params4,params5,params6, params7);
 
+        $('#modal-filter-stock').modal('show');
 
         $('.btn-export-stock').on("click", function(){
             $('#modal-export-stock').modal('show');
@@ -98,20 +105,26 @@
 
         $('.btn-export').on("click", function(){
             if(format == "csv"){
-                window.location.href = "<?= base_url('Laporan/export_csv_stock/'); ?>"+params1+'/'+params2+'/'+params3+'/'+params4+'/'+params5+'/'+params6;
+                window.location.href = "<?= base_url('Laporan/export_csv_stock/'); ?>"+params1+'/'+params2+'/'+params3+'/'+params4+'/'+params5+'/'+params6+'/'+params7;
             }else if(format == "xls"){
-                window.location.href = "<?= base_url('Laporan/export_excel_stock/'); ?>"+params1+'/'+params2+'/'+params3+'/'+params4+'/'+params5+'/'+params6;
+                window.location.href = "<?= base_url('Laporan/export_excel_stock/'); ?>"+params1+'/'+params2+'/'+params3+'/'+params4+'/'+params5+'/'+params6+'/'+params7;
             }
         });
 
 
         $('.btn-submit-filter').on("click", function(){
+            if (store === ''|| store == null){
+                alert('Harap Pilih Store Dahulu')
+                return false;
+            }
+
             params1 = brand_code;
             params2 = division;
             params3 = sub_division;
             params4 = dept;
             params5 = sub_dept;
             params6 = store;
+            params7 = art_type;
 
             if (params1 === "") {
                 params1 = null;
@@ -131,11 +144,14 @@
             if (params6 === "") {
                 params6 = null;
             }
+            if (params7 === "") {
+                params7 = null;
+            }
 
-            load_data_stock(params1,params2,params3,params4,params5,params6);
+            load_data_stock(params1,params2,params3,params4,params5,params6,params7);
         });
 
-        function load_data_stock(params1,params2,params3,params4,params5,params6){
+        function load_data_stock(params1,params2,params3,params4,params5,params6,params7){
             tabel = $('#tb_stock_list').DataTable({
                 "processing": true,
                 "responsive":true,
@@ -147,7 +163,7 @@
                 {
                     "url": "<?= base_url('Laporan/stock_where');?>", // URL file untuk proses select datanya
                     "type": "POST",
-                    "data":  { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6 }, 
+                    "data":  { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6,"params7": params7 }, 
                 },
                 "deferRender": true,
                 "aLengthMenu": [[10, 25, 50],[ 10, 25, 50]], // Combobox Limit
@@ -454,6 +470,13 @@
             sub_dept = this.value;
         });
         // END SUB DEPT
+
+        // START ARTICLE TYPE
+        $('.list_article_type').on('change', function (e) {
+            art_type = this.value;
+            console.log(art_type);
+        })
+        // END ARTICLE TYPE
     });
 </script>
 
