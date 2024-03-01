@@ -116,7 +116,7 @@ class Laporan extends My_Controller
 
         $tables     = "r_sales";
 
-        $search     = array('branch_id','periode','barcode','brand_code','brand_name','article_name','varian_option1','varian_option2','price','tot_qty','disc_pct','total_disc_amt','total_moredisc_amt','moredisc_pct','margin','gross_after_margin','gross','net','source_data','trans_no');
+        $search     = array('branch_id','periode','barcode','brand_code','brand_name','article_name','varian_option1','varian_option2','price','tot_qty','disc_pct','total_disc_amt','total_moredisc_amt','moredisc_pct','margin','gross_after_margin','gross','source_data','trans_no','no_ref');
 
         $data['username']       = $this->input->cookie('cookie_invent_user');
         // $vendor_code    = $this->input->post('vendor_code');
@@ -848,11 +848,12 @@ class Laporan extends My_Controller
         $sheet->setCellValue('AA1', 'Margin');
         $sheet->setCellValue('AB1', 'Gross After Margin');
         $sheet->setCellValue('AC1', 'Gross(Rp)');
-        $sheet->setCellValue('AD1', 'Net(Rp)');
-        $sheet->setCellValue('AE1', 'Area Transaksi');
-        $sheet->setCellValue('AF1', 'Source Data');
-        $sheet->setCellValue('AG1', 'Trans No'); 
-        $sheet->setCellValue('AH1', 'No Ref'); 
+        $sheet->setCellValue('AD1', 'Net Before(Rp)');
+        $sheet->setCellValue('AE1', 'Net After(Rp)');
+        $sheet->setCellValue('AF1', 'Area Transaksi');
+        $sheet->setCellValue('AG1', 'Source Data');
+        $sheet->setCellValue('AH1', 'Trans No'); 
+        $sheet->setCellValue('AI1', 'No Ref'); 
         
         /* Excel Data */
         $row_number = 2;
@@ -888,14 +889,15 @@ class Laporan extends My_Controller
             $sheet->setCellValue('AA'.$row_number, $row['margin']);
             $sheet->setCellValue('AB'.$row_number, $row['gross_after_margin']);
             $sheet->setCellValue('AC'.$row_number, $row['gross']);
-            $sheet->setCellValue('AD'.$row_number, $row['net']);
+            $sheet->setCellValue('AD'.$row_number, $row['net_bf']);
+            $sheet->setCellValue('AE'.$row_number, $row['net_af']);
             if(substr($row['trans_no'], 8,1) != '5'){
                 $data_areatrx = substr($row['trans_no'], 8,1) == '3' ? 'BAZZAR' : 'FLOOR';
             }
-            $sheet->setCellValue('AE'.$row_number, $data_areatrx);
-            $sheet->setCellValue('AF'.$row_number, $row['source_data']);
-            $sheet->setCellValue('AG'.$row_number, $row['trans_no']);
-            $sheet->setCellValue('AH'.$row_number, $row['no_ref']);
+            $sheet->setCellValue('AF'.$row_number, $data_areatrx);
+            $sheet->setCellValue('AG'.$row_number, $row['source_data']);
+            $sheet->setCellValue('AH'.$row_number, $row['trans_no']);
+            $sheet->setCellValue('AI'.$row_number, $row['no_ref']);
             $row_number++;
         }
 
@@ -999,13 +1001,16 @@ class Laporan extends My_Controller
         $sheet->setCellValue('Y1', 'Disc. Tambahan(Rp)');
         $sheet->setCellValue('Z1', 'Disc. Tambahan(%)');
         $sheet->setCellValue('AA1', 'Gross(Rp)');
-        $sheet->setCellValue('AB1', 'Net(Rp)');
-        $sheet->setCellValue('AC1', 'Source Data');
-        $sheet->setCellValue('AD1', 'Trans No'); 
-        $sheet->setCellValue('AE1', 'No Ref'); 
+        $sheet->setCellValue('AB1', 'Net Before(Rp)');
+        $sheet->setCellValue('AC1', 'Net After(Rp)');
+        $sheet->setCellValue('AD1', 'Area Transaksi');
+        $sheet->setCellValue('AE1', 'Source Data');
+        $sheet->setCellValue('AF1', 'Trans No'); 
+        $sheet->setCellValue('AG1', 'No Ref'); 
         
         /* Excel Data */
         $row_number = 2;
+        $data_areatrx = '';
         foreach($data as $key => $row)
         {
             $sheet->setCellValue('A'.$row_number, $key+1);
@@ -1035,10 +1040,15 @@ class Laporan extends My_Controller
             $sheet->setCellValue('Y'.$row_number, $row['total_moredisc_amt']);
             $sheet->setCellValue('Z'.$row_number, $row['moredisc_pct']);
             $sheet->setCellValue('AA'.$row_number, $row['gross']);
-            $sheet->setCellValue('AB'.$row_number, $row['net']);
-            $sheet->setCellValue('AC'.$row_number, $row['source_data']);
-            $sheet->setCellValue('AD'.$row_number, $row['trans_no']);
-            $sheet->setCellValue('AE'.$row_number, $row['no_ref']);
+            $sheet->setCellValue('AB'.$row_number, $row['net_bf']);
+            $sheet->setCellValue('AC'.$row_number, $row['net_af']);
+            if(substr($row['trans_no'], 8,1) != '5'){
+                $data_areatrx = substr($row['trans_no'], 8,1) == '3' ? 'BAZZAR' : 'FLOOR';
+            }
+            $sheet->setCellValue('AD'.$row_number, $data_areatrx);
+            $sheet->setCellValue('AE'.$row_number, $row['source_data']);
+            $sheet->setCellValue('AF'.$row_number, $row['trans_no']);
+            $sheet->setCellValue('AG'.$row_number, $row['no_ref']);
             $row_number++;
         }
 
@@ -1341,10 +1351,10 @@ class Laporan extends My_Controller
             $where.= " AND DATE_FORMAT(periode,'%Y-%m-%d') BETWEEN '".$fromdate."' and '".$todate."'";
         }
 
-        $data   = $this->db->query("SELECT branch_id, SUBSTRING(periode, 1, 10) as periode,SUBSTRING(periode, 6, 2) as bulan, DIVISION,SUB_DIVISION,tag_5,category_code,DEPT,SUB_DEPT,article_code,barcode,brand_code,brand_name,article_name,varian_option1,varian_option2,price,vendor_code,vendor_name, tot_qty,tot_berat, disc_pct,total_disc_amt,total_moredisc_amt,moredisc_pct,margin,gross_after_margin,gross,net,trans_no as areatrx,source_data,trans_no, no_ref FROM r_sales where 1=1 $where order by periode")->result_array();
+        $data   = $this->db->query("SELECT branch_id, SUBSTRING(periode, 1, 10) as periode,SUBSTRING(periode, 6, 2) as bulan, DIVISION,SUB_DIVISION,tag_5,category_code,DEPT,SUB_DEPT,article_code,barcode,brand_code,brand_name,article_name,varian_option1,varian_option2,price,vendor_code,vendor_name, tot_qty,tot_berat, disc_pct,total_disc_amt,total_moredisc_amt,moredisc_pct,margin,gross_after_margin,gross,net_bf,net_af,trans_no as areatrx,source_data,trans_no, no_ref FROM r_sales where 1=1 $where order by periode")->result_array();
         $file   = fopen('php://output','w');
 
-        $header = array('Store','Periode','Bulan','DIVISION','SUB DIVISION','Tipe Artikel','Kode Kategori','DEPT','SUB DEPT','Article Code','Barcode','Kode Brand','Nama Brand','Nama Produk','Varian Option1','Varian Option2','Harga','Kode Vendor','Nama Vendor','Total Qty(Pcs)','Total Berat(Kg)','Disc(%)','Total Disc','Disc. Tambahan(Rp)','Disc. Tambahan(%)','Margin','Gross After Margin','Gross(Rp)','Net(Rp)','Area Transaksi','Source Data','Trans No','No Ref');
+        $header = array('Store','Periode','Bulan','DIVISION','SUB DIVISION','Tipe Artikel','Kode Kategori','DEPT','SUB DEPT','Article Code','Barcode','Kode Brand','Nama Brand','Nama Produk','Varian Option1','Varian Option2','Harga','Kode Vendor','Nama Vendor','Total Qty(Pcs)','Total Berat(Kg)','Disc(%)','Total Disc','Disc. Tambahan(Rp)','Disc. Tambahan(%)','Margin','Gross After Margin','Gross(Rp)','Net Before(Rp)','Net After(Rp)','Area Transaksi','Source Data','Trans No','No Ref');
 
         fputcsv($file,$header);
 
@@ -1421,15 +1431,20 @@ class Laporan extends My_Controller
             $where.= " AND DATE_FORMAT(periode,'%Y-%m-%d') BETWEEN '".$fromdate."' and '".$todate."'";
         }
 
-
-        $data   = $this->db->query("SELECT branch_id,SUBSTRING(periode, 1, 10) as periode ,SUBSTRING(periode, 6, 2) as bulan, DIVISION,SUB_DIVISION,tag_5,category_code,DEPT,SUB_DEPT,article_code,barcode,brand_code,brand_name,article_name,varian_option1,varian_option2,price,vendor_code,vendor_name, tot_qty,tot_berat,disc_pct,total_disc_amt,total_moredisc_amt,moredisc_pct,gross,net,source_data,trans_no, no_ref FROM r_sales where 1=1 $where order by periode")->result_array();
+        $data   = $this->db->query("SELECT branch_id, SUBSTRING(periode, 1, 10) as periode,SUBSTRING(periode, 6, 2) as bulan, DIVISION,SUB_DIVISION,tag_5,category_code,DEPT,SUB_DEPT,article_code,barcode,brand_code,brand_name,article_name,varian_option1,varian_option2,price,vendor_code,vendor_name, tot_qty,tot_berat, disc_pct,total_disc_amt,total_moredisc_amt,moredisc_pct,margin,gross_after_margin,gross,net_bf,net_af,trans_no as areatrx,source_data,trans_no, no_ref FROM r_sales where 1=1 $where order by periode")->result_array();
         $file   = fopen('php://output','w');
 
-        $header = array('Store','Periode','Bulan','DIVISION','SUB DIVISION','Tipe Artikel','Kode Kategori','DEPT','SUB DEPT','Article Code','Barcode','Kode Brand','Nama Brand','Nama Produk','Varian Option1','Varian Option2','Harga','Kode Vendor','Nama Vendor','Total Qty(Pcs)','Total Berat(Kg)','Disc(%)','Total Disc','Disc. Tambahan(Rp)','Disc. Tambahan(%)','Gross(Rp)','Net(Rp)','Source Data','Trans No','No Ref');
+        $header = array('Store','Periode','Bulan','DIVISION','SUB DIVISION','Tipe Artikel','Kode Kategori','DEPT','SUB DEPT','Article Code','Barcode','Kode Brand','Nama Brand','Nama Produk','Varian Option1','Varian Option2','Harga','Kode Vendor','Nama Vendor','Total Qty(Pcs)','Total Berat(Kg)','Disc(%)','Total Disc','Disc. Tambahan(Rp)','Disc. Tambahan(%)','Margin','Gross After Margin','Gross(Rp)','Net Before(Rp)','Net After(Rp)','Area Transaksi','Source Data','Trans No','No Ref');
 
         fputcsv($file,$header);
 
         foreach($data as $key => $value){
+            if(substr($value['areatrx'], 8,1) != '5'){
+                $value['areatrx']= substr($value['areatrx'], 8,1) == '3' ? 'BAZZAR' : 'FLOOR';
+            }
+            else{
+                $value['areatrx'] = '';
+            }
             fputcsv($file, $value);
         }
         fclose($file);

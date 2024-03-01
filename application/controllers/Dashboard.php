@@ -44,7 +44,7 @@ class Dashboard extends My_Controller
         $data['omset_date']      = $this->Models->showdata("SELECT * from r_sales
         WHERE MONTH(periode) ='".date('m')."' and YEAR(periode) ='".date('Y')."' $where  GROUP BY periode order by periode");
 
-        $data['omset_pos']      = $this->Models->showdata("SELECT SUM(net) as net, date_format(periode,'%Y-%m-%d') as periode
+        $data['omset_pos']      = $this->Models->showdata("SELECT SUM(net_af) as net, date_format(periode,'%Y-%m-%d') as periode
         from r_sales
         WHERE MONTH(periode) ='".date('m')."' 
         and YEAR(periode) ='".date('Y')."' 
@@ -53,7 +53,7 @@ class Dashboard extends My_Controller
         GROUP BY periode
         order by periode");
 
-        $data['omset_apps']      = $this->Models->showdata("SELECT SUM(net) as net, date_format(periode,'%Y-%m-%d') as periode
+        $data['omset_apps']      = $this->Models->showdata("SELECT SUM(net_af) as net, date_format(periode,'%Y-%m-%d') as periode
         from r_sales
         WHERE MONTH(periode) ='".date('m')."' 
         and YEAR(periode) ='".date('Y')."' 
@@ -98,7 +98,7 @@ class Dashboard extends My_Controller
         $data['hasil']          = $this->Models->showdata("SELECT
         date_format(periode, '%Y.%m.%d') AS periode,
         SUM(tot_qty) AS tot_qty,
-        SUM(net) AS net
+        SUM(net_af) AS net
         FROM r_sales
         WHERE (date_format(periode, '%Y.%m') = date_format(current_date(),'%Y.%m')) 
         $where
@@ -137,7 +137,7 @@ class Dashboard extends My_Controller
         $data['hasil']          = $this->Models->showdata("SELECT
         date_format(periode, '%Y.%m') AS periode,
         SUM(tot_qty) AS tot_qty,
-        SUM(net) AS net
+        SUM(net_af) AS net
         FROM r_sales
         WHERE date_format(periode, '%Y.%m.%d') between '2023.03.01' and date_format(current_date(),'%Y.%m.%d')
         $where
@@ -176,7 +176,7 @@ class Dashboard extends My_Controller
         // END CEK ADA KATEGORINYA NGGA
 
         $data['hasil'] = $this->Models->showdata("SELECT * from (
-            select ROW_NUMBER() OVER (order by sum(net) desc) ranking1, date_format(periode , '%Y.%m') periode1, brand_name as brand_name1 , sum(tot_qty) tot_qty1, sum(net) tnet1
+            select ROW_NUMBER() OVER (order by sum(net_af) desc) ranking1, date_format(periode , '%Y.%m') periode1, brand_name as brand_name1 , sum(tot_qty) tot_qty1, sum(net_af) tnet1
             from r_sales 
             where date_format(periode , '%Y.%m') = date_format(DATE_ADD(current_date(), INTERVAL -2 MONTH),'%Y.%m') 
             $where
@@ -184,7 +184,7 @@ class Dashboard extends My_Controller
             order by tnet1 desc
             limit 10	
         ) a inner join (
-            select ROW_NUMBER() OVER (order by sum(net) desc) ranking2, date_format(periode , '%Y.%m') periode2, brand_name as brand_name2, sum(tot_qty) tot_qty2, sum(net) tnet2
+            select ROW_NUMBER() OVER (order by sum(net_af) desc) ranking2, date_format(periode , '%Y.%m') periode2, brand_name as brand_name2, sum(tot_qty) tot_qty2, sum(net_af) tnet2
             from r_sales 
             where date_format(periode , '%Y.%m') = date_format(DATE_ADD(current_date(), INTERVAL -1 MONTH),'%Y.%m') 
             $where
@@ -192,7 +192,7 @@ class Dashboard extends My_Controller
             order by tnet2 desc
             limit 10
         ) b on a.ranking1 = b. ranking2 inner join (
-            select ROW_NUMBER() OVER (order by sum(net) desc) ranking3, date_format(periode , '%Y.%m') periode3, brand_name as brand_name3, sum(tot_qty) tot_qty3, sum(net) tnet3
+            select ROW_NUMBER() OVER (order by sum(net_af) desc) ranking3, date_format(periode , '%Y.%m') periode3, brand_name as brand_name3, sum(tot_qty) tot_qty3, sum(net_af) tnet3
             from r_sales 
             where date_format(periode , '%Y.%m') = date_format(DATE_ADD(current_date(), INTERVAL 0 MONTH),'%Y.%m') 
             $where
@@ -244,7 +244,7 @@ class Dashboard extends My_Controller
                 SELECT DATE_ADD(DATE_ADD(DATE_ADD(LAST_DAY('".$from."'), INTERVAL 1 DAY), INTERVAL -1 MONTH), INTERVAL help_topic_id DAY) as periode
                 FROM mysql.help_topic order by help_topic_id asc limit 31
             ) aa left join (
-                SELECT SUM(net) as net, date_format(periode,'%Y-%m-%d') as periode
+                SELECT SUM(net_af) as net, date_format(periode,'%Y-%m-%d') as periode
                 from r_sales
                 WHERE MONTH(periode) ='".$bulan."' 
                 and YEAR(periode) ='".$tahun."' 

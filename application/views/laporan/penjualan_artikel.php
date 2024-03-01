@@ -52,7 +52,8 @@
                             <th><nobr>Margin</nobr></th>
                             <th><nobr>Gross After Margin</nobr></th>
                             <th><nobr>Gross(Rp)</nobr></th>
-                            <th><nobr>Net(Rp)</nobr></th>
+                            <th><nobr>Net Before(Rp)</nobr></th>
+                            <th><nobr>Net After(Rp)</nobr></th>
                             <th><nobr>Area Transaksi</nobr></th> 
                             <th><nobr>Source Data</nobr></th>
                             <th><nobr>Trans No</nobr></th> 
@@ -358,11 +359,16 @@
                                 return '<nobr>Rp '+rupiahjs(data)+'</nobr>';
                         },
                     },
-                    { "data": "net",
+                    { "data": "net_bf",
                         "render": function ( data, type, row ) {
                                 return '<nobr>Rp '+rupiahjs(data)+'</nobr>';
                         },
-                    },                    
+                    },  
+                    { "data": "net_af",
+                        "render": function ( data, type, row ) {
+                                return '<nobr>Rp '+rupiahjs(data)+'</nobr>';
+                        },
+                    },                   
                     { "data": "trans_no",
                         "render": function ( data, type, row ) {
                                 var data_areatrx = '';

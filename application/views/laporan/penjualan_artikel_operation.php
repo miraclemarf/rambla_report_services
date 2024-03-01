@@ -50,7 +50,8 @@
                             <th><nobr>Disc. Tambahan(Rp)</nobr></th>
                             <th><nobr>Disc. Tambahan(%)</nobr></th>
                             <th><nobr>Gross(Rp)</nobr></th>
-                            <th><nobr>Net(Rp)</nobr></th>
+                            <th><nobr>Net Before(Rp)</nobr></th>
+                            <th><nobr>Net After(Rp)</nobr></th>
                             <th><nobr>Area Transaksi</nobr></th> 
                             <th><nobr>Source Data</nobr></th>
                             <th><nobr>Trans No</nobr></th> 
@@ -345,7 +346,12 @@
                                 return '<nobr>Rp '+rupiahjs(data)+'</nobr>';
                         },
                     },
-                    { "data": "net",
+                    { "data": "net_bf",
+                        "render": function ( data, type, row ) {
+                                return '<nobr>Rp '+rupiahjs(data)+'</nobr>';
+                        },
+                    },  
+                    { "data": "net_af",
                         "render": function ( data, type, row ) {
                                 return '<nobr>Rp '+rupiahjs(data)+'</nobr>';
                         },
