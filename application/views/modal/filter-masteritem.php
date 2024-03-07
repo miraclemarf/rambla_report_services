@@ -19,6 +19,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <select class="js-example-basic-single list_store">
+                                        <option value=''>Please Wait...</option>
                                     </select>
                                 </div>
                             </div>
@@ -28,6 +29,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <select class="js-example-basic-single list_division">
+                                        <option value=''>Please Wait...</option>
                                     </select>
                                 </div>
                             </div>
@@ -37,6 +39,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <select class="js-example-basic-single list_sub_division">
+                                        <option value=''>Please Wait...</option>
                                     </select>
                                 </div>
                             </div>
@@ -46,6 +49,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <select class="js-example-basic-single list_dept">
+                                        <option value=''>Please Wait...</option>
                                     </select>
                                 </div>
                             </div>
@@ -55,6 +59,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <select class="js-example-basic-single list_sub_dept">
+                                        <option value=''>Please Wait...</option>
                                     </select>
                                 </div>
                             </div>
@@ -64,6 +69,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <select class="js-example-basic-single list_user_brand">
+                                        <option value=''>Please Wait...</option>
                                     </select>
                                 </div>
                             </div>

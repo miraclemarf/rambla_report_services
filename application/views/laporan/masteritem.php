@@ -79,8 +79,8 @@
         var params6         = null;
         var format          = null;
 
-        load_data_masteritem(params1,params2,params3,params4,params5,params6);
-    
+        // load_data_masteritem(params1,params2,params3,params4,params5,params6);
+        $('#modal-filter-masteritem').modal('show');
 
         $('.btn-export-masteritem').on("click", function(){
             $('#modal-export-masteritem').modal('show');
@@ -112,6 +112,10 @@
         });
 
         $('.btn-submit-filter').on("click", function(){
+            if (store === ''|| store == null){
+                alert('Harap Pilih Store Dahulu')
+                return false;
+            }
             params1 = brand_code;
             params2 = division;
             params3 = sub_division;
@@ -311,7 +315,6 @@
                     $('.list_store').html(data);
                 },
                 beforeSend: function( xhr ) {
-                    console.log(xhr);
                     $(".loading").show();
                     $("#filter-penjualanartikel").hide();
                     $("#export-penjualanartikel").hide();
