@@ -6,7 +6,10 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex flex-wrap justify-content-between mb-3">
-                        <h4 class="card-title mb-3">Laporan Promo</h4>
+                        <div>
+                            <h4 class="card-title mb-0">Laporan Promo</h4>
+                            <p class="text-muted mb-2">Terapkan filter untuk menampilkan data.</p>
+                        </div>
                         <div class="align-self-end">
                             <button type="button" class="btn btn-success btn-sm btn-icon-text btn-export-promo ml-2" style="float:right">
                             <i class="typcn typcn-download btn-icon-prepend"></i>                                                    
@@ -76,12 +79,14 @@
         get_sub_division();
         get_dept();
         get_list_dept();
+        get_store();
         var brand_code      = null;
         var promo           = null;
         var division        = null;
         var sub_division    = null;
         var dept            = null;
         var sub_dept        = null;
+        var store           = null;
         var params1         = null;
         var params2         = null;
         var params3         = null;
@@ -89,10 +94,12 @@
         var params5         = null;
         var params6         = null;
         var params7         = null;
+        var params8         = null;
         var format          = null;
      
-        console.log(params3);
-        load_data_promo(params1,params2,params3,params4,params5,params6,params7);
+        // console.log(params3);
+        $('#modal-filter-promo').modal('show');
+        // load_data_promo(params1,params2,params3,params4,params5,params6,params7);
 
         $('.btn-export-promo').on("click", function(){
             $('#modal-export-promo').modal('show');
@@ -119,6 +126,10 @@
         });
 
         $('.btn-submit-filter').on("click", function(){
+            if (store === ''|| store == null){
+                alert('Harap Pilih Store Dahulu')
+                return false;
+            }
             params1 = brand_code;
             params2 = promo;
             params3 = periode;
@@ -126,6 +137,7 @@
             params5 = sub_division;
             params6 = dept;
             params7 = sub_dept;
+            params8 = store;
 
             if (params1 === "") {
                 params1 = null;
@@ -148,14 +160,17 @@
             if (params7 === "") {
                 params7 = null;
             }
-            load_data_promo(params1,params2,params3,params4,params5,params6,params7);
+            if (params8 === "") {
+                params8 = null;
+            }
+            load_data_promo(params1,params2,params3,params4,params5,params6,params7, params8);
         });
 
         $('.btn-export').on("click", function(){
-            export_penjualanartikel(params1,params2,params3,params4,params5,params6,params7);
+            export_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8);
         });
 
-        function export_penjualanartikel(params1,params2,params3,params4,params5,params6,params7) {
+        function export_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8) {
           $.ajax({
             type: "POST",
             url: "<?= base_url('Laporan/generate_date');?>",
@@ -163,28 +178,27 @@
             data: {"periode": params3},
             success: function(data) {
               if(format == "csv"){
-                window.location.href = "<?= base_url('Laporan/export_csv_promo/'); ?>"+params1+'/'+params2+'/'+data.fromdate+'/'+data.todate+'/'+params4+'/'+params5+'/'+params6+'/'+params7;
+                window.location.href = "<?= base_url('Laporan/export_csv_promo/'); ?>"+params1+'/'+params2+'/'+data.fromdate+'/'+data.todate+'/'+params4+'/'+params5+'/'+params6+'/'+params7+'/'+params8;
               }else if(format == "xls"){
-                window.location.href = "<?= base_url('Laporan/export_excel_promo/'); ?>"+params1+'/'+params2+'/'+data.fromdate+'/'+data.todate+'/'+params4+'/'+params5+'/'+params6+'/'+params7;
+                window.location.href = "<?= base_url('Laporan/export_excel_promo/'); ?>"+params1+'/'+params2+'/'+data.fromdate+'/'+data.todate+'/'+params4+'/'+params5+'/'+params6+'/'+params7+'/'+params8;
               }
             }
           });
         }
 
-        // function load_data_promotest(params1,params2,params3,params4,params5,params6,params7) {
-        //     console.log(params1,params2,params3,params4,params5,params6,params7);
+        // function load_data_promotest(params1,params2,params3,params4,params5,params6,params7, params8) {
         //   $.ajax({
         //     type: "POST",
         //     url: "<?= base_url('Laporan/promo_where');?>",
         //     dataType: "JSON",
-        //     data: { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6,"params7": params7 },
+        //     data: { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6,"params7": params7,"params8": params8 },
         //         success: function(data) {
         //         console.log(data);
         //         }
         //   });
-        //}
+        // }
 
-        function load_data_promo(params1,params2,params3,params4,params5,params6,params7){
+        function load_data_promo(params1,params2,params3,params4,params5,params6,params7, params8){
             tabel = $('#tb_promo').DataTable({
                 "processing": true,
                 "responsive":true,
@@ -196,7 +210,7 @@
                 {
                     "url": "<?= base_url('Laporan/promo_where');?>", // URL file untuk proses select datanya
                     "type": "POST",
-                    "data":  { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6,"params7": params7}, 
+                    "data":  { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6,"params7": params7, "params8": params8}, 
                 },
                 "deferRender": true,
                 "aLengthMenu": [[10, 25, 50],[ 10, 25, 50]], // Combobox Limit
@@ -441,6 +455,33 @@
                 }
             });
         }
+
+        // START STORE
+         function get_store(){
+            $.ajax({
+                type: "GET",
+                url: "<?= base_url('Masterdata'); ?>/get_store",
+                dataType: "html",
+                success: function(data) {
+                    console.log(data);
+                    $(".loading").hide();
+                    $("#export-penjualanartikel").show();
+                    $("#filter-penjualanartikel").show();
+                    $('.list_store').html(data);
+                },
+                beforeSend: function( xhr ) {
+                    console.log(xhr);
+                    $(".loading").show();
+                    $("#filter-penjualanartikel").hide();
+                    $("#export-penjualanartikel").hide();
+                }
+            });
+        }
+
+        $('.list_store').on('change', function (e) {
+            store = this.value;
+        })
+        // END STORE
 
         // START DIVISION
         function get_division(){

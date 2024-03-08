@@ -277,7 +277,7 @@ class Laporan extends My_Controller
             )";
         }
         // END CEK ADA KATEGORINYA NGGA
-        if($params1 || $params2 || $params3 || $params4 || $params5 || $params6 || $params7){
+        if($params1 || $params2 || $params3 || $params4 || $params5 || $params6 || $params7 || $params8){
             if($params1){
                 $filter1 = " AND brand = '".$params1."'";
                 $filter.= $filter1;
@@ -292,7 +292,7 @@ class Laporan extends My_Controller
                     $fromdate = date("Y-m-d", strtotime($tgl[0]));
                     $todate = date("Y-m-d", strtotime($tgl[1]));
                 }
-                $filter3 = " AND DATE_FORMAT(start_date,'%Y-%m-%d') = '".$fromdate."' AND DATE_FORMAT(end_date,'%Y-%m-%d') = '".$todate."'";
+                $filter3 = " AND DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$fromdate."' AND DATE_FORMAT(end_date,'%Y-%m-%d') <= '".$todate."'";
                 $filter.=$filter3;
             }
             if($params4){
@@ -311,11 +311,14 @@ class Laporan extends My_Controller
                 $filter7 = " AND SUB_DEPT = '".$params7."'";
                 $filter.=$filter7;
             }
+            if($params8){
+                $filter8 = " AND branch_id = '".$params8."'";
+                $filter.=$filter8;
+            }
             $isWhere = $filter;
         }else{
             $isWhere = $filter;
         }
-
     
         header('Content-Type: application/json');
         echo $this->M_Datatables->get_tables_where($tables,$search,$where,$isWhere);
@@ -488,7 +491,7 @@ class Laporan extends My_Controller
         $writer->save('php://output');
     }
 
-    function export_excel_promo($brand_code, $promo, $fromdate, $todate,$division, $sub_division, $dept, $sub_dept)
+    function export_excel_promo($brand_code, $promo, $fromdate, $todate,$division, $sub_division, $dept, $sub_dept, $branch_id)
 	{
         /* Data */
         $data['username']      = $this->input->cookie('cookie_invent_user');
@@ -534,7 +537,11 @@ class Laporan extends My_Controller
         }
 
         if($fromdate !== "null" AND $todate !== "null"){
-            $where.= " AND DATE_FORMAT(start_date,'%Y-%m-%d') = '".$fromdate."' AND DATE_FORMAT(end_date,'%Y-%m-%d') = '".$todate."'";
+            $where.= " AND DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$fromdate."' AND DATE_FORMAT(end_date,'%Y-%m-%d') <= '".$todate."'";
+        }
+
+        if($branch_id !== "null"){
+            $where.=" AND branch_id = '".$branch_id."'";
         }
       
         $data         = $this->db->query("SELECT * FROM r_promo_aktif WHERE 1=1 $where")->result_array();
@@ -1199,7 +1206,7 @@ class Laporan extends My_Controller
         exit;
     }
 
-    function export_csv_promo($brand_code, $promo, $fromdate, $todate,$division, $sub_division, $dept, $sub_dept){
+    function export_csv_promo($brand_code, $promo, $fromdate, $todate,$division, $sub_division, $dept, $sub_dept, $branch_id){
         $filename = 'promo_report.csv';
 
         $division       = str_replace("%20"," ",$division);
@@ -1249,7 +1256,11 @@ class Laporan extends My_Controller
         }
 
         if($fromdate !== "null" AND $todate !== "null"){
-            $where.= " AND DATE_FORMAT(start_date,'%Y-%m-%d') = '".$fromdate."' AND DATE_FORMAT(end_date,'%Y-%m-%d') = '".$todate."'";
+            $where.= " AND DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$fromdate."' AND DATE_FORMAT(end_date,'%Y-%m-%d') <= '".$todate."'";
+        }
+
+        if($branch_id !== "null"){
+            $where.=" AND branch_id = '".$branch_id."'";
         }
 
         $data   = $this->db->query("SELECT branch_id, start_date,end_date,promo_id,promo_type,category_code,vendor_name,brand,barcode,pos_pname,varian_option1,varian_option2,promo_desc,current_price,min_qty,min_purchase,disc_percentage,disc_amount,add_disc_percentage,free_qty,special_price,aktif,active_monday,active_tuesday,active_wednesday,active_thursday,active_friday,active_saturday,active_sunday,DIVISION, SUB_DIVISION, DEPT, SUB_DEPT FROM r_promo_aktif WHERE 1=1 $where")->result_array();

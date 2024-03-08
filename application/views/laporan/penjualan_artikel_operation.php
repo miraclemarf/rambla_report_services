@@ -8,7 +8,7 @@
                     <div class="d-flex flex-wrap justify-content-between mb-3">
                     <div>
                         <h4 class="card-title mb-0">Laporan Penjualan By Artikel Operation</h4>
-                        <p class="text-muted mb-0">Terapkan filter untuk menampilkan data.</p>
+                        <p class="text-muted mb-2">Terapkan filter untuk menampilkan data.</p>
                         </div>
                         <div class="align-self-end">
                             <button type="button" class="btn btn-success btn-sm btn-icon-text btn-export-penjualanartikel ml-2" style="float:right">
