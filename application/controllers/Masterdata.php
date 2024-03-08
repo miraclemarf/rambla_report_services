@@ -60,8 +60,18 @@ class Masterdata extends My_Controller
 
     public function get_store(){
         extract(populateform());
+        $data['username']       = $this->input->cookie('cookie_invent_user');
+        $cek_user_branch        = $this->db->query("SELECT * FROM m_user_site where username ='".$data['username']."' and flagactv = '1'")->row();  
 
-        $data['hasil']          = $this->Models->showdata("SELECT branch_id, branch_name from m_branches");
+        if($cek_user_branch){
+            $data['hasil']      = $this->Models->showdata("SELECT a.branch_id, b.branch_name from m_user_site a
+            inner join m_branches b
+            on a.branch_id = b.branch_id
+            where a.flagactv ='1'
+            and username ='".$data['username']."'");
+        }else{
+            $data['hasil']      = $this->Models->showdata("SELECT branch_id, branch_name from m_branches");
+        }
  
         echo "<option value=''>-- Pilih Data --</option>";
         foreach ($data['hasil'] as $row) {
