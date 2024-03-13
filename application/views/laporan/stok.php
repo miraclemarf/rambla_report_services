@@ -8,7 +8,7 @@
                     <div class="d-flex flex-wrap justify-content-between mb-3">
                         <div>
                             <h4 class="card-title mb-0">Laporan Stock</h4>
-                            <p class="text-muted mb-0">Data Per : <?=
+                            <p class="text-muted mb-2">Data Per : <?=
                             date("l, d F Y",strtotime("-1 days")) ?></p>
                         </div>
                         <div class="align-self-end">

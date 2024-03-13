@@ -292,7 +292,7 @@ class Laporan extends My_Controller
                     $fromdate = date("Y-m-d", strtotime($tgl[0]));
                     $todate = date("Y-m-d", strtotime($tgl[1]));
                 }
-                $filter3 = " AND DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$fromdate."' AND DATE_FORMAT(end_date,'%Y-%m-%d') <= '".$todate."'";
+                $filter3 = " AND DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$fromdate."' OR DATE_FORMAT(end_date,'%Y-%m-%d') <= '".$todate."'";
                 $filter.=$filter3;
             }
             if($params4){
@@ -537,7 +537,7 @@ class Laporan extends My_Controller
         }
 
         if($fromdate !== "null" AND $todate !== "null"){
-            $where.= " AND DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$fromdate."' AND DATE_FORMAT(end_date,'%Y-%m-%d') <= '".$todate."'";
+            $where.= " AND DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$fromdate."' OR DATE_FORMAT(end_date,'%Y-%m-%d') <= '".$todate."'";
         }
 
         if($branch_id !== "null"){
@@ -1256,7 +1256,7 @@ class Laporan extends My_Controller
         }
 
         if($fromdate !== "null" AND $todate !== "null"){
-            $where.= " AND DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$fromdate."' AND DATE_FORMAT(end_date,'%Y-%m-%d') <= '".$todate."'";
+            $where.= " AND DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$fromdate."' OR DATE_FORMAT(end_date,'%Y-%m-%d') <= '".$todate."'";
         }
 
         if($branch_id !== "null"){
