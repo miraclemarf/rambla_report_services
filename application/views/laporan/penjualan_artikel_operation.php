@@ -444,6 +444,23 @@
                 $opt = '<option value="">-- Pilih Data --</option>';
                 $('.list_areatrx').html($opt); 
             }
+            $.ajax({
+                url: "<?= base_url('Masterdata'); ?>/get_list_division",
+                data: {
+                    store : store
+                },
+                type: 'POST',
+                dataType: 'html',
+                success: function(data) {
+                    //console.log(data);
+                    $(".loading").hide();
+                    $('.list_division').html(data);
+                },
+                beforeSend: function( xhr ) {
+                    // console.log(xhr);
+                    $(".loading").show();
+                }
+            });
         })
 
         $('.list_areatrx').on('change', function (e) {           

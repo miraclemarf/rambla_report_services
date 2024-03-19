@@ -188,17 +188,17 @@
             });
         }
 
-        // function load_data_penjualanartikeltest(params1,params2,params3) {
-        //   $.ajax({
-        //     type: "POST",
-        //     url: "<?= base_url('Laporan/penjualan_artikel_where_test');?>",
-        //     dataType: "JSON",
-        //     data: { "params1": params1,"params2": params2,"params3": params3 },
-        //     success: function(data) {
-        //       console.log(data);
-        //     }
-        //   });
-        // }
+        function load_data_penjualanartikeltest(params1, params2, params3, params4, params5, params6,params7,params8,params9) {
+          $.ajax({
+            type: "POST",
+            url: "<?= base_url('Laporan/penjualan_artikel_where');?>",
+            dataType: "JSON",
+            data: { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6,"params7": params7, "params8": params8, "params9": params9 },
+            success: function(data) {
+              console.log(data);
+            }
+          });
+        }
 
         function load_data_penjualanartikel(params1, params2, params3, params4, params5, params6,params7,params8,params9){
             $('#tb_penjualanartikel_list').removeClass('d-none');
@@ -455,6 +455,23 @@
                 $opt = '<option value="">-- Pilih Data --</option>';
                 $('.list_areatrx').html($opt); 
             }
+            $.ajax({
+                url: "<?= base_url('Masterdata'); ?>/get_list_division",
+                data: {
+                    store : store
+                },
+                type: 'POST',
+                dataType: 'html',
+                success: function(data) {
+                    //console.log(data);
+                    $(".loading").hide();
+                    $('.list_division').html(data);
+                },
+                beforeSend: function( xhr ) {
+                    // console.log(xhr);
+                    $(".loading").show();
+                }
+            });
         })
 
         $('.list_areatrx').on('change', function (e) {           

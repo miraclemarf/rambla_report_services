@@ -10,6 +10,7 @@ class Masterdata extends My_Controller
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
         $this->load->model('models', '', TRUE);
+        $this->load->model('M_Division');
         $this->ceklogin();
     }
     public function get_user_brand(){
@@ -87,11 +88,17 @@ class Masterdata extends My_Controller
             select distinct brand from m_user_brand 
             where username = '".$data['username']."'
         )";
-        $data['hasil']          = $this->Models->showdata("SELECT DISTINCT DIVISION, KODE_DIVISION from m_kategori_list WHERE category_code in (
-            select category_code from m_vendor_category
-            WHERE 1=1 $where and isactive = '1'
-        )");
- 
+
+        $cek_site = $this->db->query("SELECT * from m_user_site where username ='".$data['username']."' and flagactv = '1' limit 1")->row();
+        if($cek_site){
+            $data['hasil']          = $this->M_Division->get_division_filter($data['username'],$store);
+        }else{
+            $data['hasil']          = $this->Models->showdata("SELECT DISTINCT DIVISION, KODE_DIVISION from m_kategori_list WHERE category_code in (
+                select category_code from m_vendor_category
+                WHERE 1=1 $where and isactive = '1'
+            )");
+        }
+
         echo "<option value=''>-- Pilih Data --</option>";
         foreach ($data['hasil'] as $row) {
             echo "<option value='" . $row->DIVISION . "'>".$row->DIVISION." (".$row->KODE_DIVISION.")</option>";

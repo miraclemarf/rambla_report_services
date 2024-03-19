@@ -327,6 +327,23 @@
 
         $('.list_store').on('change', function (e) {
             store = this.value;
+            $.ajax({
+                url: "<?= base_url('Masterdata'); ?>/get_list_division",
+                data: {
+                    store : store
+                },
+                type: 'POST',
+                dataType: 'html',
+                success: function(data) {
+                    //console.log(data);
+                    $(".loading").hide();
+                    $('.list_division').html(data);
+                },
+                beforeSend: function( xhr ) {
+                    // console.log(xhr);
+                    $(".loading").show();
+                }
+            });
         })
         // END STORE
 

@@ -142,7 +142,7 @@ class Laporan extends My_Controller
             )";
         }
         // END CEK ADA KATEGORINYA NGGA
-       
+
         if($params1 || $params2 || $params3 || $params4 || $params5 || $params6 || $params7 || $params8){
             if($params1){
                 $filter1 = " AND brand_code = '".$params1."'";
@@ -195,8 +195,7 @@ class Laporan extends My_Controller
         }else{
             $isWhere = $filter;
         }
-
-   
+      
         header('Content-Type: application/json');
         echo $this->M_Datatables->get_tables_where($tables,$search,$where,$isWhere);
     }
