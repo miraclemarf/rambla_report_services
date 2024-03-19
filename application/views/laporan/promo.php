@@ -186,17 +186,17 @@
           });
         }
 
-        // function load_data_promotest(params1,params2,params3,params4,params5,params6,params7, params8) {
-        //   $.ajax({
-        //     type: "POST",
-        //     url: "<?= base_url('Laporan/promo_where');?>",
-        //     dataType: "JSON",
-        //     data: { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6,"params7": params7,"params8": params8 },
-        //         success: function(data) {
-        //         console.log(data);
-        //         }
-        //   });
-        // }
+        function load_data_promotest(params1,params2,params3,params4,params5,params6,params7, params8) {
+          $.ajax({
+            type: "POST",
+            url: "<?= base_url('Laporan/promo_where');?>",
+            dataType: "JSON",
+            data: { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6,"params7": params7,"params8": params8 },
+                success: function(data) {
+                console.log(data);
+                }
+          });
+        }
 
         function load_data_promo(params1,params2,params3,params4,params5,params6,params7, params8){
             tabel = $('#tb_promo').DataTable({

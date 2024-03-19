@@ -17,6 +17,7 @@ class Laporan extends My_Controller
         $this->load->model('models', '', TRUE);
         $this->load->model('M_Datatables');
         $this->load->model('M_Categories');
+        $this->load->model('M_Division');
         $this->ceklogin();
     }
 
@@ -126,9 +127,15 @@ class Laporan extends My_Controller
 
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='".$data['username']."' and flagactv = '1' limit 1")->row();
         if($cek_user_category){
             $filter = $this->M_Categories->get_category($data['username']);
+        }else if($cek_user_site){
+            $filter = $this->M_Division->get_division($data['username'],$params8);
         }else{
+            // UNTUK MD
             $filter = "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
@@ -136,7 +143,7 @@ class Laporan extends My_Controller
         }
         // END CEK ADA KATEGORINYA NGGA
        
-        if($params1 || $params2 || $params3 || $params4 || $params5 || $params6 || $params7){
+        if($params1 || $params2 || $params3 || $params4 || $params5 || $params6 || $params7 || $params8){
             if($params1){
                 $filter1 = " AND brand_code = '".$params1."'";
                 $filter.= $filter1;
@@ -188,6 +195,8 @@ class Laporan extends My_Controller
         }else{
             $isWhere = $filter;
         }
+
+   
         header('Content-Type: application/json');
         echo $this->M_Datatables->get_tables_where($tables,$search,$where,$isWhere);
     }
@@ -198,18 +207,25 @@ class Laporan extends My_Controller
         $search     = array('branch_id','brand_code','brand_name','barcode','varian_option1','varian_option2','periode','DIVISION','SUB_DIVISION','DEPT','SUB_DEPT','article_name','last_stock');
         $data['username']       = $this->input->cookie('cookie_invent_user');
         $where      = array('');
-        
+
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='".$data['username']."' and flagactv = '1' limit 1")->row();
         if($cek_user_category){
             $filter = $this->M_Categories->get_category($data['username']);
+        }else if($cek_user_site){
+            $filter = $this->M_Division->get_division($data['username'],$params6);
         }else{
+            // UNTUK MD
             $filter = "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
             )";
         }
         // END CEK ADA KATEGORINYA NGGA
+
         if($params1 || $params2 || $params3 || $params4 || $params5 || $params6 || $params7){
             if($params1){
                 $filter1 = " AND brand_code = '".$params1."'";
@@ -266,17 +282,25 @@ class Laporan extends My_Controller
 
         $data['username']       = $this->input->cookie('cookie_invent_user');
         $where      = array('');
+        
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='".$data['username']."' and flagactv = '1' limit 1")->row();
         if($cek_user_category){
             $filter = $this->M_Categories->get_category($data['username']);
+        }else if($cek_user_site){
+            $filter = $this->M_Division->get_division($data['username'],$params8);
         }else{
+            // UNTUK MD
             $filter = "AND brand in (
-            select distinct brand from m_user_brand 
-            where username = '".$data['username']."'
+                select distinct brand from m_user_brand 
+                where username = '".$data['username']."'
             )";
         }
         // END CEK ADA KATEGORINYA NGGA
+
         if($params1 || $params2 || $params3 || $params4 || $params5 || $params6 || $params7 || $params8){
             if($params1){
                 $filter1 = " AND brand = '".$params1."'";
@@ -292,7 +316,7 @@ class Laporan extends My_Controller
                     $fromdate = date("Y-m-d", strtotime($tgl[0]));
                     $todate = date("Y-m-d", strtotime($tgl[1]));
                 }
-                $filter3 = " AND DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$fromdate."' OR DATE_FORMAT(end_date,'%Y-%m-%d') <= '".$todate."'";
+                $filter3 = " AND (DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$fromdate."' OR DATE_FORMAT(end_date,'%Y-%m-%d') <= '".$todate."')";
                 $filter.=$filter3;
             }
             if($params4){
@@ -331,17 +355,25 @@ class Laporan extends My_Controller
         // $vendor_code    = $this->input->post('vendor_code');
         $data['username']       = $this->input->cookie('cookie_invent_user');
         $where      = array('');
+
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='".$data['username']."' and flagactv = '1' limit 1")->row();
         if($cek_user_category){
             $filter = $this->M_Categories->get_category($data['username']);
+        }else if($cek_user_site){
+            $filter = $this->M_Division->get_division($data['username'],$params6);
         }else{
+            // UNTUK MD
             $filter = "AND brand in (
-            select distinct brand from m_user_brand 
-            where username = '".$data['username']."'
+                select distinct brand from m_user_brand 
+                where username = '".$data['username']."'
             )";
         }
         // END CEK ADA KATEGORINYA NGGA
+
         if($params1 || $params2 || $params3 || $params4 || $params5 || $params6){
             if($params1){
                 $filter1 = " AND brand = '".$params1."'";
@@ -385,17 +417,23 @@ class Laporan extends My_Controller
         $dept           = str_replace("%20"," ",$dept);
         $sub_dept       = str_replace("%20"," ",$sub_dept); 
 
-       // START CEK ADA KATEGORINYA NGGA
-       $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
-       if($cek_user_category){
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='".$data['username']."' and flagactv = '1' limit 1")->row();
+        if($cek_user_category){
             $where = $this->M_Categories->get_category($data['username']);
-       }else{
+        }else if($cek_user_site){
+            $where = $this->M_Division->get_division($data['username'],$store);
+        }else{
+            // UNTUK MD
             $where = "AND brand_code in (
-               select distinct brand from m_user_brand 
-               where username = '".$data['username']."'
-           )";
-       }
-       // END CEK ADA KATEGORINYA NGGA
+                select distinct brand from m_user_brand 
+                where username = '".$data['username']."'
+            )";
+        }
+        // END CEK ADA KATEGORINYA NGGA
        
         if($brand_code !== "null"){
             $where.=" AND brand_code = '".$brand_code."'";
@@ -503,13 +541,19 @@ class Laporan extends My_Controller
 
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='".$data['username']."' and flagactv = '1' limit 1")->row();
         if($cek_user_category){
             $where = $this->M_Categories->get_category($data['username']);
+        }else if($cek_user_site){
+            $where = $this->M_Division->get_division($data['username'],$branch_id);
         }else{
+            // UNTUK MD
             $where = "AND brand in (
-            select distinct brand from m_user_brand 
-            where username = '".$data['username']."'
-        )";
+                select distinct brand from m_user_brand 
+                where username = '".$data['username']."'
+            )";
         }
         // END CEK ADA KATEGORINYA NGGA
 
@@ -537,7 +581,7 @@ class Laporan extends My_Controller
         }
 
         if($fromdate !== "null" AND $todate !== "null"){
-            $where.= " AND DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$fromdate."' OR DATE_FORMAT(end_date,'%Y-%m-%d') <= '".$todate."'";
+            $where.= " AND (DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$fromdate."' OR DATE_FORMAT(end_date,'%Y-%m-%d') <= '".$todate."')";
         }
 
         if($branch_id !== "null"){
@@ -652,12 +696,18 @@ class Laporan extends My_Controller
 
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='".$data['username']."' and flagactv = '1' limit 1")->row();
         if($cek_user_category){
             $where = $this->M_Categories->get_category($data['username']);
+        }else if($cek_user_site){
+            $where = $this->M_Division->get_division($data['username'],$store);
         }else{
+            // UNTUK MD
             $where = "AND brand in (
-            select distinct brand from m_user_brand 
-            where username = '".$data['username']."'
+                select distinct brand from m_user_brand 
+                where username = '".$data['username']."'
             )";
         }
         // END CEK ADA KATEGORINYA NGGA
@@ -767,9 +817,15 @@ class Laporan extends My_Controller
 
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='".$data['username']."' and flagactv = '1' limit 1")->row();
         if($cek_user_category){
             $where = $this->M_Categories->get_category($data['username']);
+        }else if($cek_user_site){
+            $where = $this->M_Division->get_division($data['username'],$store);
         }else{
+            // UNTUK MD
             $where = "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
@@ -920,7 +976,7 @@ class Laporan extends My_Controller
         $writer->save('php://output');
     }
 
-    function export_excel_penjualanartikel_operation($fromdate, $todate, $source, $brand_code, $division, $sub_division, $dept, $sub_dept, $store)
+    function export_excel_penjualanartikel_operation($fromdate, $todate, $source, $brand_code, $division, $sub_division, $dept, $sub_dept, $store, $areatrx)
 	{
         /* Data */
         $data['username']      = $this->input->cookie('cookie_invent_user');
@@ -932,9 +988,15 @@ class Laporan extends My_Controller
 
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='".$data['username']."' and flagactv = '1' limit 1")->row();
         if($cek_user_category){
             $where = $this->M_Categories->get_category($data['username']);
+        }else if($cek_user_site){
+            $where = $this->M_Division->get_division($data['username'],$store);
         }else{
+            // UNTUK MD
             $where = "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
@@ -972,6 +1034,16 @@ class Laporan extends My_Controller
 
         if($fromdate !== null AND $todate !== null){
             $where.= " AND DATE_FORMAT(periode,'%Y-%m-%d') BETWEEN '".$fromdate."' and '".$todate."'";
+        }
+
+        if($areatrx !== "null"){
+            $arrAreatrx = explode(',', $areatrx);
+            if(count($arrAreatrx) > 1){
+                $where .= " AND substring(trans_no,9,1) in ('".$arrAreatrx[0]."', '".$arrAreatrx[1]."')";
+            }
+            else{
+                $where .= " AND substring(trans_no,9,1) in ('".$areatrx."')";
+            }
         }
 
         $data         = $this->db->query("SELECT * FROM r_sales WHERE 1=1 $where order by periode")->result_array();
@@ -1087,10 +1159,16 @@ class Laporan extends My_Controller
 
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='".$data['username']."' and flagactv = '1' limit 1")->row();
         if($cek_user_category){
-                $where = $this->M_Categories->get_category($data['username']);
+            $where = $this->M_Categories->get_category($data['username']);
+        }else if($cek_user_site){
+            $where = $this->M_Division->get_division($data['username'],$store);
         }else{
-                $where = "AND brand_code in (
+            // UNTUK MD
+            $where = "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
             )";
@@ -1156,14 +1234,21 @@ class Laporan extends My_Controller
         header("Content-Type: application/csv;");
 
         $data['username']      = $this->input->cookie('cookie_invent_user');
+        
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='".$data['username']."' and flagactv = '1' limit 1")->row();
         if($cek_user_category){
             $where = $this->M_Categories->get_category($data['username']);
+        }else if($cek_user_site){
+            $where = $this->M_Division->get_division($data['username'],$store);
         }else{
+            // UNTUK MD
             $where = "AND brand in (
-            select distinct brand from m_user_brand 
-            where username = '".$data['username']."'
+                select distinct brand from m_user_brand 
+                where username = '".$data['username']."'
             )";
         }
         // END CEK ADA KATEGORINYA NGGA
@@ -1219,15 +1304,22 @@ class Laporan extends My_Controller
         header("Content-Type: application/csv;");
 
         $data['username']      = $this->input->cookie('cookie_invent_user');
+        
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='".$data['username']."' and flagactv = '1' limit 1")->row();
         if($cek_user_category){
             $where = $this->M_Categories->get_category($data['username']);
+        }else if($cek_user_site){
+            $where = $this->M_Division->get_division($data['username'],$branch_id);
         }else{
+            // UNTUK MD
             $where = "AND brand in (
-            select distinct brand from m_user_brand 
-            where username = '".$data['username']."'
-        )";
+                select distinct brand from m_user_brand 
+                where username = '".$data['username']."'
+            )";
         }
         // END CEK ADA KATEGORINYA NGGA
 
@@ -1256,7 +1348,7 @@ class Laporan extends My_Controller
         }
 
         if($fromdate !== "null" AND $todate !== "null"){
-            $where.= " AND DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$fromdate."' OR DATE_FORMAT(end_date,'%Y-%m-%d') <= '".$todate."'";
+            $where.= " AND (DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$fromdate."' OR DATE_FORMAT(end_date,'%Y-%m-%d') <= '".$todate."')";
         }
 
         if($branch_id !== "null"){
@@ -1309,9 +1401,15 @@ class Laporan extends My_Controller
 
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='".$data['username']."' and flagactv = '1' limit 1")->row();
         if($cek_user_category){
             $where = $this->M_Categories->get_category($data['username']);
+        }else if($cek_user_site){
+            $where = $this->M_Division->get_division($data['username'],$store);
         }else{
+            // UNTUK MD
             $where = "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
@@ -1382,7 +1480,7 @@ class Laporan extends My_Controller
         exit;
     }
 
-    function export_csv_penjualanartikel_operation($fromdate, $todate, $source_data, $brand_code, $division, $sub_division, $dept, $sub_dept, $store){
+    function export_csv_penjualanartikel_operation($fromdate, $todate, $source_data, $brand_code, $division, $sub_division, $dept, $sub_dept, $store, $areatrx){
         extract(populateform());
 
         $division       = str_replace("%20"," ",$division);
@@ -1400,9 +1498,15 @@ class Laporan extends My_Controller
 
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='".$data['username']."' and flagactv = '1' limit 1")->row();
         if($cek_user_category){
             $where = $this->M_Categories->get_category($data['username']);
+        }else if($cek_user_site){
+            $where = $this->M_Division->get_division($data['username'],$store);
         }else{
+            // UNTUK MD
             $where = "AND brand_code in (
                 select distinct brand from m_user_brand 
                 where username = '".$data['username']."'
@@ -1436,6 +1540,16 @@ class Laporan extends My_Controller
 
         if($store !== "null"){
             $where.=" AND branch_id = '".$store."'";
+        }
+
+        if($areatrx !== "null"){
+            $arrAreatrx = explode(',', $areatrx);
+            if(count($arrAreatrx) > 1){
+                $where .= " AND substring(trans_no,9,1) in ('".$arrAreatrx[0]."', '".$arrAreatrx[1]."')";
+            }
+            else{
+                $where .= " AND substring(trans_no,9,1) in ('".$areatrx."')";
+            }
         }
 
         if($fromdate !== null AND $todate !== null){
