@@ -47,6 +47,7 @@
                             <th><nobr>Normal Price</nobr></th>
                             <th><nobr>Current Price</nobr></th>
                             <th><nobr>Tag 5</nobr></th>
+                            <th><nobr>Add Date</nobr></th>
                             </tr>
                         </thead>
                     </table>
@@ -280,6 +281,11 @@
                                 return '<nobr>'+data+'</nobr>';
                         },
                     },
+                    { "data": "add_date",
+                        "render": function ( data, type, row ) {
+                                return '<nobr>'+data.substring(0, 10)+'</nobr>';
+                        },
+                    }
                 ],
             });
         }

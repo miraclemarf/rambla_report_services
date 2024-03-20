@@ -763,6 +763,7 @@ class Laporan extends My_Controller
         $sheet->setCellValue('S1', 'Sub Dept');
         $sheet->setCellValue('T1', 'Normal Price');
         $sheet->setCellValue('U1', 'Tag 5');
+        $sheet->setCellValue('V1', 'Add Date');
         
         /* Excel Data */
         $row_number = 2;
@@ -789,6 +790,7 @@ class Laporan extends My_Controller
             $sheet->setCellValue('S'.$row_number, $row['SUB_DEPT']);
             $sheet->setCellValue('T'.$row_number, $row['normal_price']);
             $sheet->setCellValue('U'.$row_number, $row['tag_5']);
+            $sheet->setCellValue('V'.$row_number, substr($row['add_date'],0,10));
         
             $row_number++;
         }
@@ -1276,10 +1278,10 @@ class Laporan extends My_Controller
             $where.=" AND branch_id = '".$store."'";
         }
 
-        $data   = $this->db->query("SELECT branch_id,article_number,article_code,barcode,supplier_pcode,category_code, article_name,supplier_pname, brand,brand_name, option1,varian_option1,option2,varian_option2, division, sub_division, dept, sub_dept, normal_price, current_price, tag_5 FROM r_item_master where 1=1 $where")->result_array();
+        $data   = $this->db->query("SELECT branch_id,article_number,article_code,barcode,supplier_pcode,category_code, article_name,supplier_pname, brand,brand_name, option1,varian_option1,option2,varian_option2, division, sub_division, dept, sub_dept, normal_price, current_price, tag_5,SUBSTRING(add_date, 1, 10) as add_date FROM r_item_master where 1=1 $where")->result_array();
         $file   = fopen('php://output','w');
 
-        $header = array('branch_id','article_number','article_code','barcode','supplier_pcode','category_code','article_name','supplier pname','brand','brand name','option1','varian_option1','option2','varian_option2','division', 'sub_division', 'dept', 'sub_dept', 'normal_price', 'current_price','tag 5');
+        $header = array('branch_id','article_number','article_code','barcode','supplier_pcode','category_code','article_name','supplier pname','brand','brand name','option1','varian_option1','option2','varian_option2','division', 'sub_division', 'dept', 'sub_dept', 'normal_price', 'current_price','tag 5','add_date');
 
         fputcsv($file,$header);
 
