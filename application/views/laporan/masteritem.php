@@ -283,9 +283,12 @@
                     },
                     { "data": "add_date",
                         "render": function ( data, type, row ) {
+                                if(data == null){
+                                    data = ''
+                                }
                                 return '<nobr>'+data.substring(0, 10)+'</nobr>';
                         },
-                    }
+                    },
                 ],
             });
         }
