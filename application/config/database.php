@@ -159,3 +159,48 @@ $db['storeV001'] = array(
 	'failover' => array(),
 	'save_queries' => TRUE
 );
+
+$db['gold'] = array(
+	// 'dsn'	=> '',
+	'hostname' => $_ENV['DB_HOST_GOLD'],
+	'username' => $_ENV['DB_USERNAME_GOLD'],
+	'password' => $_ENV['DB_PASSWORD_GOLD'],
+	'database' => $_ENV['DB_NAME_GOLD'],
+	'dbdriver' => 'oci8',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
+
+
+$db['dbcentral'] = array(
+	// 'dsn'	=> '',
+	'hostname' => $_ENV['DB_HOST_CENTRAL'],
+	'username' => $_ENV['DB_USERNAME_CENTRAL'],
+	'password' => $_ENV['DB_PASSWORD_CENTRAL'],
+	'database' => $_ENV['DB_NAME_CENTRAL'],
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
