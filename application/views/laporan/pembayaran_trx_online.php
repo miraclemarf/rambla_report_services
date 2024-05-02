@@ -75,11 +75,11 @@
         get_store();
 
         // get_list_barcode();
-        var store = null;
+        var store = '';
         var params3 = periode;
-        var params8 = null;
-        var deltype = null;
-        var paytype = null;
+        var params8 = '';
+        var deltype = '';
+        var paytype = '';
 
         //load_data_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8,params9);
 
@@ -119,9 +119,9 @@
                 data: { "periode": params3 },
                 success: function (data) {
                     if (format == "csv") {
-                        window.location.href = "<?= base_url('Laporan/export_csv_pembayaran_online/'); ?>" + data.fromdate + '/' + data.todate + '/' + store + '/' + deltype + '/' + paytype;
+                        window.location.href = "<?= base_url('Laporan/export_csv_pembayaran_online/'); ?>?fromdate=" + data.fromdate + '&todate=' + data.todate + '&store=' + store + '&deltype=' + deltype + '&paytype=' + paytype;
                     } else if (format == "xls") {
-                        window.location.href = "<?= base_url('Laporan/export_excel_pembayaran_online/'); ?>" + data.fromdate + '/' + data.todate + '/' + store + '/' + deltype + '/' + paytype;
+                        window.location.href = "<?= base_url('Laporan/export_excel_pembayaran_online/'); ?>?fromdate=" + data.fromdate + '&todate=' + data.todate + '&store=' + store + '&deltype=' + deltype + '&paytype=' + paytype;
                     }
 
                 }

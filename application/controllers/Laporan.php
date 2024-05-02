@@ -1609,9 +1609,17 @@ class Laporan extends My_Controller
 
         echo json_encode($data);
     }
-    function export_csv_pembayaran_online($fromdate, $todate, $store, $deltype, $paytype)
+    function export_csv_pembayaran_online()
     {
         extract(populateform());
+
+        $getData = $this->input->get();
+        $fromdate = $getData['fromdate'] ;
+        $todate = $getData['todate'] ;
+        $store = $getData['store'] ;
+        $deltype = $getData['deltype'] ;
+        $paytype = $getData['paytype'] ;
+
         $dbCentral = $this->load->database('dbcentral', TRUE);
 
         $filename = 'payment_trx_online.csv';
@@ -1625,17 +1633,17 @@ class Laporan extends My_Controller
         $query = "SELECT distinct CASE WHEN ( substr( a.trans_no, 7, 2 ) = '01' ) THEN 'R001' WHEN ( substr( a.trans_no, 7, 2 ) = '02' ) THEN 'R002' WHEN ( substr( a.trans_no, 7, 2 ) = '03' ) THEN 'V001' END  AS branch_id,  DATE_FORMAT(a.trans_date,'%Y-%m-%d'), DATE_FORMAT(a.trans_date,'%m'), a.trans_no, a.no_ref, a.delivery_type, a.delivery_number, CASE left(tp.mop_code,2) when 'VA' THEN 'Virtual Account' WHEN 'VC' THEN 'Voucher' WHEN 'PP' THEN 'Point' WHEN 'CC' THEN 'Credit Card' WHEN 'CP' THEN 'Coupon' ELSE description end mop_name, card_name, tp.paid_amount FROM t_sales_trans_hdr a LEFT JOIN t_paid tp on tp.trans_no = a.trans_no LEFT JOIN m_mop mm on mm.mop_code = tp.mop_code where a.trans_status = '1' and substr( a.trans_no, 9, 1 )  = '5' ";
 
         $whereClause = "";
-        if ($store != "null") {
+        if ($store != "") {
             $store = $store == "V001" ? "03" : substr($store, -2);
             $whereClause .= " and substr( a.trans_no, 7, 2 ) ='" . $store . "' ";
         }
         if ($fromdate != "" && $todate != "") {
             $whereClause .= " AND DATE_FORMAT(a.trans_date,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
         }
-        if ($deltype != "null") {
+        if ($deltype != "") {
             $whereClause .= " and a.delivery_type ='" . $deltype . "' ";
         }
-        if ($paytype != "null") {
+        if ($paytype != "") {
             if ($paytype != 'VA' || $paytype != 'VC' || $paytype != 'PP' || $paytype != 'CC' || $paytype != 'CP') {
 
                 $whereClause .= " and mm.description ='" . $paytype . "' ";
@@ -1669,26 +1677,31 @@ class Laporan extends My_Controller
         exit;
     }
 
-    function export_excel_pembayaran_online($fromdate, $todate, $store, $deltype, $paytype)
+    function export_excel_pembayaran_online()
     {
-        
+        $getData = $this->input->get();
+        $fromdate = $getData['fromdate'] ;
+        $todate = $getData['todate'] ;
+        $store = $getData['store'] ;
+        $deltype = $getData['deltype'] ;
+        $paytype = $getData['paytype'] ;
         $dbCentral = $this->load->database('dbcentral', TRUE);
         $data['username'] = $this->input->cookie('cookie_invent_user');
 
         $query = "SELECT distinct CASE WHEN ( substr( a.trans_no, 7, 2 ) = '01' ) THEN 'R001' WHEN ( substr( a.trans_no, 7, 2 ) = '02' ) THEN 'R002' WHEN ( substr( a.trans_no, 7, 2 ) = '03' ) THEN 'V001' END  AS branch_id,  DATE_FORMAT(a.trans_date,'%Y-%m-%d') as periode, DATE_FORMAT(a.trans_date,'%m') as bulan, a.trans_no, a.no_ref, a.delivery_type, a.delivery_number, CASE left(tp.mop_code,2) when 'VA' THEN 'Virtual Account' WHEN 'VC' THEN 'Voucher' WHEN 'PP' THEN 'Point' WHEN 'CC' THEN 'Credit Card' WHEN 'CP' THEN 'Coupon' ELSE description end mop_name, card_name, tp.paid_amount FROM t_sales_trans_hdr a LEFT JOIN t_paid tp on tp.trans_no = a.trans_no LEFT JOIN m_mop mm on mm.mop_code = tp.mop_code where a.trans_status = '1' and substr( a.trans_no, 9, 1 )  = '5' ";
 
         $whereClause = "";
-        if ($store != "null") {
+        if ($store != "") {
             $store = $store == "V001" ? "03" : substr($store, -2);
             $whereClause .= " and substr( a.trans_no, 7, 2 ) ='" . $store . "' ";
         }
         if ($fromdate != "" && $todate != "") {
             $whereClause .= " AND DATE_FORMAT(a.trans_date,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
         }
-        if ($deltype != "null") {
+        if ($deltype != "") {
             $whereClause .= " and a.delivery_type ='" . $deltype . "' ";
         }
-        if ($paytype != "null") {
+        if ($paytype != "") {
             if ($paytype != 'VA' || $paytype != 'VC' || $paytype != 'PP' || $paytype != 'CC' || $paytype != 'CP') {
 
                 $whereClause .= " and mm.description ='" . $paytype . "' ";

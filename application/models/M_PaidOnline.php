@@ -51,12 +51,11 @@ class M_PaidOnline extends CI_Model
             $whereClause .= " and a.delivery_type ='".$deltype."' ";
         }
         if($paytype != ''){
-            if($paytype != 'VA' || $paytype != 'VC' || $paytype != 'PP' || $paytype != 'CC' || $paytype != 'CP'){
-                
-                $whereClause .= " and mm.description ='".$paytype."' ";
+            if($paytype == 'VA' || $paytype == 'VC' || $paytype == 'PP' || $paytype == 'CC' || $paytype == 'CP'){
+                $whereClause .= " and left(tp.mop_code,2) ='".$paytype."' ";
             }
             else{
-                $whereClause .= " and left(tp.mop_code,2) ='".$paytype."' ";
+                $whereClause .= " and mm.description ='".$paytype."' ";
             }
         }
 
