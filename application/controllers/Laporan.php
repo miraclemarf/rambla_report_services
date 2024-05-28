@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 require 'vendor/autoload.php';
+
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
@@ -489,11 +490,12 @@ class Laporan extends My_Controller
         $sheet->setCellValue('J1', 'vendor_name');
         $sheet->setCellValue('K1', 'brand_code');
         $sheet->setCellValue('L1', 'brand_name');
-        $sheet->setCellValue('M1', 'DIVISION');
-        $sheet->setCellValue('N1', 'SUB_DIVISION');
-        $sheet->setCellValue('O1', 'DEPT');
-        $sheet->setCellValue('P1', 'SUB_DEPT');
-        $sheet->setCellValue('Q1', 'last_stock');
+        $sheet->setCellValue('M1', 'Kode Kategori');
+        $sheet->setCellValue('N1', 'DIVISION');
+        $sheet->setCellValue('O1', 'SUB_DIVISION');
+        $sheet->setCellValue('P1', 'DEPT');
+        $sheet->setCellValue('Q1', 'SUB_DEPT');
+        $sheet->setCellValue('R1', 'last_stock');
 
         /* Excel Data */
         $row_number = 2;
@@ -510,11 +512,12 @@ class Laporan extends My_Controller
             $sheet->setCellValue('J' . $row_number, $row['vendor_name']);
             $sheet->setCellValue('K' . $row_number, $row['brand_code']);
             $sheet->setCellValue('L' . $row_number, $row['brand_name']);
-            $sheet->setCellValue('M' . $row_number, $row['DIVISION']);
-            $sheet->setCellValue('N' . $row_number, $row['SUB_DIVISION']);
-            $sheet->setCellValue('O' . $row_number, $row['DEPT']);
-            $sheet->setCellValue('P' . $row_number, $row['SUB_DEPT']);
-            $sheet->setCellValue('Q' . $row_number, $row['last_stock']);
+            $sheet->setCellValue('M' . $row_number, $row['category_code']);
+            $sheet->setCellValue('N' . $row_number, $row['DIVISION']);
+            $sheet->setCellValue('O' . $row_number, $row['SUB_DIVISION']);
+            $sheet->setCellValue('P' . $row_number, $row['DEPT']);
+            $sheet->setCellValue('Q' . $row_number, $row['SUB_DEPT']);
+            $sheet->setCellValue('R' . $row_number, $row['last_stock']);
 
             $row_number++;
         }
@@ -1206,10 +1209,10 @@ class Laporan extends My_Controller
             }
         }
 
-        $data = $this->db->query("SELECT branch_id,periode,barcode, article_code, article_name,varian_option1,varian_option2, vendor_code, vendor_name, brand_code,brand_name,DIVISION,SUB_DIVISION,DEPT,SUB_DEPT,last_stock FROM r_s_item_stok where 1=1 $where")->result_array();
+        $data = $this->db->query("SELECT branch_id,periode,barcode, article_code, article_name,varian_option1,varian_option2, vendor_code, vendor_name, brand_code,brand_name,category_code, DIVISION,SUB_DIVISION,DEPT,SUB_DEPT,last_stock FROM r_s_item_stok where 1=1 $where")->result_array();
         $file = fopen('php://output', 'w');
 
-        $header = array('branch_id', 'periode', 'barcode', 'article_code', 'article_name', 'varian_option1', 'varian_option2', 'vendor_code', 'vendor_name', 'brand_code', 'brand_name', 'DIVISION', 'SUB_DIVISION', 'DEPT', 'SUB_DEPT', 'last_stock');
+        $header = array('branch_id', 'periode', 'barcode', 'article_code', 'article_name', 'varian_option1', 'varian_option2', 'vendor_code', 'vendor_name', 'brand_code', 'brand_name', 'Kode_Kategori', 'DIVISION', 'SUB_DIVISION', 'DEPT', 'SUB_DEPT', 'last_stock');
 
         fputcsv($file, $header);
 
@@ -1614,11 +1617,11 @@ class Laporan extends My_Controller
         extract(populateform());
 
         $getData = $this->input->get();
-        $fromdate = $getData['fromdate'] ;
-        $todate = $getData['todate'] ;
-        $store = $getData['store'] ;
-        $deltype = $getData['deltype'] ;
-        $paytype = $getData['paytype'] ;
+        $fromdate = $getData['fromdate'];
+        $todate = $getData['todate'];
+        $store = $getData['store'];
+        $deltype = $getData['deltype'];
+        $paytype = $getData['paytype'];
 
         $dbCentral = $this->load->database('dbcentral', TRUE);
 
@@ -1662,11 +1665,9 @@ class Laporan extends My_Controller
         foreach ($data as $key => $value) {
             if ($value['delivery_type'] == 'P') {
                 $value['delivery_type'] = 'Pickup';
-            }
-            else if ($value['delivery_type'] == 'I') {
+            } else if ($value['delivery_type'] == 'I') {
                 $value['delivery_type'] = 'Instan';
-            }
-            else if ($value['delivery_type'] == 'R') {
+            } else if ($value['delivery_type'] == 'R') {
                 $value['delivery_type'] = 'Reguler';
             } else {
                 $value['delivery_type'] = '';
@@ -1680,11 +1681,11 @@ class Laporan extends My_Controller
     function export_excel_pembayaran_online()
     {
         $getData = $this->input->get();
-        $fromdate = $getData['fromdate'] ;
-        $todate = $getData['todate'] ;
-        $store = $getData['store'] ;
-        $deltype = $getData['deltype'] ;
-        $paytype = $getData['paytype'] ;
+        $fromdate = $getData['fromdate'];
+        $todate = $getData['todate'];
+        $store = $getData['store'];
+        $deltype = $getData['deltype'];
+        $paytype = $getData['paytype'];
         $dbCentral = $this->load->database('dbcentral', TRUE);
         $data['username'] = $this->input->cookie('cookie_invent_user');
 
@@ -1741,11 +1742,9 @@ class Laporan extends My_Controller
             $sheet->setCellValue('F' . $row_number, $row['no_ref']);
             if ($row['delivery_type'] == 'P') {
                 $maskDelType = 'Pickup';
-            }
-            else if ($row['delivery_type'] == 'I') {
+            } else if ($row['delivery_type'] == 'I') {
                 $maskDelType = 'Instan';
-            }
-            else if ($row['delivery_type'] == 'R') {
+            } else if ($row['delivery_type'] == 'R') {
                 $maskDelType = 'Reguler';
             } else {
                 $maskDelType = '';
@@ -1769,5 +1768,4 @@ class Laporan extends My_Controller
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save('php://output');
     }
-
 }
