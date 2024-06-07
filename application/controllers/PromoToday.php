@@ -130,10 +130,11 @@ class PromoToday extends My_Controller
         $sub_division = $getData['sub_division'] ? $getData['sub_division'] : '';
         $dept = $getData['dept'] ? $getData['dept'] : '';
         $sub_dept = $getData['sub_dept'] ? $getData['sub_dept'] : '';
+        $storeId = $getData['storeId'] ? $getData['storeId'] : '';
         $dbCentral = $this->load->database('dbcentral', TRUE);
         $data['username'] = $this->input->cookie('cookie_invent_user');
 
-        $query = "select b.code as barcode, mi.supplier_pname as article_name, mb.brand_name, mk.SUB_DIVISION, mk.DEPT, mk.SUB_DEPT, a.promo_id, promo_desc, tp.promo_name, date_format(start_date, '%d %M %Y') as start_date, start_time, date_format(end_date, '%d %M %Y') as end_date, end_time from t_promo_hdr a inner join t_promo_dtl b on a.promo_id = b.promo_id left JOIN m_codebar mc on b.code = mc.barcode left JOIN m_item_master mi on mc.article_number = mi.article_number LEFT JOIN m_brand mb on mb.brand_code = mi.brand LEFT JOIN m_kategori_list mk on mk.CATEGORY_CODE = mi.category_code LEFT JOIN t_promo_type tp on tp.promo_type = a.promo_type where status = 'S' and a.promo_type < 30 and aktif = '1' and date_format(date_add(curdate(),interval 0 day),'%y%m%d') between date_format(date_add(start_date ,interval 0 day),'%y%m%d') and date_format(date_add(end_date,interval 0 day),'%y%m%d') and a.branch_id = 'V001' and mi.branch_id = 'V001' ";
+        $query = "select b.code as barcode, mi.supplier_pname as article_name, mb.brand_name, mk.SUB_DIVISION, mk.DEPT, mk.SUB_DEPT, a.promo_id, promo_desc, tp.promo_name, date_format(start_date, '%d %M %Y') as start_date, start_time, date_format(end_date, '%d %M %Y') as end_date, end_time from t_promo_hdr a inner join t_promo_dtl b on a.promo_id = b.promo_id left JOIN m_codebar mc on b.code = mc.barcode left JOIN m_item_master mi on mc.article_number = mi.article_number LEFT JOIN m_brand mb on mb.brand_code = mi.brand LEFT JOIN m_kategori_list mk on mk.CATEGORY_CODE = mi.category_code LEFT JOIN t_promo_type tp on tp.promo_type = a.promo_type where status = 'S' and a.promo_type < 30 and aktif = '1' and a.branch_id = '".$storeId."' and mi.branch_id = '".$storeId."' ";
 
         $whereClause = "";
         
