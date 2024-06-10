@@ -163,17 +163,6 @@
 
         $('#show-periode').hide();
 
-        $('#check-periode :checkbox').change(function() {
-            // this will contain a reference to the checkbox   
-            if (this.checked) {
-                $('#show-periode').show();
-                params3 = periode;
-            } else {
-                $('#show-periode').hide();
-                params3 = '01/01/2023 - 31/12/2049';
-            }
-        });
-
         // console.log(params3);
         $('#modal-filter-promo').modal('show');
         // load_data_promo(params1,params2,params3,params4,params5,params6,params7);
@@ -202,6 +191,17 @@
             format = this.value;
         });
 
+        $('#check-periode :checkbox').change(function() {
+            // this will contain a reference to the checkbox   
+            if (this.checked) {
+                $('#show-periode').show();
+            } else {
+                $('#show-periode').hide();
+            }
+        });
+
+
+
         $('.btn-submit-filter').on("click", function() {
             if (store === '' || store == null) {
                 alert('Harap Pilih Store Dahulu')
@@ -209,12 +209,19 @@
             }
             params1 = brand_code;
             params2 = promo;
-            params3 = periode;
+
+            if ($('.form-check-input').prop('checked')) {
+                params3 = periode;
+            } else {
+                params3 = '01/01/2023 - 12/31/2049';
+            }
             params4 = division;
             params5 = sub_division;
             params6 = dept;
             params7 = sub_dept;
             params8 = store;
+            console.log(params3);
+            console.log(periode);
 
             if (params1 === "") {
                 params1 = null;

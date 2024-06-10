@@ -346,6 +346,8 @@ class Laporan extends My_Controller
         } else {
             $isWhere = $filter;
         }
+        // echo json_encode($isWhere);
+        // die;
 
         header('Content-Type: application/json');
         echo $this->M_Datatables->get_tables_where($tables, $search, $where, $isWhere);
