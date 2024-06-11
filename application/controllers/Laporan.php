@@ -18,6 +18,7 @@ class Laporan extends My_Controller
         $this->load->model('models', '', TRUE);
         $this->load->model('M_Datatables');
         $this->load->model('M_PaidOnline');
+        $this->load->model('M_OperationalFee');
         $this->load->model('M_Categories');
         $this->load->model('M_Division');
         $this->ceklogin();
@@ -1581,6 +1582,28 @@ class Laporan extends My_Controller
         exit;
     }
 
+    public function operational_fee()
+    {
+        extract(populateform());
+        $data['title'] = 'Rambla | Laporan Operational Fee';
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+        $data['vendor'] = $this->input->cookie('cookie_invent_vendor');
+
+        $this->load->view('template_member/header', $data);
+        $this->load->view('template_member/navbar', $data);
+        $this->load->view('template_member/sidebar', $data);
+        $this->load->view('laporan/operational_fee', $data);
+        $this->load->view('template_member/footer');
+    }
+
+    public function pembayaran_operational_fee()
+    {
+
+        $postData = $this->input->post();
+        $data = $this->M_OperationalFee->getOperationalFee($postData);
+        echo json_encode($data);
+    }
+
     public function pembayaran_online_paid()
     {
 
@@ -1605,13 +1628,8 @@ class Laporan extends My_Controller
 
     public function pembayaran_online_list()
     {
-
-        // POST data
         $postData = $this->input->post();
-
-        // Get data
         $data = $this->M_PaidOnline->getPaidOnline($postData);
-
         echo json_encode($data);
     }
     function export_csv_pembayaran_online()
@@ -1762,6 +1780,308 @@ class Laporan extends My_Controller
         /* Excel File Format */
         $writer = new Xlsx($spreadsheet);
         $filename = 'payment_trx_online';
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save('php://output');
+    }
+    function export_csv_operational_fee()
+    {
+        extract(populateform());
+
+        $getData = $this->input->get();
+        $fromdate = $getData['fromdate'];
+        $todate = $getData['todate'];
+        $store = $getData['store'];
+
+        $dbCentral = $this->load->database('dbcentral', TRUE);
+
+        $filename = 'operational_fee_' . $store . '_' . $fromdate . '_' . $todate . '.csv';
+
+        header("Content-Description: File Transfer");
+        header("Content-Disposition: attachment; filename=" . $filename);
+        header("Content-Type: application/csv;");
+
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+
+        $whereClause = "";
+        $kode = "";
+
+        if ($store != '') {
+            if ($store == "R001") {
+                $kode = "01";
+            } else if ($store == "R002") {
+                $kode = "02";
+            } else if ($store == "V001") {
+                $kode = "03";
+            }
+        }
+        if ($fromdate != "" && $todate != "") {
+            $whereClause .= " AND DATE_FORMAT(trans_date,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
+        }
+
+        $query = "SELECT row_number() over() No, sales.vendor_code, vendor_name, brand_code, 
+        sum(net_bf_floor)net_floor, sum(net_bf_bazzar)nett_bazzar, 
+        sum(gross_bf_floor)gross_floor, sum(gross_bf_bazzar)gross_bazzar,
+        ifnull(ops_fee,0)ops_fee, 
+        ifnull(sum((gross_bf_floor*ops_fee)/100),0)TotalOpsFee
+        from (
+            select date_format(trans_date , '%Y.%m') bulan, 
+            round(sum(td.net_prc),0) net_af_floor, 0 net_af_bazzar,
+            round(sum(td.net_all),0) net_bf_floor, 0 net_bf_bazzar,    
+            round(sum(td.gross_BF),0) gross_bf_floor, 0 gross_bf_bazzar,
+            td.brand, mim.vendor_code
+            from t_sales_trans_hdr th inner join 
+            (select *, case when flag_tax in(1) then net_price / 1.11				
+                          else net_price
+                      end as net_prc, 	
+                          
+                  case flag_flexi when 1 then 		
+                    case type_flex when '0' then net_price / 1.11	
+                        when '1' then (net_price + (fee * -1))/ 1.11
+                        when '2' then (net_price - fee)/ 1.11
+                    end		
+                    else 		
+                      case when flag_tax in(1)  then net_price / 1.11	
+                          else net_price
+                      end	
+                    end as net_all,
+                    case flag_flexi when 1 then 		
+                    case type_flex when '0' then net_price	
+                        when '1' then net_price + (fee * -1)
+                        when '2' then net_price - fee
+                    end		
+                    else net_price 
+                    end as gross_BF
+                    from t_sales_trans_dtl
+            ) td on th.trans_no = td.trans_no left join m_codebar mc on td.barcode = mc.barcode
+            left join m_item_master mim on mc.article_number = mim.article_number and mim.branch_id = (CASE
+            WHEN substring(th.trans_no,7,2) = '01' THEN 'R001'
+            WHEN substring(th.trans_no,7,2) = '02' THEN 'R002'
+            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' END)
+            where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause 
+            and substring(th.trans_no,7,2) = '$kode'
+            and substring(th.trans_no,9,1) in ('0','1','2','5') 
+            group by bulan, td.brand, mim.vendor_code		
+            union all 
+            select date_format(trans_date , '%Y.%m') bulan, 
+            0 net_af_floor, round(sum(td.net_prc),0) net_af_bazzar, 
+            0 net_bf_floor, round(sum(td.net_all),0) net_bf_bazzar, 
+            0 gross_bf_floor, round(sum(td.gross_BF),0) gross_bf_bazzar,
+            td.brand, mim.vendor_code
+            from t_sales_trans_hdr th inner join 
+            (select *, case when flag_tax in(1) then net_price / 1.11				
+                          else net_price
+                      end as net_prc, 	
+                          
+                  case flag_flexi when 1 then 		
+                    case type_flex when '0' then net_price / 1.11	
+                        when '1' then (net_price + (fee * -1))/ 1.11
+                        when '2' then (net_price - fee)/ 1.11
+                    end		
+                    else 		
+                      case when flag_tax in(1)  then net_price / 1.11	
+                          else net_price
+                      end	
+                    end as net_all,
+                    case flag_flexi when 1 then 		
+                    case type_flex when '0' then net_price	
+                        when '1' then net_price + (fee * -1)
+                        when '2' then net_price - fee
+                    end		
+                    else net_price 
+                    end as gross_BF
+                    from t_sales_trans_dtl
+            ) td on th.trans_no = td.trans_no left join m_codebar mc on td.barcode = mc.barcode
+            left join m_item_master mim on mc.article_number = mim.article_number and mim.branch_id = (CASE
+            WHEN substring(th.trans_no,7,2) = '01' THEN 'R001'
+            WHEN substring(th.trans_no,7,2) = '02' THEN 'R002'
+            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' END)
+            where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause    
+            and substring(th.trans_no,7,2) = '$kode' 
+            and substring(th.trans_no,9,1) in ('3') 
+            group by bulan, td.brand, mim.vendor_code    
+        )sales left join (
+            SELECT mc.vendor_code, brand_code, vendor_name, ops_fee
+            FROM m_margin_code mc left join m_vendor mv on mc.vendor_code = mv.vendor_code
+            where mc.branch_id = '" . $store . "'
+        ) Margin on sales.brand = Margin.brand_code and sales.vendor_code = Margin.vendor_code  
+        group by sales.vendor_code, vendor_name, brand_code, ops_fee
+        ";
+
+        $orderBy = " ";
+        $data = $dbCentral->query($query . $orderBy)->result_array();
+
+        $file = fopen('php://output', 'w');
+
+        $header = array('No', 'Vendor Code', 'Vendor Name', 'Brand Code', 'Net Floor', 'Net Bazaar', 'Gross Floor', 'Gross Bazaar', 'Ops Fee', 'Total Ops Fee');
+
+        fputcsv($file, $header);
+        foreach ($data as $key => $value) {
+            fputcsv($file, $value);
+        }
+        // fclose($file);
+        exit;
+    }
+
+    function export_excel_operational_fee()
+    {
+        $getData = $this->input->get();
+        $fromdate = $getData['fromdate'];
+        $todate = $getData['todate'];
+        $store = $getData['store'];
+
+        $dbCentral = $this->load->database('dbcentral', TRUE);
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+
+        $whereClause = "";
+        $kode = "";
+
+        if ($store != '') {
+            if ($store == "R001") {
+                $kode = "01";
+            } else if ($store == "R002") {
+                $kode = "02";
+            } else if ($store == "V001") {
+                $kode = "03";
+            }
+        }
+        if ($fromdate != "" && $todate != "") {
+            $whereClause .= " AND DATE_FORMAT(trans_date,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
+        }
+
+        $query = "SELECT row_number() over() No, sales.vendor_code, vendor_name, brand_code, 
+        sum(net_bf_floor)net_floor, sum(net_bf_bazzar)nett_bazzar, 
+        sum(gross_bf_floor)gross_floor, sum(gross_bf_bazzar)gross_bazzar,
+        ifnull(ops_fee,0)ops_fee, 
+        ifnull(sum((gross_bf_floor*ops_fee)/100),0)TotalOpsFee
+        from (
+            select date_format(trans_date , '%Y.%m') bulan, 
+            round(sum(td.net_prc),0) net_af_floor, 0 net_af_bazzar,
+            round(sum(td.net_all),0) net_bf_floor, 0 net_bf_bazzar,    
+            round(sum(td.gross_BF),0) gross_bf_floor, 0 gross_bf_bazzar,
+            td.brand, mim.vendor_code
+            from t_sales_trans_hdr th inner join 
+            (select *, case when flag_tax in(1) then net_price / 1.11				
+                          else net_price
+                      end as net_prc, 	
+                          
+                  case flag_flexi when 1 then 		
+                    case type_flex when '0' then net_price / 1.11	
+                        when '1' then (net_price + (fee * -1))/ 1.11
+                        when '2' then (net_price - fee)/ 1.11
+                    end		
+                    else 		
+                      case when flag_tax in(1)  then net_price / 1.11	
+                          else net_price
+                      end	
+                    end as net_all,
+                    case flag_flexi when 1 then 		
+                    case type_flex when '0' then net_price	
+                        when '1' then net_price + (fee * -1)
+                        when '2' then net_price - fee
+                    end		
+                    else net_price 
+                    end as gross_BF
+                    from t_sales_trans_dtl
+            ) td on th.trans_no = td.trans_no left join m_codebar mc on td.barcode = mc.barcode
+            left join m_item_master mim on mc.article_number = mim.article_number and mim.branch_id = (CASE
+            WHEN substring(th.trans_no,7,2) = '01' THEN 'R001'
+            WHEN substring(th.trans_no,7,2) = '02' THEN 'R002'
+            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' END)
+            where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause 
+            and substring(th.trans_no,7,2) = '$kode'
+            and substring(th.trans_no,9,1) in ('0','1','2','5') 
+            group by bulan, td.brand, mim.vendor_code		
+            union all 
+            select date_format(trans_date , '%Y.%m') bulan, 
+            0 net_af_floor, round(sum(td.net_prc),0) net_af_bazzar, 
+            0 net_bf_floor, round(sum(td.net_all),0) net_bf_bazzar, 
+            0 gross_bf_floor, round(sum(td.gross_BF),0) gross_bf_bazzar,
+            td.brand, mim.vendor_code
+            from t_sales_trans_hdr th inner join 
+            (select *, case when flag_tax in(1) then net_price / 1.11				
+                          else net_price
+                      end as net_prc, 	
+                          
+                  case flag_flexi when 1 then 		
+                    case type_flex when '0' then net_price / 1.11	
+                        when '1' then (net_price + (fee * -1))/ 1.11
+                        when '2' then (net_price - fee)/ 1.11
+                    end		
+                    else 		
+                      case when flag_tax in(1)  then net_price / 1.11	
+                          else net_price
+                      end	
+                    end as net_all,
+                    case flag_flexi when 1 then 		
+                    case type_flex when '0' then net_price	
+                        when '1' then net_price + (fee * -1)
+                        when '2' then net_price - fee
+                    end		
+                    else net_price 
+                    end as gross_BF
+                    from t_sales_trans_dtl
+            ) td on th.trans_no = td.trans_no left join m_codebar mc on td.barcode = mc.barcode
+            left join m_item_master mim on mc.article_number = mim.article_number and mim.branch_id = (CASE
+            WHEN substring(th.trans_no,7,2) = '01' THEN 'R001'
+            WHEN substring(th.trans_no,7,2) = '02' THEN 'R002'
+            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' END)
+            where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause    
+            and substring(th.trans_no,7,2) = '$kode' 
+            and substring(th.trans_no,9,1) in ('3') 
+            group by bulan, td.brand, mim.vendor_code    
+        )sales left join (
+            SELECT mc.vendor_code, brand_code, vendor_name, ops_fee
+            FROM m_margin_code mc left join m_vendor mv on mc.vendor_code = mv.vendor_code
+            where mc.branch_id = '" . $store . "'
+        ) Margin on sales.brand = Margin.brand_code and sales.vendor_code = Margin.vendor_code  
+        group by sales.vendor_code, vendor_name, brand_code, ops_fee
+        ";
+
+
+        $orderBy = " ";
+        $data = $dbCentral->query($query . $orderBy)->result_array();
+
+        /* Spreadsheet Init */
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        /* Excel Header */
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Vendor Code');
+        $sheet->setCellValue('C1', 'Vendor Name');
+        $sheet->setCellValue('D1', 'Brand Code');;
+        $sheet->setCellValue('E1', 'Net Floor');
+        $sheet->setCellValue('F1', 'Net Bazaar');
+        $sheet->setCellValue('G1', 'Gross Floor');
+        $sheet->setCellValue('H1', 'Gross Bazaar');
+        $sheet->setCellValue('I1', 'Ops Fee');
+        $sheet->setCellValue('J1', 'Total Ops Fee');
+
+        /* Excel Data */
+        $row_number = 2;
+        $maskDelType = '';
+        foreach ($data as $key => $row) {
+            $sheet->setCellValue('A' . $row_number, $key + 1);
+            $sheet->setCellValue('B' . $row_number, $row['vendor_code']);
+            $sheet->setCellValue('C' . $row_number, $row['vendor_name']);
+            $sheet->setCellValue('D' . $row_number, $row['brand_code']);
+            $sheet->setCellValue('E' . $row_number, $row['net_floor']);
+            $sheet->setCellValue('F' . $row_number, $row['nett_bazzar']);
+            $sheet->setCellValue('G' . $row_number, $row['gross_floor']);
+            $sheet->setCellValue('H' . $row_number, $row['gross_bazzar']);
+            $sheet->setCellValue('I' . $row_number, $row['ops_fee']);
+            $sheet->setCellValue('J' . $row_number, $row['TotalOpsFee']);
+            $row_number++;
+        }
+
+        /* Excel File Format */
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'operational_fee_' . $store . '_' . $fromdate . '_' . $todate;
 
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
