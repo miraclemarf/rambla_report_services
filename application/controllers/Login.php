@@ -40,14 +40,14 @@ class Login extends My_Controller
 		$query = $this->db->query("SELECT * FROM m_login a
         inner join m_role b
         on a.role_id = b.role_id
-        where username ='" . $username . "' AND password = '" . $password . "'");
+        where username ='" . $username . "' AND password = '" . $password . "' and a.is_active ='1'");
 
 
 		if ($query->num_rows() > 0) {
 
 			$vToken   = $this->randstring();
 			$username = $query->row()->username;
-            $tipe     = $query->row()->role_id;
+			$tipe     = $query->row()->role_id;
 
 			//Delete login data 
 			$this->Models->queryhandle("DELETE FROM t_login_log WHERE username = '" . $username . "'");
@@ -70,15 +70,14 @@ class Login extends My_Controller
 		}
 	}
 
-    function randstring()
+	function randstring()
 	{
 		$pass = 60;
 		$allchar = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
 		mt_srand((float) microtime() * 1000000);
 		$string = '';
 		for ($i = 0; $i < $pass; $i++) {
-			$string .= $allchar[
-				mt_rand(0, strlen($allchar) - 1)];
+			$string .= $allchar[mt_rand(0, strlen($allchar) - 1)];
 		}
 		return $string;
 	}
@@ -105,6 +104,5 @@ class Login extends My_Controller
 			'expire' => '86400'
 		);
 		$this->input->set_cookie($cookie3);
-
 	}
 }
