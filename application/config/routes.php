@@ -54,3 +54,7 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['promo-today/(:any)']['GET'] = '/PromoToday/index/$1';
+
+$route['oned/auth'] = 'OneD/getAuthorizationUrl';
+$route['oned/token'] = 'OneD/getAccessToken';
+$route['oned/refresh'] = 'OneD/refreshToken';

@@ -15,7 +15,7 @@ class UpdatePrice extends My_Controller
         $this->load->library('form_validation');
         $this->load->model('models', '', TRUE);
         $this->load->model('M_UpdatePrice');
-        //$this->ceklogin();
+        $this->ceklogin();
     }
 
     public function index()
