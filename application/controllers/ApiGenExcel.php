@@ -115,30 +115,24 @@ class ApiGenExcel extends CI_Controller
 
         $url = 'https://graph.microsoft.com/v1.0/me/drive/root:' . $targetDir . '/' . rawurlencode($filename. '.xlsx') . ':/content';
         $fileContent = file_get_contents('D:/upload/' . $filename . '.xlsx');
-        $response = $this->client->put($url, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/octet-stream',
-            ],
-            'body' => $fileContent
-        ]);
-        $responseBody = json_decode($response->getBody()->getContents(), true);
-        // Check for expired token and refresh if needed
-        if (isset($responseBody['error']) && $responseBody['error']['code'] === 'InvalidAuthenticationToken') {
-            $accessToken = $this->M_TokenOneD->refreshToken();
-            $response = $this->client->put($url, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $accessToken,
-                    'Content-Type' => 'application/octet-stream',
-                ],
-                'body' => $fileContent
-            ]);
 
-            $responseBody = json_decode($response->getBody()->getContents(), true);
+        $response = $this->uploadToOneDrive($url, $fileContent, $accessToken);
+
+        // If the token was invalid, refresh the token and retry
+        if ($response['status'] === 'InvalidAuthenticationToken') {
+            $accessToken = $this->M_TokenOneD->refreshToken();
+            if ($accessToken) {
+                $response = $this->uploadToOneDrive($url, $fileContent, $accessToken);
+            } else {
+                echo json_encode(['error' => 'Failed to refresh token.']);
+                return;
+            }
         }
-        if (!isset($responseBody['error'])) {
-            unlink('D:/upload/' . $filename . '.xlsx');
-        }
+
+        // Only unlink the temporary file if the upload is successful
+        if ($response['status'] === 'success') {
+            unlink('D:/upload/' . $filename . '.xlsx'); // Delete the temporary file
+        }       
 
 
         header('Content-Type: application/json');
@@ -305,5 +299,28 @@ class ApiGenExcel extends CI_Controller
         });
 
         return $listAssortItem;
+    }
+
+    private function uploadToOneDrive($url, $fileContent, $accessToken) {
+        try {
+            $response = $this->client->put($url, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type' => 'application/octet-stream',
+                ],
+                'body' => $fileContent
+            ]);
+
+            $responseBody = json_decode($response->getBody()->getContents(), true);
+            return ['status' => 'success', 'body' => $responseBody];
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            $responseBody = json_decode($e->getResponse()->getBody()->getContents(), true);
+            $errorCode = $responseBody['error']['code'] ?? 'Unknown';
+            if ($errorCode === 'InvalidAuthenticationToken') {
+                return ['status' => 'InvalidAuthenticationToken', 'body' => $responseBody];
+            }
+            log_message('error', 'Upload failed: ' . $e->getMessage());
+            return ['status' => 'error', 'body' => $responseBody];
+        }
     }
 }

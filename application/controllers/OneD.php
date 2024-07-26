@@ -20,13 +20,13 @@ class OneD extends CI_Controller {
         $authorizationUrl = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=' . $this->clientId .
             '&response_type=code&redirect_uri=' . urlencode($this->redirectUri) .
             '&response_mode=query&scope=offline_access%20files.readwrite%20openid%20profile';
-
-        echo json_encode(['url' => $authorizationUrl]);
+        $data['url'] = $authorizationUrl;
+        $this->load->view('configuration/onedauth', $data);
     }
 
     public function getAccessToken() {
-        //$authorizationCode = $this->input->get('code');
-        $authorizationCode = 'M.C511_BL2.2.U.c6dedbdf-d13e-bec7-66f9-fba31f92c225';
+        $authorizationCode = $this->input->get('code');
+        //$authorizationCode = 'M.C511_BL2.2.U.c6dedbdf-d13e-bec7-66f9-fba31f92c225';
         $response = $this->client->post('https://login.microsoftonline.com/common/oauth2/v2.0/token', [
             'form_params' => [
                 'client_id' => $this->clientId,
