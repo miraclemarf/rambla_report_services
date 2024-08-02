@@ -50,7 +50,7 @@ class M_Supermarket extends CI_Model
             'th.no_ref AS no_ref',
             'CASE WHEN (SUBSTR(th.trans_no, 7, 2) = "01") THEN "R001" WHEN (SUBSTR(th.trans_no, 7, 2) = "02") THEN "R002" WHEN (SUBSTR(th.trans_no, 7, 2) = "03") THEN "V001" END AS branch_id',
             'CASE WHEN (mim.tag_5 = "timbang") THEN SUM(td.berat) ELSE SUM(td.qty) END AS "Qty Gab"',
-            'CASE WHEN (COALESCE(th.member_id, '') != '') THEN "MEMBER" ELSE "NON MEMBER" END AS Member',
+            'CASE WHEN (COALESCE(th.member_id, "") != "") THEN "MEMBER" ELSE "NON MEMBER" END AS Member',
             'DATE_FORMAT(th.trans_date, "%M") AS "Month"',
             'DATE_FORMAT(th.trans_date, "%d-%M") AS "Date"',
             'DATE_FORMAT(th.trans_time, "%H:00") AS "Hour"',
