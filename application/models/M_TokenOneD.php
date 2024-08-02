@@ -18,7 +18,6 @@ class M_TokenOneD extends CI_Model {
 
     public function refreshToken() {
         $refreshToken = $this->session->userdata('refresh_token');
-        var_dump($refreshToken);
         $response = $this->client->post('https://login.microsoftonline.com/common/oauth2/v2.0/token', [
             'form_params' => [
                 'client_id' => $this->clientId,
