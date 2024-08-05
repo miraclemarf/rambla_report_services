@@ -85,6 +85,24 @@
                                         <nobr>Free Qty</nobr>
                                     </th>
                                     <th>
+                                        <nobr>Q0</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Price0</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Q1</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Price1</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Q2</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Price2</nobr>
+                                    </th>
+                                    <th>
                                         <nobr>Special Price</nobr>
                                     </th>
                                     <th>
@@ -452,6 +470,42 @@
                         "data": "free_qty",
                         "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "Q0",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "price0",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "Q1",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "price1",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "Q2",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "price2",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
