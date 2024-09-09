@@ -7,7 +7,7 @@ class M_Supermarket extends CI_Model
         parent::__construct();
     }
 
-    function getSalesDaily($store)
+    function getSalesDaily($store, $date = NULL)
     {
         $dbCentral = $this->load->database('dbcentral', TRUE);
         $dbCentral->select([
@@ -69,7 +69,7 @@ class M_Supermarket extends CI_Model
 
         $dbCentral->where('th.trans_status IN ("1", "3")');
         $dbCentral->where('td.category_code != "RSOTMKVC01"');
-        $dbCentral->where('th.trans_date', date('Y-m-d', strtotime('-1 day')));
+        $dbCentral->where('th.trans_date', date('Y-m-d', !$date ? strtotime('-1 day') : $date));
         if ($store == '01') {
             $dbCentral->where('mkl.DIVISION', 'Supermarket');
         }

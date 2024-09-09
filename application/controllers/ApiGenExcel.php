@@ -72,7 +72,8 @@ class ApiGenExcel extends CI_Controller
     public function groSalesDaily()
     {
         $store = $this->input->get('storeid');
-        $data = $this->M_Supermarket->getSalesDaily($store);
+        $date = $this->input->get('tgl')
+        $data = $this->M_Supermarket->getSalesDaily($store, $date);
         /* Spreadsheet Init */
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
