@@ -238,8 +238,6 @@
             params6 = dept;
             params7 = sub_dept;
             params8 = store;
-            console.log(params3);
-            console.log(periode);
 
             if (params1 === "") {
                 params1 = null;

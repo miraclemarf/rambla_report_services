@@ -23,13 +23,13 @@ class Dashboard extends My_Controller
         $where = "";
 
         // START CEK ADA KATEGORINYA NGGA
-        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
-        if($cek_user_category){
-            $where.= $this->M_Categories->get_category($data['username']);
-        }else{
-            $where.= "AND brand_code in (
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
+        if ($cek_user_category) {
+            $where .= $this->M_Categories->get_category($data['username']);
+        } else {
+            $where .= "AND brand_code in (
                 select distinct brand from m_user_brand 
-                where username = '".$data['username']."'
+                where username = '" . $data['username'] . "'
             )";
         }
         // END CEK ADA KATEGORINYA NGGA
@@ -39,15 +39,15 @@ class Dashboard extends My_Controller
         $data['list_brand']     = $this->Models->showdata("SELECT DISTINCT brand, brand_name from m_user_brand a
         inner join m_brand b
         on a.brand = b.brand_code
-        where username ='".$data['username']."'");
+        where username ='" . $data['username'] . "'");
 
         $data['omset_date']      = $this->Models->showdata("SELECT * from r_sales
-        WHERE MONTH(periode) ='".date('m')."' and YEAR(periode) ='".date('Y')."' $where  GROUP BY periode order by periode");
+        WHERE MONTH(periode) ='" . date('m') . "' and YEAR(periode) ='" . date('Y') . "' $where  GROUP BY periode order by periode");
 
         $data['omset_pos']      = $this->Models->showdata("SELECT SUM(net_af) as net, date_format(periode,'%Y-%m-%d') as periode
         from r_sales
-        WHERE MONTH(periode) ='".date('m')."' 
-        and YEAR(periode) ='".date('Y')."' 
+        WHERE MONTH(periode) ='" . date('m') . "' 
+        and YEAR(periode) ='" . date('Y') . "' 
         $where
         and substring(trans_no, 9, 1) != '5'
         GROUP BY periode
@@ -55,21 +55,22 @@ class Dashboard extends My_Controller
 
         $data['omset_apps']      = $this->Models->showdata("SELECT SUM(net_af) as net, date_format(periode,'%Y-%m-%d') as periode
         from r_sales
-        WHERE MONTH(periode) ='".date('m')."' 
-        and YEAR(periode) ='".date('Y')."' 
+        WHERE MONTH(periode) ='" . date('m') . "' 
+        and YEAR(periode) ='" . date('Y') . "' 
         $where
         and substring(trans_no, 9, 1) = '5'
         GROUP BY periode
-        order by periode");        
-        
+        order by periode");
+
         $this->load->view('template_member/header', $data);
         $this->load->view('template_member/navbar', $data);
         $this->load->view('template_member/sidebar', $data);
-        $this->load->view('dashboard/index', $data);
+        $this->load->view('dashboard/index_new', $data);
         $this->load->view('template_member/footer', $data);
     }
 
-    public function get_salesbyday(){
+    public function get_salesbyday()
+    {
         extract(populateform());
         $data['username']       = $this->input->cookie('cookie_invent_user');
 
@@ -85,13 +86,13 @@ class Dashboard extends My_Controller
         //     $where.= "error";
         // }
         // START CEK ADA KATEGORINYA NGGA
-        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
-        if($cek_user_category){
-            $where.= $this->M_Categories->get_category($data['username']);
-        }else{
-            $where.= "AND brand_code in (
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
+        if ($cek_user_category) {
+            $where .= $this->M_Categories->get_category($data['username']);
+        } else {
+            $where .= "AND brand_code in (
                 select distinct brand from m_user_brand 
-                where username = '".$data['username']."'
+                where username = '" . $data['username'] . "'
             )";
         }
         // END CEK ADA KATEGORINYA NGGA
@@ -107,7 +108,8 @@ class Dashboard extends My_Controller
         echo json_encode($data);
     }
 
-    public function get_salesbymonth(){
+    public function get_salesbymonth()
+    {
         extract(populateform());
         $data['username']       = $this->input->cookie('cookie_invent_user');
 
@@ -123,13 +125,13 @@ class Dashboard extends My_Controller
         //     $where.= "error";
         // }
         // START CEK ADA KATEGORINYA NGGA
-        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
-        if($cek_user_category){
-            $where.= $this->M_Categories->get_category($data['username']);
-        }else{
-            $where.= "AND brand_code in (
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
+        if ($cek_user_category) {
+            $where .= $this->M_Categories->get_category($data['username']);
+        } else {
+            $where .= "AND brand_code in (
                 select distinct brand from m_user_brand 
-                where username = '".$data['username']."'
+                where username = '" . $data['username'] . "'
             )";
         }
         // END CEK ADA KATEGORINYA NGGA
@@ -145,10 +147,10 @@ class Dashboard extends My_Controller
         ORDER BY date_format(periode, '%Y.%m')
         ");
         echo json_encode($data);
-
     }
 
-    public function get_top10_rank(){
+    public function get_top10_rank()
+    {
         extract(populateform());
         $data['username']       = $this->input->cookie('cookie_invent_user');
         $where = "";
@@ -164,13 +166,13 @@ class Dashboard extends My_Controller
         //     $where.= "error";
         // }
         // START CEK ADA KATEGORINYA NGGA
-        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='".$data['username']."'")->row();
-        if($cek_user_category){
-            $where.= $this->M_Categories->get_category($data['username']);
-        }else{
-            $where.= "AND brand_code in (
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
+        if ($cek_user_category) {
+            $where .= $this->M_Categories->get_category($data['username']);
+        } else {
+            $where .= "AND brand_code in (
                 select distinct brand from m_user_brand 
-                where username = '".$data['username']."'
+                where username = '" . $data['username'] . "'
             )";
         }
         // END CEK ADA KATEGORINYA NGGA
@@ -211,48 +213,48 @@ class Dashboard extends My_Controller
         $where = "";
         $from = date('Y-m-01');
         $to = date('Y-m-d');
-        
-        if(strlen($bulan) == '1'){
-            $bulan = '0'.$bulan;
-        }else{
+
+        if (strlen($bulan) == '1') {
+            $bulan = '0' . $bulan;
+        } else {
             $bulan;
         }
         if ($bulan || $tahun || $brand) {
-            $from   = $tahun.'-'.$bulan.'-'.'01';
-            if($bulan == date('m')){
-                $to     = $tahun.'-'.$bulan.'-'.date('d');
-            }else{
-                $to     = $this->db->query("SELECT LAST_DAY('".$from."') as last_day")->row();
-                $to     = $to->last_day; 
+            $from   = $tahun . '-' . $bulan . '-' . '01';
+            if ($bulan == date('m')) {
+                $to     = $tahun . '-' . $bulan . '-' . date('d');
+            } else {
+                $to     = $this->db->query("SELECT LAST_DAY('" . $from . "') as last_day")->row();
+                $to     = $to->last_day;
             }
-            
-            if($brand == "all"){
+
+            if ($brand == "all") {
                 $where = "and brand_code in 
                 (
                 select DISTINCT brand from m_user_brand
-                where username ='".$data['username']."'
+                where username ='" . $data['username'] . "'
                 )";
-            }else{
-                $where = "and brand_code ='".$brand."'";
+            } else {
+                $where = "and brand_code ='" . $brand . "'";
             }
-            if($fa == 0){
-                $where.= " and substring(trans_no, 9, 1) != '5'";
-            }else if($fa == 1){
-                $where.= " and substring(trans_no, 9, 1) = '5'";
+            if ($fa == 0) {
+                $where .= " and substring(trans_no, 9, 1) != '5'";
+            } else if ($fa == 1) {
+                $where .= " and substring(trans_no, 9, 1) = '5'";
             }
             $data = $this->db->query("SELECT IFNULL(net, 0) as net,aa.periode from (
-                SELECT DATE_ADD(DATE_ADD(DATE_ADD(LAST_DAY('".$from."'), INTERVAL 1 DAY), INTERVAL -1 MONTH), INTERVAL help_topic_id DAY) as periode
+                SELECT DATE_ADD(DATE_ADD(DATE_ADD(LAST_DAY('" . $from . "'), INTERVAL 1 DAY), INTERVAL -1 MONTH), INTERVAL help_topic_id DAY) as periode
                 FROM mysql.help_topic order by help_topic_id asc limit 31
             ) aa left join (
                 SELECT SUM(net_af) as net, date_format(periode,'%Y-%m-%d') as periode
                 from r_sales
-                WHERE MONTH(periode) ='".$bulan."' 
-                and YEAR(periode) ='".$tahun."' 
+                WHERE MONTH(periode) ='" . $bulan . "' 
+                and YEAR(periode) ='" . $tahun . "' 
                 $where
                 GROUP BY periode
                 order by periode
             ) bb on aa.periode = bb.periode    
-            where aa.periode between '".$from."' and '".$to."'")->result();
+            where aa.periode between '" . $from . "' and '" . $to . "'")->result();
         } else {
             $data = array('Data Kosong');
         }
