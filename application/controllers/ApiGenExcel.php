@@ -72,7 +72,8 @@ class ApiGenExcel extends CI_Controller
     public function groSalesDaily()
     {
         $store = $this->input->get('storeid');
-        $data = $this->M_Supermarket->getSalesDaily($store);
+        $date = $this->input->get('tgl');
+        $data = $this->M_Supermarket->getSalesDaily($store, $date);
         /* Spreadsheet Init */
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -106,7 +107,7 @@ class ApiGenExcel extends CI_Controller
         $writer = new Xlsx($spreadsheet);
         $prefixFn = $store == '03' ? 'HH-sales-article_' : 'RSMKG-sales-article_';
         $dirName = $store == '03' ? '/HH' : '/RSMKG';
-        $filename = $prefixFn . date('d-m-Y', strtotime('-1 day'));
+        $filename = $prefixFn . date('d-m-Y', !$date ? strtotime('-1 day') : strtotime($date));
         $targetDir = rawurlencode('/STAR/RSHH'.$dirName);
         $accessToken = $this->M_TokenOneD->getAccessToken();
 

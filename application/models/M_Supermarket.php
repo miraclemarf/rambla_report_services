@@ -7,7 +7,7 @@ class M_Supermarket extends CI_Model
         parent::__construct();
     }
 
-    function getSalesDaily($store)
+    function getSalesDaily($store, $date = NULL)
     {
         $dbCentral = $this->load->database('dbcentral', TRUE);
         $dbCentral->select([
@@ -55,7 +55,8 @@ class M_Supermarket extends CI_Model
             'DATE_FORMAT(th.trans_date, "%d-%M") AS "Date"',
             'DATE_FORMAT(th.trans_time, "%H:00") AS "Hour"',
             'CASE WHEN DAYNAME(th.trans_date) IN ("Sunday", "Saturday") THEN "WE" ELSE "WD" END AS "WD/WE"',
-            'CASE WHEN (th.trans_status = "3") THEN "TRADER" ELSE "NON TRADER" END AS Trader'
+            'CASE WHEN (th.trans_status = "3") THEN "TRADER" ELSE "NON TRADER" END AS Trader',
+            'CASE WHEN  left(td.promo_id,1) in ("B","S","") and (td.disc_pct <> 0 or td.moredisc_pct <> 0)  THEN "KEY DISCOUNT" ELSE "NON KEY DISCOUNT" end AS "Key Discount"'
         ]);
 
         $dbCentral->from('t_sales_trans_hdr th');
@@ -69,7 +70,7 @@ class M_Supermarket extends CI_Model
 
         $dbCentral->where('th.trans_status IN ("1", "3")');
         $dbCentral->where('td.category_code != "RSOTMKVC01"');
-        $dbCentral->where('th.trans_date', date('Y-m-d', strtotime('-1 day')));
+        $dbCentral->where('th.trans_date', date('Y-m-d', !$date ? strtotime('-1 day') : strtotime($date)));
         if ($store == '01') {
             $dbCentral->where('mkl.DIVISION', 'Supermarket');
         }
