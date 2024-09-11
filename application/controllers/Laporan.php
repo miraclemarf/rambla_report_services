@@ -983,7 +983,7 @@ class Laporan extends My_Controller
             $sheet->setCellValue('AD' . $row_number, $row['net_bf']);
             $sheet->setCellValue('AE' . $row_number, $row['net_af']);
             if (substr($row['trans_no'], 8, 1) != '5') {
-                $data_areatrx = substr($row['trans_no'], 8, 1) == '3' ? 'BAZZAR' : 'FLOOR';
+                $data_areatrx = substr($row['trans_no'], 8, 1) == '3' ? 'BAZAAR' : 'FLOOR';
             }
             $sheet->setCellValue('AF' . $row_number, $data_areatrx);
             $sheet->setCellValue('AG' . $row_number, $row['source_data']);
@@ -1148,7 +1148,7 @@ class Laporan extends My_Controller
             $sheet->setCellValue('AB' . $row_number, $row['net_bf']);
             $sheet->setCellValue('AC' . $row_number, $row['net_af']);
             if (substr($row['trans_no'], 8, 1) != '5') {
-                $data_areatrx = substr($row['trans_no'], 8, 1) == '3' ? 'BAZZAR' : 'FLOOR';
+                $data_areatrx = substr($row['trans_no'], 8, 1) == '3' ? 'BAZAAR' : 'FLOOR';
             }
             $sheet->setCellValue('AD' . $row_number, $data_areatrx);
             $sheet->setCellValue('AE' . $row_number, $row['source_data']);
@@ -1499,7 +1499,7 @@ class Laporan extends My_Controller
 
         foreach ($data as $key => $value) {
             if (substr($value['areatrx'], 8, 1) != '5') {
-                $value['areatrx'] = substr($value['areatrx'], 8, 1) == '3' ? 'BAZZAR' : 'FLOOR';
+                $value['areatrx'] = substr($value['areatrx'], 8, 1) == '3' ? 'BAZAAR' : 'FLOOR';
             } else {
                 $value['areatrx'] = '';
             }
@@ -1594,7 +1594,7 @@ class Laporan extends My_Controller
 
         foreach ($data as $key => $value) {
             if (substr($value['areatrx'], 8, 1) != '5') {
-                $value['areatrx'] = substr($value['areatrx'], 8, 1) == '3' ? 'BAZZAR' : 'FLOOR';
+                $value['areatrx'] = substr($value['areatrx'], 8, 1) == '3' ? 'BAZAAR' : 'FLOOR';
             } else {
                 $value['areatrx'] = '';
             }
