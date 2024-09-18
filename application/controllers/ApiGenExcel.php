@@ -177,7 +177,7 @@ class ApiGenExcel extends CI_Controller
         }
 
         $writer = new Xlsx($spreadsheet);
-        $filename = 'HappyFreshSKU' . date('d-m-Y_His');
+        $filename = 'HappyHarvestSKU_' . date('Ymd_His');
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save('D:/upload/' . $filename . '.xlsx');
