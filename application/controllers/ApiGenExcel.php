@@ -5,6 +5,7 @@ use GuzzleHttp\Client;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use phpseclib3\Net\SFTP;
 
 class ApiGenExcel extends CI_Controller
 {
@@ -177,13 +178,67 @@ class ApiGenExcel extends CI_Controller
         }
 
         $writer = new Xlsx($spreadsheet);
-        $filename = 'HappyHarvestSKU_' . date('Ymd_His');
+        $filename = 'HappyHarvestSKU_' . date('Ymd_H');
+        $localFile = 'D:/upload/' . $filename . '.xlsx';
+        $remoteFile = './pricing/' . $filename . '.xlsx';
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save('D:/upload/' . $filename . '.xlsx');
+        $writer->save($localFile);
+
+        $sftpHost = 'cupload.happyfresh.net';
+        $sftpUsername = 'hf_happyharvest';
+        $sftpPassword = '4jQanq5Hd7J3';
+        $sftpPort = 2022; // Default port for SFTP
+
+        // Initialize SFTP connection
+        $sftp = new SFTP($sftpHost, $sftpPort);
+        
+        if (!$sftp->login($sftpUsername, $sftpPassword)) {
+            // Handle login failure
+            echo "SFTP Login Failed!";
+            return;
+        }
+
+        // Upload the file to the SFTP server
+        if ($sftp->put($remoteFile, $localFile, SFTP::SOURCE_LOCAL_FILE)) {
+            unlink($localFile); // Delete the temporary file
+        } else {
+            echo "Failed to upload the file!";
+        }
 
         header('Content-Type: application/json');
         echo json_encode($result);
+
+    }
+    public function happyFreshSku2()
+    {
+
+        $sftpHost = 'cupload.happyfresh.net';
+        $sftpUsername = 'hf_happyharvest';
+        $sftpPassword = '4jQanq5Hd7J3';
+        $sftpPort = 2022; // Default port for SFTP
+
+        // Initialize SFTP connection
+        $sftp = new SFTP($sftpHost, $sftpPort);
+        
+        if (!$sftp->login($sftpUsername, $sftpPassword)) {
+            // Handle login failure
+            echo "SFTP Login Failed!";
+            return;
+        }
+
+        $filename2 = 'HappyHarvestSKU_20240918_111003';
+
+        // Define the local file to upload
+        $localFile = 'D:/upload/' . $filename2 . '.xlsx'; // The file you want to upload
+        $remoteFile = './pricing/' . $filename2 . '.xlsx'; // Where to upload on the server
+
+        // Upload the file to the SFTP server
+        if ($sftp->put($remoteFile, $localFile, SFTP::SOURCE_LOCAL_FILE)) {
+            echo "File uploaded successfully!";
+        } else {
+            echo "Failed to upload the file!";
+        }
 
     }
 
