@@ -96,6 +96,7 @@ class ApiGenExcel extends CI_Controller
         $spreadsheet->getActiveSheet()->getStyle('L' . $row_number . ':L' . $lastRow)->getNumberFormat()->setFormatCode('#');
         $spreadsheet->getActiveSheet()->getStyle('R' . $row_number . ':R' . $lastRow)->getNumberFormat()->setFormatCode('+#');
         $spreadsheet->getActiveSheet()->getStyle('AJ' . $row_number . ':AJ' . $lastRow)->getNumberFormat()->setFormatCode('#');
+        $spreadsheet->getActiveSheet()->getStyle('AL' . $row_number . ':AL' . $lastRow)->getNumberFormat()->setFormatCode('#');
         foreach ($data as $key => $row) {
             $columnIndex2 = 'A';
             foreach ($headerColumns as $columnName) {
