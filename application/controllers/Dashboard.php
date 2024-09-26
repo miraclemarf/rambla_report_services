@@ -22,6 +22,9 @@ class Dashboard extends My_Controller
 
         $where = "";
 
+        $store = !$this->input->post('storeid') ? 'R001' : $this->input->post('storeid');
+        $data['storeid']        =  $store;
+
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
         if ($cek_user_category) {
@@ -34,6 +37,12 @@ class Dashboard extends My_Controller
         }
         // END CEK ADA KATEGORINYA NGGA
 
+        $data['site'] = $this->db->query("SELECT a.branch_id, b.branch_name from m_user_site a
+        inner join m_branches b
+        on a.branch_id = b.branch_id
+        where a.flagactv ='1'
+        and username ='" . $data['username'] . "'")->result();
+
         $data['year']           = $this->Models->showdata("SELECT DISTINCT YEAR(periode) as tahun from r_sales");
 
         $data['list_brand']     = $this->Models->showdata("SELECT DISTINCT brand, brand_name from m_user_brand a
@@ -41,26 +50,26 @@ class Dashboard extends My_Controller
         on a.brand = b.brand_code
         where username ='" . $data['username'] . "'");
 
-        $data['omset_date']      = $this->Models->showdata("SELECT * from r_sales
-        WHERE MONTH(periode) ='" . date('m') . "' and YEAR(periode) ='" . date('Y') . "' $where  GROUP BY periode order by periode");
+        // $data['omset_date']      = $this->Models->showdata("SELECT * from r_sales
+        // WHERE MONTH(periode) ='" . date('m') . "' and YEAR(periode) ='" . date('Y') . "' $where  GROUP BY periode order by periode");
 
-        $data['omset_pos']      = $this->Models->showdata("SELECT SUM(net_af) as net, date_format(periode,'%Y-%m-%d') as periode
-        from r_sales
-        WHERE MONTH(periode) ='" . date('m') . "' 
-        and YEAR(periode) ='" . date('Y') . "' 
-        $where
-        and substring(trans_no, 9, 1) != '5'
-        GROUP BY periode
-        order by periode");
+        // $data['omset_pos']      = $this->Models->showdata("SELECT SUM(net_af) as net, date_format(periode,'%Y-%m-%d') as periode
+        // from r_sales
+        // WHERE MONTH(periode) ='" . date('m') . "' 
+        // and YEAR(periode) ='" . date('Y') . "' 
+        // $where
+        // and substring(trans_no, 9, 1) != '5'
+        // GROUP BY periode
+        // order by periode");
 
-        $data['omset_apps']      = $this->Models->showdata("SELECT SUM(net_af) as net, date_format(periode,'%Y-%m-%d') as periode
-        from r_sales
-        WHERE MONTH(periode) ='" . date('m') . "' 
-        and YEAR(periode) ='" . date('Y') . "' 
-        $where
-        and substring(trans_no, 9, 1) = '5'
-        GROUP BY periode
-        order by periode");
+        // $data['omset_apps']      = $this->Models->showdata("SELECT SUM(net_af) as net, date_format(periode,'%Y-%m-%d') as periode
+        // from r_sales
+        // WHERE MONTH(periode) ='" . date('m') . "' 
+        // and YEAR(periode) ='" . date('Y') . "' 
+        // $where
+        // and substring(trans_no, 9, 1) = '5'
+        // GROUP BY periode
+        // order by periode");
 
         $this->load->view('template_member/header', $data);
         $this->load->view('template_member/navbar', $data);
@@ -149,7 +158,7 @@ class Dashboard extends My_Controller
         echo json_encode($data);
     }
 
-    public function get_top10_rank()
+    public function get_top10_rank($store)
     {
         extract(populateform());
         $data['username']       = $this->input->cookie('cookie_invent_user');
@@ -182,6 +191,7 @@ class Dashboard extends My_Controller
             from r_sales 
             where date_format(periode , '%Y.%m') = date_format(DATE_ADD(current_date(), INTERVAL -2 MONTH),'%Y.%m') 
             $where
+            and branch_id = '" . $store . "'
             group by date_format(periode , '%Y.%m'), brand_name1
             order by tnet1 desc
             limit 10	
@@ -190,6 +200,7 @@ class Dashboard extends My_Controller
             from r_sales 
             where date_format(periode , '%Y.%m') = date_format(DATE_ADD(current_date(), INTERVAL -1 MONTH),'%Y.%m') 
             $where
+            and branch_id = '" . $store . "'
             group by date_format(periode , '%Y.%m'), brand_name2
             order by tnet2 desc
             limit 10
@@ -198,6 +209,7 @@ class Dashboard extends My_Controller
             from r_sales 
             where date_format(periode , '%Y.%m') = date_format(DATE_ADD(current_date(), INTERVAL 0 MONTH),'%Y.%m') 
             $where
+            and branch_id = '" . $store . "'
             group by date_format(periode , '%Y.%m'), brand_name3
             order by tnet3 desc
             limit 10

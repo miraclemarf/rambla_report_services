@@ -28,51 +28,51 @@ class SalesToday extends My_Controller
         inner join m_branches b
         on a.branch_id = b.branch_id
         where a.flagactv ='1'
-        and username ='".$data['username']."'")->result();
+        and username ='" . $data['username'] . "'")->result();
 
-        if(!$data['site']){
+        if (!$data['site']) {
             echo "<script>
             alert('Anda tidak punya akses site');
-            window.location.href='".base_url('Dashboard')."';
+            window.location.href='" . base_url('Dashboard') . "';
             </script>";
-        }   
+        }
 
         $store = !$this->input->post('storeid') ? $data['site'][0]->branch_id : $this->input->post('storeid');
         $data['storeid']        =  $store;
-        
-       
 
-        
+
+
+
         // $data['resultArticle'] = $this->M_Store->get_top10_article($store);
 
-        if($store == "R001"){
-            $data['result'] = $this->M_Store->get_sales_today_all($store,null);
-            $data['sales_allfl'] = $this->M_Store->get_sales_today_all($store,'ALLFL');
-            $data['sales_fl1'] = $this->M_Store->get_sales_today_all($store,'FL1');
-            $data['sales_fl2'] = $this->M_Store->get_sales_today_all($store,'FL2');
-            $data['sales_rd'] = $this->M_Store->get_sales_today_all($store,'RD');
-            $data['sales_rs'] = $this->M_Store->get_sales_today_all($store,'RS');
-            $data['sales_bazaar'] = $this->M_Store->get_sales_today_all($store,'BAZAAR');
-        }else if($store == "R002"){
-            $data['result'] = $this->M_Store->get_sales_today_all($store,null);
-            $data['sales_allfl'] = $this->M_Store->get_sales_today_all($store,'ALLFL');
-            $data['sales_gf'] = $this->M_Store->get_sales_today_all($store,'GF');
-            $data['sales_fl1'] = $this->M_Store->get_sales_today_all($store,'FL1');
-            $data['sales_rd'] = $this->M_Store->get_sales_today_all($store,'RD');
-            $data['sales_rs'] = $this->M_Store->get_sales_today_all($store,'RS');
-            $data['sales_bazaar'] = $this->M_Store->get_sales_today_all($store,'BAZAAR');
-        }else if($store == "V001"){
-            $data['result'] = $this->M_Store->get_sales_today_all($store,null);
-            $data['sales_rd'] = $this->M_Store->get_sales_today_all($store,'RD');
-            $data['sales_rs'] = $this->M_Store->get_sales_today_all($store,'RS');
+        if ($store == "R001") {
+            $data['result'] = $this->M_Store->get_sales_today_all($store, null);
+            $data['sales_allfl'] = $this->M_Store->get_sales_today_all($store, 'ALLFL');
+            $data['sales_fl1'] = $this->M_Store->get_sales_today_all($store, 'FL1');
+            $data['sales_fl2'] = $this->M_Store->get_sales_today_all($store, 'FL2');
+            $data['sales_rd'] = $this->M_Store->get_sales_today_all($store, 'RD');
+            $data['sales_rs'] = $this->M_Store->get_sales_today_all($store, 'RS');
+            $data['sales_bazaar'] = $this->M_Store->get_sales_today_all($store, 'BAZAAR');
+        } else if ($store == "R002") {
+            $data['result'] = $this->M_Store->get_sales_today_all($store, null);
+            $data['sales_allfl'] = $this->M_Store->get_sales_today_all($store, 'ALLFL');
+            $data['sales_gf'] = $this->M_Store->get_sales_today_all($store, 'GF');
+            $data['sales_fl1'] = $this->M_Store->get_sales_today_all($store, 'FL1');
+            $data['sales_rd'] = $this->M_Store->get_sales_today_all($store, 'RD');
+            $data['sales_rs'] = $this->M_Store->get_sales_today_all($store, 'RS');
+            $data['sales_bazaar'] = $this->M_Store->get_sales_today_all($store, 'BAZAAR');
+        } else if ($store == "V001") {
+            $data['result'] = $this->M_Store->get_sales_today_all($store, null);
+            $data['sales_rd'] = $this->M_Store->get_sales_today_all($store, 'RD');
+            $data['sales_rs'] = $this->M_Store->get_sales_today_all($store, 'RS');
+            $data['sales_bazaar'] = $this->M_Store->get_sales_today_all($store, 'BAZAAR');
         }
- 
+
 
         $this->load->view('template_member/header', $data);
         $this->load->view('template_member/navbar', $data);
         $this->load->view('template_member/sidebar', $data);
         $this->load->view('laporan/salestoday', $data);
-        $this->load->view('template_member/footer', $data);        
+        $this->load->view('template_member/footer', $data);
     }
-
 }

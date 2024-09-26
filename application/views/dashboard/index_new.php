@@ -36,8 +36,37 @@
         <div class="col-xl-12 d-flex grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <div class="d-flex flex-wrap justify-content-between">
-                        <h4 class="card-title mb-3">Top 10 Sales by brand last 3 month</h4>
+                    <div class="d-flex flex-wrap justify-content-between mb-3">
+                        <h4 class="card-title pt-2">Top 10 Sales by brand last 3 month</h4>
+                        <div class="mb-xl-0 pr-1 p-0">
+                            <div class="dropdown">
+                                <button class="btn bg-white btn-sm dropdown-toggle btn-icon-text border mr-2" type="button"
+                                    id="choose-store" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <?php
+                                    if ($storeid == 'R001')
+                                        $storename = 'Rambla Kelapa Gading';
+                                    if ($storeid == 'R002')
+                                        $storename = 'Rambla Bandung';
+                                    if ($storeid == 'V001')
+                                        $storename = 'Happy Harvest Bandung';
+                                    ?>
+                                    <i class="typcn typcn-location mr-2"></i>
+                                    <?= $storename ?>
+                                </button>
+                                <div class="dropdown-menu opt-store" aria-labelledby="dropdownMenuSizeButton3"
+                                    data-x-placement="top-start" x-placement="bottom-start"
+                                    style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 35px, 0px);">
+                                    <h6 class="dropdown-header"></h6>
+                                    <?php foreach ($site as $row) : ?>
+                                        <a class="dropdown-item" style="cursor:pointer" data="<?= $row->branch_id; ?>"><?= $row->branch_name; ?></a>
+                                    <?php endforeach; ?>
+                                    <!-- <a class="dropdown-item" style="cursor:pointer" data="R001">Rambla Kelapa Gading</a>
+                            <a class="dropdown-item" style="cursor:pointer" data="R002">Rambla Bandung</a>
+                            <a class="dropdown-item" style="cursor:pointer" data="V001">Happy Harvest Bandung</a> -->
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div id="loader-wrapper">
                         <div class="h-100 d-flex align-items-center justify-content-center">
@@ -106,20 +135,29 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <script type="text/javascript" src="<?= base_url(); ?>assets/vendor/chartjs/js/loader.js"></script>
-        <script src="<?= base_url(); ?>assets/vendor/chartjs/js/chart.js"></script>
-        <script type="text/JavaScript">
-            $( document ).ready(function() {    
+    <script type="text/javascript" src="<?= base_url(); ?>assets/vendor/chartjs/js/loader.js"></script>
+    <script src="<?= base_url(); ?>assets/vendor/chartjs/js/chart.js"></script>
+    <script type="text/JavaScript">
+        var store_id = '<?= $storeid; ?>';
+        $( document ).ready(function() {   
+            
+        $('.opt-store .dropdown-item').on('click', function(){
+            //console.log($(this).attr('data'));
+            $('#choose-store').html('<i class="typcn typcn-location mr-2"></i>'+$(this).text());
+            // $('#filter-store input').val($(this).attr('data'));
+            store_id = $(this).attr('data');
+            GetTop10Rank(store_id);
+            // $('#filter-store form').trigger('submit');
+        })
 
-        GetTop10Rank();
-    
-   
+    GetTop10Rank(store_id);
 
-    function GetTop10Rank(){
+    function GetTop10Rank(store_id){
         $.ajax({
             type: "GET",
-            url: "<?= base_url(); ?>Dashboard/get_top10_rank",
+            url: "<?= base_url(); ?>Dashboard/get_top10_rank/"+store_id,
             dataType: "JSON",
             beforeSend: function( xhr ) {
                 // console.log(xhr);

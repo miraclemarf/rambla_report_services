@@ -14,7 +14,7 @@
                                     <div class="col-sm-12">
                                         <div class="table-responsive">
                                             <table class="table table-striped" id="tb_sales">
-                                                <thead class="" >
+                                                <thead class="">
                                                     <tr>
                                                         <th>Periode</th>
                                                         <th>Tot_Qty</th>
@@ -41,7 +41,7 @@
                                     <div class="col-sm-12">
                                         <div class="table-responsive">
                                             <table class="table table-striped" id="tb_sales">
-                                                <thead class="" >
+                                                <thead class="">
                                                     <tr>
                                                         <th>Periode</th>
                                                         <th>Tot_Qty</th>
@@ -59,9 +59,9 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
-        
+
         <div class="col-xl-9 d-flex grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
@@ -74,31 +74,31 @@
                                 <div class="mr-md-3 mb-4">
                                     <div class="form-group">
                                         <h5 class="mb-1"><i class="typcn typcn-calendar mr-1"></i>Year</h5>
-                                        <select id="tahun_omset" class="form-control form-control-lg" >
-                                            <?php foreach($year as $row): ?>
-                                                <option value="<?= $row->tahun; ?>" <?php if($row->tahun == date('Y')): ?>selected<?php endif; ?>><?= $row->tahun; ?></option>
+                                        <select id="tahun_omset" class="form-control form-control-lg">
+                                            <?php foreach ($year as $row): ?>
+                                                <option value="<?= $row->tahun; ?>" <?php if ($row->tahun == date('Y')): ?>selected<?php endif; ?>><?= $row->tahun; ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="mr-md-3 mb-4">
                                     <div class="form-group">
-                                    <h5 class="mb-1"><i class="typcn typcn-calendar mr-1"></i>Month</h5>
-                                    <select id="bulan_omset" class="form-control" >
-                                        <option value="">Pilih Bulan</option> 
-                                        <option value="1" <?php if(date("m") == "1"): ?> selected <?php endif; ?>>Januari</option>
-                                        <option value="2" <?php if(date("m") == "2"): ?> selected <?php endif; ?>>February</option>
-                                        <option value="3" <?php if(date("m") == "3"): ?> selected <?php endif; ?>>Maret</option>
-                                        <option value="4" <?php if(date("m") == "4"): ?> selected <?php endif; ?>>April</option>
-                                        <option value="5" <?php if(date("m") == "5"): ?> selected <?php endif; ?>>May</option>
-                                        <option value="6" <?php if(date("m") == "6"): ?> selected <?php endif; ?>>Juni</option>
-                                        <option value="7" <?php if(date("m") == "7"): ?> selected <?php endif; ?>>Juli</option>
-                                        <option value="8" <?php if(date("m") == "8"): ?> selected <?php endif; ?>>Agustus</option>
-                                        <option value="9" <?php if(date("m") == "9"): ?> selected <?php endif; ?>>September</option>
-                                        <option value="10" <?php if(date("m") == "10"): ?> selected <?php endif; ?>>Oktober</option>
-                                        <option value="11" <?php if(date("m") == "11"): ?> selected <?php endif; ?>>November</option>
-                                        <option value="12" <?php if(date("m") == "12"): ?> selected <?php endif; ?>>Desember</option>
-                                    </select>
+                                        <h5 class="mb-1"><i class="typcn typcn-calendar mr-1"></i>Month</h5>
+                                        <select id="bulan_omset" class="form-control">
+                                            <option value="">Pilih Bulan</option>
+                                            <option value="1" <?php if (date("m") == "1"): ?> selected <?php endif; ?>>Januari</option>
+                                            <option value="2" <?php if (date("m") == "2"): ?> selected <?php endif; ?>>February</option>
+                                            <option value="3" <?php if (date("m") == "3"): ?> selected <?php endif; ?>>Maret</option>
+                                            <option value="4" <?php if (date("m") == "4"): ?> selected <?php endif; ?>>April</option>
+                                            <option value="5" <?php if (date("m") == "5"): ?> selected <?php endif; ?>>May</option>
+                                            <option value="6" <?php if (date("m") == "6"): ?> selected <?php endif; ?>>Juni</option>
+                                            <option value="7" <?php if (date("m") == "7"): ?> selected <?php endif; ?>>Juli</option>
+                                            <option value="8" <?php if (date("m") == "8"): ?> selected <?php endif; ?>>Agustus</option>
+                                            <option value="9" <?php if (date("m") == "9"): ?> selected <?php endif; ?>>September</option>
+                                            <option value="10" <?php if (date("m") == "10"): ?> selected <?php endif; ?>>Oktober</option>
+                                            <option value="11" <?php if (date("m") == "11"): ?> selected <?php endif; ?>>November</option>
+                                            <option value="12" <?php if (date("m") == "12"): ?> selected <?php endif; ?>>Desember</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="mr-md-3 mb-4">
@@ -106,14 +106,14 @@
                                         <h5 class="mb-1"><i class="typcn typcn-tags mr-1"></i>Brand</h5>
                                         <select id="brand_code" class="form-control form-control-lg js-example-basic-single">
                                             <option value="all">All</option>
-                                            <?php foreach($list_brand as $row): ?>
+                                            <?php foreach ($list_brand as $row): ?>
                                                 <option value="<?= $row->brand; ?>"><?= $row->brand_name; ?> (<?= $row->brand; ?>)</option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <canvas id="chart-omset"></canvas> 
+                            <canvas id="chart-omset"></canvas>
                         </div>
                     </div>
                     <div class="top10sales">
@@ -125,21 +125,51 @@
                             <table class="table table-striped" id="tb_ranking">
                                 <thead class="">
                                     <tr>
-                                    <th style="background-color: #17c964; color: white"><nobr>Ranking</nobr></th>
-                                    <th style="background-color: #17c964; color: white"><nobr>Periode</nobr></th>
-                                    <th style="background-color: #17c964; color: white"><nobr>Brand Name</nobr></th>
-                                    <th style="background-color: #17c964; color: white"><nobr>Tot Qty</nobr></th>
-                                    <th style="background-color: #17c964; color: white"><nobr>Tot Net</nobr></th>
-                                    <th style="background-color: #f2125e; color: white"><nobr>Ranking</nobr></th>
-                                    <th style="background-color: #f2125e; color: white"><nobr>Periode</nobr></th>
-                                    <th style="background-color: #f2125e; color: white"><nobr>Brand Name</nobr></th>
-                                    <th style="background-color: #f2125e; color: white"><nobr>Tot Qty</nobr></th>
-                                    <th style="background-color: #f2125e; color: white"><nobr>Tot Net</nobr></th>
-                                    <th style="background-color: #2b80ff; color: white;"><nobr>Ranking</nobr></th>
-                                    <th style="background-color: #2b80ff; color: white;"><nobr>Periode</nobr></th>
-                                    <th style="background-color: #2b80ff; color: white;"><nobr>Brand Name</nobr></th>
-                                    <th style="background-color: #2b80ff; color: white;"><nobr>Tot Qty</nobr></th>
-                                    <th style="background-color: #2b80ff; color: white;"><nobr>Tot Net</nobr></th>
+                                        <th style="background-color: #17c964; color: white">
+                                            <nobr>Ranking</nobr>
+                                        </th>
+                                        <th style="background-color: #17c964; color: white">
+                                            <nobr>Periode</nobr>
+                                        </th>
+                                        <th style="background-color: #17c964; color: white">
+                                            <nobr>Brand Name</nobr>
+                                        </th>
+                                        <th style="background-color: #17c964; color: white">
+                                            <nobr>Tot Qty</nobr>
+                                        </th>
+                                        <th style="background-color: #17c964; color: white">
+                                            <nobr>Tot Net</nobr>
+                                        </th>
+                                        <th style="background-color: #f2125e; color: white">
+                                            <nobr>Ranking</nobr>
+                                        </th>
+                                        <th style="background-color: #f2125e; color: white">
+                                            <nobr>Periode</nobr>
+                                        </th>
+                                        <th style="background-color: #f2125e; color: white">
+                                            <nobr>Brand Name</nobr>
+                                        </th>
+                                        <th style="background-color: #f2125e; color: white">
+                                            <nobr>Tot Qty</nobr>
+                                        </th>
+                                        <th style="background-color: #f2125e; color: white">
+                                            <nobr>Tot Net</nobr>
+                                        </th>
+                                        <th style="background-color: #2b80ff; color: white;">
+                                            <nobr>Ranking</nobr>
+                                        </th>
+                                        <th style="background-color: #2b80ff; color: white;">
+                                            <nobr>Periode</nobr>
+                                        </th>
+                                        <th style="background-color: #2b80ff; color: white;">
+                                            <nobr>Brand Name</nobr>
+                                        </th>
+                                        <th style="background-color: #2b80ff; color: white;">
+                                            <nobr>Tot Qty</nobr>
+                                        </th>
+                                        <th style="background-color: #2b80ff; color: white;">
+                                            <nobr>Tot Net</nobr>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody id="ranking">
@@ -353,11 +383,11 @@
     data: {
         labels: [
             <?php
-                if (count($omset_date)>0) {
-                    foreach ($omset_date as $tgl) {
-                        echo "'".indo_date3($tgl->periode)."',";
-                    }
-                }   
+            if (count($omset_date) > 0) {
+                foreach ($omset_date as $tgl) {
+                    echo "'" . indo_date3($tgl->periode) . "',";
+                }
+            }
             ?>
         ],
         datasets: [{
@@ -366,11 +396,11 @@
             borderColor: '#6D6BF5',
             data: [
                 <?php
-                    if (count($omset_pos)>0) {
-                        foreach ($omset_pos as $row) {
-                            echo "'" .$row->net ."',";
-                        }
+                if (count($omset_pos) > 0) {
+                    foreach ($omset_pos as $row) {
+                        echo "'" . $row->net . "',";
                     }
+                }
                 ?>
             ]
           },
@@ -380,11 +410,11 @@
             borderColor: '#D1E0FE',
             data: [
                 <?php
-                    if (count($omset_apps)>0) {
-                        foreach ($omset_apps as $row) {
-                            echo "'" .$row->net ."',";
-                        }
+                if (count($omset_apps) > 0) {
+                    foreach ($omset_apps as $row) {
+                        echo "'" . $row->net . "',";
                     }
+                }
                 ?>
             ]
           },
