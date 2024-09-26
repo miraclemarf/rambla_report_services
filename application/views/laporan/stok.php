@@ -78,6 +78,12 @@
                                     <th>
                                         <nobr>Last Stock</nobr>
                                     </th>
+                                    <th>
+                                        <nobr>Current Price</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Retail Value</nobr>
+                                    </th>
                                 </tr>
                             </thead>
                         </table>
@@ -326,6 +332,18 @@
                         "data": "last_stock",
                         "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "current_price",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(Math.round(data)) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(Math.round(row.current_price) * row.last_stock) + '</nobr>';
                         },
                     },
                 ],

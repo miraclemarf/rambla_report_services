@@ -504,6 +504,8 @@ class Laporan extends My_Controller
         $sheet->setCellValue('P1', 'DEPT');
         $sheet->setCellValue('Q1', 'SUB_DEPT');
         $sheet->setCellValue('R1', 'last_stock');
+        $sheet->setCellValue('S1', 'current price');
+        $sheet->setCellValue('T1', 'retail value');
 
         /* Excel Data */
         $row_number = 2;
@@ -526,7 +528,8 @@ class Laporan extends My_Controller
             $sheet->setCellValue('P' . $row_number, $row['DEPT']);
             $sheet->setCellValue('Q' . $row_number, $row['SUB_DEPT']);
             $sheet->setCellValue('R' . $row_number, $row['last_stock']);
-
+            $sheet->setCellValue('S' . $row_number, $row['current_price']);
+            $sheet->setCellValue('T' . $row_number, $row['current_price'] * $row['last_stock']);
             $row_number++;
         }
 
@@ -1234,10 +1237,10 @@ class Laporan extends My_Controller
             }
         }
 
-        $data = $this->db->query("SELECT branch_id,periode,barcode, article_code, article_name,varian_option1,varian_option2, vendor_code, vendor_name, brand_code,brand_name,category_code, DIVISION,SUB_DIVISION,DEPT,SUB_DEPT,last_stock FROM r_s_item_stok where 1=1 $where")->result_array();
+        $data = $this->db->query("SELECT branch_id,periode,barcode, article_code, article_name,varian_option1,varian_option2, vendor_code, vendor_name, brand_code,brand_name,category_code, DIVISION,SUB_DIVISION,DEPT,SUB_DEPT,last_stock, current_price, (last_stock * current_price) as retail_value FROM r_s_item_stok where 1=1 $where")->result_array();
         $file = fopen('php://output', 'w');
 
-        $header = array('branch_id', 'periode', 'barcode', 'article_code', 'article_name', 'varian_option1', 'varian_option2', 'vendor_code', 'vendor_name', 'brand_code', 'brand_name', 'Kode_Kategori', 'DIVISION', 'SUB_DIVISION', 'DEPT', 'SUB_DEPT', 'last_stock');
+        $header = array('branch_id', 'periode', 'barcode', 'article_code', 'article_name', 'varian_option1', 'varian_option2', 'vendor_code', 'vendor_name', 'brand_code', 'brand_name', 'Kode_Kategori', 'DIVISION', 'SUB_DIVISION', 'DEPT', 'SUB_DEPT', 'last_stock', 'current_price', 'retail_value');
 
         fputcsv($file, $header);
 
