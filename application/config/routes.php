@@ -58,3 +58,8 @@ $route['promo-today/(:any)']['GET'] = '/PromoToday/index/$1';
 $route['oned/auth'] = 'OneD/getAuthorizationUrl';
 $route['oned/token'] = 'OneD/getAccessToken';
 $route['oned/refresh'] = 'OneD/refreshToken';
+
+$route['Laporan/v2/(.+)'] = function ($funcName)
+{
+        return 'LaporanExt/' . $funcName;
+};

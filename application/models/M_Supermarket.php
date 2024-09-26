@@ -48,6 +48,8 @@ class M_Supermarket extends CI_Model
             'SUM(td.fee) AS fee',
             'th.trans_no AS trans_no',
             'th.no_ref AS no_ref',
+            'td.promo_id as promo_id',
+            'tp.promo_desc as promo_desc',
             'CASE WHEN (SUBSTR(th.trans_no, 7, 2) = "01") THEN "R001" WHEN (SUBSTR(th.trans_no, 7, 2) = "02") THEN "R002" WHEN (SUBSTR(th.trans_no, 7, 2) = "03") THEN "V001" END AS branch_id',
             'CASE WHEN (mim.tag_5 = "timbang") THEN SUM(td.berat) ELSE SUM(td.qty) END AS "Qty Gab"',
             'CASE WHEN (COALESCE(th.member_id, "") != "") THEN "MEMBER" ELSE "NON MEMBER" END AS Member',
@@ -67,6 +69,7 @@ class M_Supermarket extends CI_Model
         $dbCentral->join('m_kategori_list mkl', 'td.category_code = mkl.category_code', 'left');
         $dbCentral->join('m_vendor mv', 'mim.vendor_code = mv.vendor_code', 'left');
         $dbCentral->join('l_member_master_goodie mg', 'mg.member_id = th.member_id', 'left');
+        $dbCentral->join('t_promo_hdr tp', 'td.promo_id = tp.promo_id', 'left');
 
         $dbCentral->where('th.trans_status IN ("1", "3")');
         $dbCentral->where('td.category_code != "RSOTMKVC01"');
@@ -123,8 +126,8 @@ class M_Supermarket extends CI_Model
             '(NULL) AS "Sub - Category"',
             'ROUND(a.current_price) AS "Normal Price"',
             '(CASE promo.promo_type WHEN 1 THEN ROUND(a.current_price - (a.current_price * (promo.disc_percentage / 100)), 0) WHEN 3 THEN ROUND(promo.special_price, 0) ELSE 0 END) AS "Promo Price"',
-            'GREATEST(FLOOR((a.last_stock * 90 / 100)),0) AS StoreStock',
             '(CASE a.tag_5 WHEN "Timbang" THEN "KG" ELSE "Piece" END) AS "Sales Unit"',
+            'GREATEST(FLOOR((a.last_stock * 90 / 100)),0) AS StoreStock',
             'a.images AS Image',
             'a.width AS "Width (cm)"',
             'a.length AS "Depth (cm)"',
