@@ -386,7 +386,7 @@ class Laporan extends My_Controller
         }
         // END CEK ADA KATEGORINYA NGGA
 
-        if ($params1 || $params2 || $params3 || $params4 || $params5 || $params6) {
+        if ($params1 || $params2 || $params3 || $params4 || $params5 || $params6 || $params7) {
             if ($params1) {
                 $filter1 = " AND brand = '" . $params1 . "'";
                 $filter .= $filter1;
@@ -410,6 +410,10 @@ class Laporan extends My_Controller
             if ($params6) {
                 $filter6 = " AND branch_id = '" . $params6 . "'";
                 $filter .= $filter6;
+            }
+            if ($params7) {
+                $filter7 = " AND status_article = '" . $params7 . "'";
+                $filter .= $filter7;
             }
             $isWhere = $filter;
         } else {
@@ -498,7 +502,7 @@ class Laporan extends My_Controller
         $sheet->setCellValue('J1', 'vendor_name');
         $sheet->setCellValue('K1', 'brand_code');
         $sheet->setCellValue('L1', 'brand_name');
-        $sheet->setCellValue('M1', 'Kode Kategori');
+        $sheet->setCellValue('M1', 'category_code');
         $sheet->setCellValue('N1', 'DIVISION');
         $sheet->setCellValue('O1', 'SUB_DIVISION');
         $sheet->setCellValue('P1', 'DEPT');
@@ -716,7 +720,7 @@ class Laporan extends My_Controller
         $writer->save('php://output');
     }
 
-    function export_excel_masteritem($brand_code, $division, $sub_division, $dept, $sub_dept, $store)
+    function export_excel_masteritem($brand_code, $division, $sub_division, $dept, $sub_dept, $store, $article_status)
     {
         /* Data */
         $data['username'] = $this->input->cookie('cookie_invent_user');
@@ -768,6 +772,10 @@ class Laporan extends My_Controller
             $where .= " AND branch_id = '" . $store . "'";
         }
 
+        if ($article_status !== "null") {
+            $where .= " AND status_article = '" . $article_status . "'";
+        }
+
         $data = $this->db->query("SELECT * FROM r_item_master WHERE 1=1 $where")->result_array();
 
         /* Spreadsheet Init */
@@ -777,26 +785,31 @@ class Laporan extends My_Controller
         /* Excel Header */
         $sheet->setCellValue('A1', '#');
         $sheet->setCellValue('B1', 'Store');
-        $sheet->setCellValue('C1', 'Number Artikel');
-        $sheet->setCellValue('D1', 'Kode Artikel');
+        $sheet->setCellValue('C1', 'Article Number');
+        $sheet->setCellValue('D1', 'Article Code');
         $sheet->setCellValue('E1', 'Barcode');
-        $sheet->setCellValue('F1', 'Kode Produk');
-        $sheet->setCellValue('G1', 'Kode Kategori');
-        $sheet->setCellValue('H1', 'Nama Produk');
-        $sheet->setCellValue('I1', 'Nama Produk Supplier');
-        $sheet->setCellValue('J1', 'Kode Brand');
-        $sheet->setCellValue('K1', 'Nama Brand');
-        $sheet->setCellValue('L1', 'Option1');
-        $sheet->setCellValue('M1', 'Varian Option1');
-        $sheet->setCellValue('N1', 'Option2');
-        $sheet->setCellValue('O1', 'Varian Option2');
-        $sheet->setCellValue('P1', 'Division');
-        $sheet->setCellValue('Q1', 'Sub Division');
-        $sheet->setCellValue('R1', 'Dept');
-        $sheet->setCellValue('S1', 'Sub Dept');
-        $sheet->setCellValue('T1', 'Normal Price');
-        $sheet->setCellValue('U1', 'Tag 5');
-        $sheet->setCellValue('V1', 'Add Date');
+        $sheet->setCellValue('F1', 'Supplier Pcode');
+        $sheet->setCellValue('G1', 'Category Code');
+        $sheet->setCellValue('H1', 'Article Name');
+        $sheet->setCellValue('I1', 'Supplier Pname');
+        $sheet->setCellValue('J1', 'Vendor Code');
+        $sheet->setCellValue('K1', 'Vendor Name');
+        $sheet->setCellValue('L1', 'Brand Code');
+        $sheet->setCellValue('M1', 'Brand Brand');
+        $sheet->setCellValue('N1', 'Option1');
+        $sheet->setCellValue('O1', 'Varian Option1');
+        $sheet->setCellValue('P1', 'Option2');
+        $sheet->setCellValue('Q1', 'Varian Option2');
+        $sheet->setCellValue('R1', 'Division');
+        $sheet->setCellValue('S1', 'Sub Division');
+        $sheet->setCellValue('T1', 'Dept');
+        $sheet->setCellValue('U1', 'Sub Dept');
+        $sheet->setCellValue('V1', 'Normal Price');
+        $sheet->setCellValue('W1', 'Current Price');
+        $sheet->setCellValue('X1', 'Tag 5');
+        $sheet->setCellValue('Y1', 'Add Date');
+        $sheet->setCellValue('Z1', 'Last Update');
+        $sheet->setCellValue('AA1', 'Article Status');
 
         /* Excel Data */
         $row_number = 2;
@@ -810,20 +823,24 @@ class Laporan extends My_Controller
             $sheet->setCellValue('G' . $row_number, $row['category_code']);
             $sheet->setCellValue('H' . $row_number, $row['article_name']);
             $sheet->setCellValue('I' . $row_number, $row['supplier_pname']);
-            $sheet->setCellValue('J' . $row_number, $row['brand']);
-            $sheet->setCellValue('K' . $row_number, $row['brand_name']);
-            $sheet->setCellValue('L' . $row_number, $row['option1']);
-            $sheet->setCellValue('M' . $row_number, $row['varian_option1']);
-            $sheet->setCellValue('N' . $row_number, $row['option2']);
-            $sheet->setCellValue('O' . $row_number, $row['varian_option2']);
-            $sheet->setCellValue('P' . $row_number, $row['DIVISION']);
-            $sheet->setCellValue('Q' . $row_number, $row['SUB_DIVISION']);
-            $sheet->setCellValue('R' . $row_number, $row['DEPT']);
-            $sheet->setCellValue('S' . $row_number, $row['SUB_DEPT']);
-            $sheet->setCellValue('T' . $row_number, $row['normal_price']);
-            $sheet->setCellValue('U' . $row_number, $row['tag_5']);
-            $sheet->setCellValue('V' . $row_number, substr($row['add_date'], 0, 10));
-
+            $sheet->setCellValue('J' . $row_number, $row['vendor_code']);
+            $sheet->setCellValue('K' . $row_number, $row['vendor_name']);
+            $sheet->setCellValue('L' . $row_number, $row['brand']);
+            $sheet->setCellValue('M' . $row_number, $row['brand_name']);
+            $sheet->setCellValue('N' . $row_number, $row['option1']);
+            $sheet->setCellValue('O' . $row_number, $row['varian_option1']);
+            $sheet->setCellValue('P' . $row_number, $row['option2']);
+            $sheet->setCellValue('Q' . $row_number, $row['varian_option2']);
+            $sheet->setCellValue('R' . $row_number, $row['DIVISION']);
+            $sheet->setCellValue('S' . $row_number, $row['SUB_DIVISION']);
+            $sheet->setCellValue('T' . $row_number, $row['DEPT']);
+            $sheet->setCellValue('U' . $row_number, $row['SUB_DEPT']);
+            $sheet->setCellValue('V' . $row_number, $row['normal_price']);
+            $sheet->setCellValue('W' . $row_number, $row['current_price']);
+            $sheet->setCellValue('X' . $row_number, $row['tag_5']);
+            $sheet->setCellValue('Y' . $row_number, substr($row['add_date'], 0, 10));
+            $sheet->setCellValue('Z' . $row_number, substr($row['last_update'], 0, 10));
+            $sheet->setCellValue('AA' . $row_number, $row['status_article']);
             $row_number++;
         }
 
@@ -1251,7 +1268,7 @@ class Laporan extends My_Controller
         exit;
     }
 
-    function export_csv_masteritem($brand_code, $division, $sub_division, $dept, $sub_dept, $store)
+    function export_csv_masteritem($brand_code, $division, $sub_division, $dept, $sub_dept, $store, $article_status)
     {
         $filename = 'masteritem_report.csv';
 
@@ -1308,10 +1325,14 @@ class Laporan extends My_Controller
             $where .= " AND branch_id = '" . $store . "'";
         }
 
-        $data = $this->db->query("SELECT branch_id,article_number,article_code,barcode,supplier_pcode,category_code, article_name,supplier_pname, brand,brand_name, option1,varian_option1,option2,varian_option2, division, sub_division, dept, sub_dept, normal_price, current_price, tag_5,SUBSTRING(add_date, 1, 10) as add_date FROM r_item_master where 1=1 $where")->result_array();
+        if ($article_status !== "null") {
+            $where .= " AND status_article = '" . $article_status . "'";
+        }
+
+        $data = $this->db->query("SELECT branch_id,article_number,article_code,barcode,supplier_pcode,category_code, article_name,supplier_pname, vendor_code, vendor_name, brand,brand_name, option1,varian_option1,option2,varian_option2, division, sub_division, dept, sub_dept, normal_price, current_price, tag_5,SUBSTRING(add_date, 1, 10) as add_date,SUBSTRING(last_update, 1, 10) as last_update, status_article FROM r_item_master where 1=1 $where")->result_array();
         $file = fopen('php://output', 'w');
 
-        $header = array('branch_id', 'article_number', 'article_code', 'barcode', 'supplier_pcode', 'category_code', 'article_name', 'supplier pname', 'brand', 'brand name', 'option1', 'varian_option1', 'option2', 'varian_option2', 'division', 'sub_division', 'dept', 'sub_dept', 'normal_price', 'current_price', 'tag 5', 'add_date');
+        $header = array('branch id', 'article number', 'article code', 'barcode', 'supplier_pcode', 'category code', 'article name', 'supplier pname', 'vendor code', 'vendor name', 'brand code', 'brand name', 'option1', 'varian option1', 'option2', 'varian option2', 'division', 'sub division', 'dept', 'sub dept', 'normal_price', 'current_price', 'tag 5', 'add_date', 'last_update', 'article status');
 
         fputcsv($file, $header);
 

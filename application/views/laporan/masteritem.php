@@ -1,6 +1,6 @@
 <div class="content-wrapper">
-<?php $this->load->view('modal/export-masteritem', true); ?>
-<?php $this->load->view('modal/filter-masteritem', true); ?>
+    <?php $this->load->view('modal/export-masteritem', true); ?>
+    <?php $this->load->view('modal/filter-masteritem', true); ?>
     <div class="row">
         <div class="col-lg-12 d-flex grid-margin stretch-card">
             <div class="card">
@@ -12,46 +12,102 @@
                         </div>
                         <div class="align-self-end">
                             <button type="button" class="btn btn-success btn-sm btn-icon-text btn-export-masteritem ml-2" style="float:right">
-                            <i class="typcn typcn-download btn-icon-prepend"></i>                                                    
-                            Export File
+                                <i class="typcn typcn-download btn-icon-prepend"></i>
+                                Export File
                             </button>
                             <button type="button" class="btn btn-info btn-sm btn-icon-text btn-filter-masteritem" style="float:right">
-                            <i class="typcn typcn-filter"></i>                                                
+                                <i class="typcn typcn-filter"></i>
                                 Filter
                             </button>
                         </div>
                     </div>
                     <div class="table-responsive">
-                    <table class="table table-striped table-custom" id="tb_masteritem_list">
-                        <thead class="table-rambla">
-                            <tr>
-                            <th>#</th>
-                            <th><nobr>Store</nobr></th>   
-                            <th><nobr>Number Artikel</nobr></th>
-                            <th><nobr>Kode Artikel</nobr></th>
-                            <th><nobr>Barcode</nobr></th>
-                            <th><nobr>Kode Produk</nobr></th>
-                            <th><nobr>Kode Kategori</nobr></th>
-                            <th><nobr>Nama Produk</nobr></th>
-                            <th><nobr>Nama Produk Supplier</nobr></th>
-                            <th><nobr>Kode Brand</nobr></th>
-                            <th><nobr>Nama Brand</nobr></th>
-                            <th><nobr>Option1</nobr></th>
-                            <th><nobr>Varian Option1</nobr></th>
-                            <th><nobr>Option1</nobr></th>
-                            <th><nobr>Varian Option2</nobr></th>
-                            <th><nobr>DIVISION</nobr></th>
-                            <th><nobr>SUB DIVISION</nobr></th>
-                            <th><nobr>DEPT</nobr></th>
-                            <th><nobr>SUB DEPT</nobr></th>
-                            <th><nobr>Normal Price</nobr></th>
-                            <th><nobr>Current Price</nobr></th>
-                            <th><nobr>Tag 5</nobr></th>
-                            <th><nobr>Add Date</nobr></th>
-                            </tr>
-                        </thead>
-                    </table>
-                  </div>
+                        <table class="table table-striped table-custom" id="tb_masteritem_list">
+                            <thead class="table-rambla">
+                                <tr>
+                                    <th>#</th>
+                                    <th>
+                                        <nobr>Store</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Article Number</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Article Code</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Barcode</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Supplier Pcode</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Category Code</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Article Name</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Supplier Pname</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Vendor Code</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Vendor Name</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Brand Code</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Brand Name</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Option1</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Varian Option1</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Option1</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Varian Option2</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>DIVISION</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>SUB DIVISION</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>DEPT</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>SUB DEPT</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Normal Price</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Current Price</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Tag 5</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Add Date</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Last Update</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Article Status</nobr>
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -61,7 +117,7 @@
 <script>
     var tabel = null;
     $(document).ready(function() {
-        
+
         get_user_brand();
         get_division();
         get_sub_division();
@@ -69,54 +125,56 @@
         get_list_dept();
         get_store();
 
-        var brand_code      = null;
-        var division        = null;
-        var sub_division    = null;
-        var dept            = null;
-        var sub_dept        = null;
-        var store           = null;
-        var params1         = null;
-        var params2         = null;
-        var params3         = null;
-        var params4         = null;
-        var params5         = null;
-        var params6         = null;
-        var format          = null;
+        var brand_code = null;
+        var division = null;
+        var sub_division = null;
+        var dept = null;
+        var sub_dept = null;
+        var store = null;
+        var article_status = null;
+        var params1 = null;
+        var params2 = null;
+        var params3 = null;
+        var params4 = null;
+        var params5 = null;
+        var params6 = null;
+        var params7 = null;
+        var format = null;
 
         // load_data_masteritem(params1,params2,params3,params4,params5,params6);
         $('#modal-filter-masteritem').modal('show');
 
-        $('.btn-export-masteritem').on("click", function(){
+        $('.btn-export-masteritem').on("click", function() {
             $('#modal-export-masteritem').modal('show');
         });
 
-        $('.btn-filter-masteritem').on("click", function(){
+        $('.btn-filter-masteritem').on("click", function() {
             $('#modal-filter-masteritem').modal('show');
         });
 
-        $('.list_user_brand').on('change', function (e) {
+        $('.list_user_brand').on('change', function(e) {
             brand_code = this.value;
         });
 
-        $('.list_barcode').on('change', function (e) {
+        $('.list_barcode').on('change', function(e) {
             barcode = this.value;
         });
 
-        $('.format-file-export').on('change', function (e) {
+        $('.format-file-export').on('change', function(e) {
             format = this.value;
         });
 
 
-        $('.btn-export').on("click", function(){
-            if(format == "csv"){
-                window.location.href = "<?= base_url('Laporan/export_csv_masteritem/'); ?>"+params1+'/'+params2+'/'+params3+'/'+params4+'/'+params5+'/'+params6;
-            }else if(format == "xls"){
-                window.location.href = "<?= base_url('Laporan/export_excel_masteritem/'); ?>"+params1+'/'+params2+'/'+params3+'/'+params4+'/'+params5+'/'+params6;
+        $('.btn-export').on("click", function() {
+            if (format == "csv") {
+                window.location.href = "<?= base_url('Laporan/export_csv_masteritem/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7;
+            } else if (format == "xls") {
+                window.location.href = "<?= base_url('Laporan/export_excel_masteritem/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7;
             }
         });
 
-        $('.btn-submit-filter').on("click", function(){
-            if (store === ''|| store == null){
+        $('.btn-submit-filter').on("click", function() {
+            if (store === '' || store == null) {
                 alert('Harap Pilih Store Dahulu')
                 return false;
             }
@@ -126,6 +184,7 @@
             params4 = dept;
             params5 = sub_dept;
             params6 = store;
+            params7 = article_status;
 
             if (params1 === "") {
                 params1 = null;
@@ -145,155 +204,224 @@
             if (params6 === "") {
                 params6 = null;
             }
+            if (params7 === "") {
+                params7 = null;
+            }
 
-            load_data_masteritem(params1,params2,params3,params4,params5,params6);
+            load_data_masteritem(params1, params2, params3, params4, params5, params6, params7);
         });
 
-        function load_data_masteritem(params1,params2,params3,params4,params5,params6){
+        function load_data_masteritem(params1, params2, params3, params4, params5, params6, params7) {
             tabel = $('#tb_masteritem_list').DataTable({
                 "processing": true,
-                "responsive":true,
+                "responsive": true,
                 "serverSide": true,
                 "bDestroy": true,
                 "ordering": true, // Set true agar bisa di sorting
-                "order": [[ 0, 'asc' ]], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
-                "ajax":
-                {
-                    "url": "<?= base_url('Laporan/masteritem_where');?>", // URL file untuk proses select datanya
+                "order": [
+                    [0, 'asc']
+                ], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
+                "ajax": {
+                    "url": "<?= base_url('Laporan/masteritem_where'); ?>", // URL file untuk proses select datanya
                     "type": "POST",
-                    "data":  { "params1": params1,"params2": params2,"params3": params3,"params4": params4,"params5": params5,"params6": params6 }, 
+                    "data": {
+                        "params1": params1,
+                        "params2": params2,
+                        "params3": params3,
+                        "params4": params4,
+                        "params5": params5,
+                        "params6": params6,
+                        "params7": params7
+                    },
                 },
                 "deferRender": true,
-                "aLengthMenu": [[10, 25, 50],[ 10, 25, 50]], // Combobox Limit
-                "columns": [
-                    {"data": 'article_code',"sortable": false, 
+                "aLengthMenu": [
+                    [10, 25, 50],
+                    [10, 25, 50]
+                ], // Combobox Limit
+                "columns": [{
+                        "data": 'article_code',
+                        "sortable": false,
                         // "render": function ( data, type, row, meta ) {
                         //     var i = meta.row + meta.settings._iDisplayStart + 1;
                         //     return '<div class="form-check"><label class="form-check-label text-muted"><input type="checkbox" class="form-check-input" name="checkbox_'+i+'"><i class="input-helper"></i></label></div>';
                         // },
-                        "render": function ( data, type, row, meta ) {
+                        "render": function(data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         },
                     },
-                    { "data": "branch_id",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
+                    {
+                        "data": "branch_id",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
                     },
-                   
-                    { "data": "article_number",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
+
+                    {
+                        "data": "article_number",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
                     },
-                    { "data": "article_code",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
+                    {
+                        "data": "article_code",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
                     }, // Tampilkan judul
-                    { "data": "barcode",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
+                    {
+                        "data": "barcode",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
-                    },  // Tampilkan kategori
-                    { "data": "supplier_pcode",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
-                        },
-                    }, 
-                    { "data": "category_code",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
-                        },
-                    }, 
-                    { "data": "article_name",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
-                        },
-                    },  // Tampilkan penulis
-                    { "data": "supplier_pname",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
-                        },
-                    },  // Tampilkan penulis
-                    { "data": "brand",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
-                        },
-                    },  // Tampilkan tgl posting
-                    { "data": "brand_name",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
-                        },
-                    },  // Tampilkan tgl posting
-                    { "data": "option1",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
-                        },
-                    },  // Tampilkan tgl posting
-                    { "data": "varian_option1",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
-                        },
-                    },  // Tampilkan tgl posting
-                    { "data": "option2",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
+                    }, // Tampilkan kategori
+                    {
+                        "data": "supplier_pcode",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
                     },
-                    { "data": "varian_option2",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
+                    {
+                        "data": "category_code",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
                     },
-                    { "data": "DIVISION",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
+                    {
+                        "data": "article_name",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    }, // Tampilkan penulis
+                    {
+                        "data": "supplier_pname",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    }, // Tampilkan penulis
+                    {
+                        "data": "vendor_code",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    }, // Tampilkan tgl posting
+                    {
+                        "data": "vendor_name",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    }, // 
+                    {
+                        "data": "brand",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    }, // Tampilkan tgl posting
+                    {
+                        "data": "brand_name",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    }, // Tampilkan tgl posting
+                    {
+                        "data": "option1",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    }, // Tampilkan tgl posting
+                    {
+                        "data": "varian_option1",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    }, // Tampilkan tgl posting
+                    {
+                        "data": "option2",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "varian_option2",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "DIVISION",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
                     }, // Tampilkan judul
-                    { "data": "SUB_DIVISION",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
+                    {
+                        "data": "SUB_DIVISION",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
                     }, // Tampilkan judul
-                    { "data": "DEPT",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
+                    {
+                        "data": "DEPT",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
                     }, // Tampilkan judul
-                    { "data": "SUB_DEPT",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
+                    {
+                        "data": "SUB_DEPT",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
                     }, // Tampilkan judul
-                    { "data": "normal_price",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>RP '+rupiahjs(data)+'</nobr>';
+                    {
+                        "data": "normal_price",
+                        "render": function(data, type, row) {
+                            return '<nobr>RP ' + rupiahjs(data) + '</nobr>';
                         },
                     },
-                    { "data": "current_price",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>RP '+rupiahjs(data)+'</nobr>';
+                    {
+                        "data": "current_price",
+                        "render": function(data, type, row) {
+                            return '<nobr>RP ' + rupiahjs(data) + '</nobr>';
                         },
                     },
-                    { "data": "tag_5",
-                        "render": function ( data, type, row ) {
-                                return '<nobr>'+data+'</nobr>';
+                    {
+                        "data": "tag_5",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
                     },
-                    { "data": "add_date",
-                        "render": function ( data, type, row ) {
-                                if(data == null){
-                                    data = ''
-                                }
-                                return '<nobr>'+data.substring(0, 10)+'</nobr>';
+                    {
+                        "data": "add_date",
+                        "render": function(data, type, row) {
+                            if (data == null) {
+                                data = ''
+                            }
+                            return '<nobr>' + data.substring(0, 10) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "last_update",
+                        "render": function(data, type, row) {
+                            if (data == null) {
+                                data = ''
+                            }
+                            return '<nobr>' + data.substring(0, 10) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "status_article",
+                        "render": function(data, type, row) {
+                            if (data == 'ACTIVE') {
+                                return '<nobr><label class="badge badge-success">' + data + '</label></nobr>';
+                            } else {
+                                return '<nobr><label class="badge badge-danger">' + data + '</label></nobr>';
+                            }
                         },
                     },
                 ],
             });
         }
 
-        function get_user_brand(){
+        function get_user_brand() {
             $.ajax({
                 type: "GET",
                 url: "<?= base_url('Masterdata'); ?>/get_user_brand",
@@ -304,7 +432,7 @@
                     $("#filter-masteritem").show();
                     $('.list_user_brand').html(data);
                 },
-                beforeSend: function( xhr ) {
+                beforeSend: function(xhr) {
                     // console.log(xhr);
                     $(".loading").show();
                     $("#filter-masteritem").hide();
@@ -314,7 +442,7 @@
         }
 
         // START STORE
-        function get_store(){
+        function get_store() {
             $.ajax({
                 type: "GET",
                 url: "<?= base_url('Masterdata'); ?>/get_store",
@@ -326,7 +454,7 @@
                     $("#filter-penjualanartikel").show();
                     $('.list_store').html(data);
                 },
-                beforeSend: function( xhr ) {
+                beforeSend: function(xhr) {
                     $(".loading").show();
                     $("#filter-penjualanartikel").hide();
                     $("#export-penjualanartikel").hide();
@@ -334,12 +462,12 @@
             });
         }
 
-        $('.list_store').on('change', function (e) {
+        $('.list_store').on('change', function(e) {
             store = this.value;
             $.ajax({
                 url: "<?= base_url('Masterdata'); ?>/get_list_division",
                 data: {
-                    store : store
+                    store: store
                 },
                 type: 'POST',
                 dataType: 'html',
@@ -348,7 +476,7 @@
                     $(".loading").hide();
                     $('.list_division').html(data);
                 },
-                beforeSend: function( xhr ) {
+                beforeSend: function(xhr) {
                     // console.log(xhr);
                     $(".loading").show();
                 }
@@ -357,7 +485,7 @@
         // END STORE
 
         // START DIVISION
-        function get_division(){
+        function get_division() {
             $.ajax({
                 type: "GET",
                 url: "<?= base_url('Masterdata'); ?>/get_list_division",
@@ -369,7 +497,7 @@
                     $("#filter-penjualanartikel").show();
                     $('.list_division').html(data);
                 },
-                beforeSend: function( xhr ) {
+                beforeSend: function(xhr) {
                     // console.log(xhr);
                     $(".loading").show();
                     $("#filter-penjualanartikel").hide();
@@ -378,13 +506,13 @@
             });
         }
 
-        $('.list_division').on('change', function (e) {
+        $('.list_division').on('change', function(e) {
             division = this.value;
-            if(division != ''){
+            if (division != '') {
                 $.ajax({
                     url: "<?= base_url('Masterdata'); ?>/get_list_sub_division",
                     data: {
-                        division : division
+                        division: division
                     },
                     type: 'POST',
                     dataType: 'html',
@@ -392,7 +520,7 @@
                         $(".loading").hide();
                         $('.list_sub_division').html(data);
                     },
-                    beforeSend: function( xhr ) {
+                    beforeSend: function(xhr) {
                         // console.log(xhr);
                         $(".loading").show();
                     }
@@ -402,7 +530,7 @@
         // END DIVISION
 
         // START SUB DIVISION
-        function get_sub_division(){
+        function get_sub_division() {
             $.ajax({
                 type: "GET",
                 url: "<?= base_url('Masterdata'); ?>/get_list_sub_division",
@@ -414,7 +542,7 @@
                     $("#filter-penjualanartikel").show();
                     $('.list_sub_division').html(data);
                 },
-                beforeSend: function( xhr ) {
+                beforeSend: function(xhr) {
                     // console.log(xhr);
                     $(".loading").show();
                     $("#filter-penjualanartikel").hide();
@@ -423,13 +551,13 @@
             });
         }
 
-        $('.list_sub_division').on('change', function (e) {
+        $('.list_sub_division').on('change', function(e) {
             sub_division = this.value;
-            if(sub_division != ''){
+            if (sub_division != '') {
                 $.ajax({
                     url: "<?= base_url('Masterdata'); ?>/get_list_dept",
                     data: {
-                        sub_division : sub_division
+                        sub_division: sub_division
                     },
                     type: 'POST',
                     dataType: 'html',
@@ -438,7 +566,7 @@
                         $(".loading").hide();
                         $('.list_dept').html(data);
                     },
-                    beforeSend: function( xhr ) {
+                    beforeSend: function(xhr) {
                         // console.log(xhr);
                         $(".loading").show();
                     }
@@ -447,8 +575,14 @@
         })
         // END SUB DIVISION
 
+        // START STATUS
+        $('.list_article_status').on('change', function(e) {
+            article_status = this.value;
+        })
+        // END STATUS
+
         // START DEPT
-        function get_dept(){
+        function get_dept() {
             $.ajax({
                 type: "GET",
                 url: "<?= base_url('Masterdata'); ?>/get_list_dept",
@@ -459,7 +593,7 @@
                     $("#filter-penjualanartikel").show();
                     $('.list_dept').html(data);
                 },
-                beforeSend: function( xhr ) {
+                beforeSend: function(xhr) {
                     // console.log(xhr);
                     $(".loading").show();
                     $("#filter-penjualanartikel").hide();
@@ -468,13 +602,13 @@
             });
         }
 
-        $('.list_dept').on('change', function (e) {
+        $('.list_dept').on('change', function(e) {
             dept = this.value;
-            if(dept != ''){
+            if (dept != '') {
                 $.ajax({
                     url: "<?= base_url('Masterdata'); ?>/get_list_sub_dept",
                     data: {
-                        dept : dept
+                        dept: dept
                     },
                     type: 'POST',
                     dataType: 'html',
@@ -483,7 +617,7 @@
                         $(".loading").hide();
                         $('.list_sub_dept').html(data);
                     },
-                    beforeSend: function( xhr ) {
+                    beforeSend: function(xhr) {
                         // console.log(xhr);
                         $(".loading").show();
                     }
@@ -493,7 +627,7 @@
         // END DEPT
 
         // START SUB DEPT
-        function get_list_dept(){
+        function get_list_dept() {
             $.ajax({
                 type: "GET",
                 url: "<?= base_url('Masterdata'); ?>/get_list_sub_dept",
@@ -504,7 +638,7 @@
                     $("#filter-penjualanartikel").show();
                     $('.list_sub_dept').html(data);
                 },
-                beforeSend: function( xhr ) {
+                beforeSend: function(xhr) {
                     // console.log(xhr);
                     $(".loading").show();
                     $("#filter-penjualanartikel").hide();
@@ -513,10 +647,9 @@
             });
         }
 
-        $('.list_sub_dept').on('change', function (e) {
+        $('.list_sub_dept').on('change', function(e) {
             sub_dept = this.value;
         });
         // END SUB DEPT
     });
 </script>
-

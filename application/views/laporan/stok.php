@@ -55,13 +55,13 @@
                                         <nobr>Vendor Name</nobr>
                                     </th>
                                     <th>
-                                        <nobr>Kode Brand</nobr>
+                                        <nobr>Brand Code</nobr>
                                     </th>
                                     <th>
-                                        <nobr>Nama Brand</nobr>
+                                        <nobr>Brand Name</nobr>
                                     </th>
                                     <th>
-                                        <nobr>Kode Kategori</nobr>
+                                        <nobr>Category Code</nobr>
                                     </th>
                                     <th>
                                         <nobr>DIVISION</nobr>
