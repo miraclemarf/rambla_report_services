@@ -30,7 +30,7 @@ class M_Supermarket extends CI_Model
             'CASE WHEN (COALESCE(th.member_id, "") != "" and COALESCE(mg.member_name, "") = "")
                 THEN ms.member_name
                 ELSE mg.member_name
-	        END AS member_name,',
+	        END AS member_name',
             'mg.mobile_number AS member_phone',
             'mg.tier_name AS member_tier',
             'mim.vendor_code AS vendor_code',
