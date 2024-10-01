@@ -27,7 +27,10 @@ class M_Supermarket extends CI_Model
             'td.varian_option1 AS varian_option1',
             'td.varian_option2 AS varian_option2',
             'td.price AS price',
-            'mg.member_name AS member_name',
+            'CASE WHEN (COALESCE(th.member_id, "") != "" and COALESCE(mg.member_name, "") = "")
+                THEN ms.member_name
+                ELSE mg.member_name
+	        END AS member_name,',
             'mg.mobile_number AS member_phone',
             'mg.tier_name AS member_tier',
             'mim.vendor_code AS vendor_code',
@@ -69,6 +72,7 @@ class M_Supermarket extends CI_Model
         $dbCentral->join('m_kategori_list mkl', 'td.category_code = mkl.category_code', 'left');
         $dbCentral->join('m_vendor mv', 'mim.vendor_code = mv.vendor_code', 'left');
         $dbCentral->join('l_member_master_goodie mg', 'mg.member_id = th.member_id', 'left');
+        $dbCentral->join('l_member_master_special ms', 'ms.member_id = th.member_id', 'left');
         $dbCentral->join('t_promo_hdr tp', 'td.promo_id = tp.promo_id', 'left');
 
         $dbCentral->where('th.trans_status IN ("1", "3")');
