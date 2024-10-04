@@ -52,16 +52,16 @@ class M_Supermarket extends CI_Model
             'th.trans_no AS trans_no',
             'th.no_ref AS no_ref',
             'td.promo_id as promo_id',
-            'tp.promo_desc as promo_desc',
+            'CASE COALESCE(tp.promo_desc, "") WHEN "" THEN "_NP" ELSE tp.promo_desc END as `promo_desc (_NP/nama Desc)`',
             'CASE WHEN (SUBSTR(th.trans_no, 7, 2) = "01") THEN "R001" WHEN (SUBSTR(th.trans_no, 7, 2) = "02") THEN "R002" WHEN (SUBSTR(th.trans_no, 7, 2) = "03") THEN "V001" END AS branch_id',
             'CASE WHEN (mim.tag_5 = "timbang") THEN SUM(td.berat) ELSE SUM(td.qty) END AS "Qty Gab"',
-            'CASE WHEN (COALESCE(th.member_id, "") != "") THEN "MEMBER" ELSE "NON MEMBER" END AS Member',
-            'DATE_FORMAT(th.trans_date, "%M") AS "Month"',
-            'DATE_FORMAT(th.trans_date, "%d-%M") AS "Date"',
+            'CASE WHEN (COALESCE(th.member_id, "") != "") THEN "Y" ELSE "N" END AS Member',
+            'DATE_FORMAT(th.trans_date, "%m.%b") AS "Month"',
+            'DATE_FORMAT(th.trans_date, "%d-%b") AS "Date"',
             'DATE_FORMAT(th.trans_time, "%H:00") AS "Hour"',
             'CASE WHEN DAYNAME(th.trans_date) IN ("Sunday", "Saturday") THEN "WE" ELSE "WD" END AS "WD/WE"',
-            'CASE WHEN (th.trans_status = "3") THEN "TRADER" ELSE "NON TRADER" END AS Trader',
-            'CASE WHEN  left(td.promo_id,1) in ("B","S","") and (td.disc_pct <> 0 or td.moredisc_pct <> 0)  THEN "KEY DISCOUNT" ELSE "NON KEY DISCOUNT" end AS "Key Discount"'
+            'CASE WHEN (th.trans_status = "3") THEN "Y" ELSE "N" END AS Trader',
+            'CASE WHEN  left(td.promo_id,1) in ("B","S","") and (td.disc_pct <> 0 or td.moredisc_pct <> 0)  THEN "Y" ELSE "N" end AS "Key Discount"'
         ]);
 
         $dbCentral->from('t_sales_trans_hdr th');
