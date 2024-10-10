@@ -94,7 +94,7 @@ class Laporan extends My_Controller
 
         $username = $this->input->cookie('cookie_invent_user');
 
-        $sql = "UPDATE report_service.r_item_master set status_article = '" . $status . "' where article_number ='" . $article_number . "' and branch_id = '" . $branch_id . "'";
+        $sql = "UPDATE report_service.r_item_master set status_article = '" . $status . "', last_update = CURRENT_TIMESTAMP() where article_number ='" . $article_number . "' and branch_id = '" . $branch_id . "'";
 
         $active = "";
 
