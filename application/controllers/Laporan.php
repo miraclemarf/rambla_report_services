@@ -78,12 +78,44 @@ class Laporan extends My_Controller
         $data['title'] = 'Rambla | Laporan Master Item';
         $data['username'] = $this->input->cookie('cookie_invent_user');
         $data['vendor'] = $this->input->cookie('cookie_invent_vendor');
+        $data['tipe'] = $this->input->cookie('cookie_invent_tipe');
 
         $this->load->view('template_member/header', $data);
         $this->load->view('template_member/navbar', $data);
         $this->load->view('template_member/sidebar', $data);
         $this->load->view('laporan/masteritem', $data);
         $this->load->view('template_member/footer', $data);
+    }
+
+    public function update_master_item()
+    {
+        $dbCentral = $this->load->database('dbcentral', TRUE);
+        extract(populateform());
+
+        $username = $this->input->cookie('cookie_invent_user');
+
+        $sql = "UPDATE report_service.r_item_master set status_article = '" . $status . "' where article_number ='" . $article_number . "' and branch_id = '" . $branch_id . "'";
+
+        $active = "";
+
+        if ($status == "ACTIVE") {
+            $active = "1";
+        } else if ($status == "PURGE") {
+            $active = "2";
+        } else if ($status == "DISCONTINUE") {
+            $active = "3";
+        }
+        $sql_central = "UPDATE m_item_master set isactive = '" . $active . "', last_update = CURRENT_TIMESTAMP(), update_by ='" . $username . "' where article_number ='" . $article_number . "' and branch_id = '" . $branch_id . "'";
+        $this->db->query($sql);
+        $dbCentral->query($sql_central);
+        // if ($this->db->affected_rows()) {
+        //     $data['status'] = true;
+        // } else {
+        //     $data['status'] = false;
+        // }
+
+        // echo json_encode($data['status']);
+        // echo json_encode($sql_central);
     }
 
     public function list_stok()
