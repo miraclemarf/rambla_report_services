@@ -17,7 +17,25 @@ class M_TokenOneD extends CI_Model {
     }
 
     public function refreshToken() {
-        $refreshToken = $this->session->userdata('refresh_token');
+        //$refreshToken = $this->session->userdata('refresh_token');
+
+        // Define the file path of the JSON file
+        $filePath = APPPATH . 'tokens/token.json';
+
+        // Check if the file exists
+        if (!file_exists($filePath)) {
+            echo "Token file does not exist.";
+            return;
+        }
+
+        // Read the JSON file
+        $jsonData = read_file($filePath);
+
+        // Decode the JSON data to an associative array
+        $tokenData = json_decode($jsonData, true);
+
+        $refreshToken = $tokenData['refresh_token'];
+
         $response = $this->client->post('https://login.microsoftonline.com/common/oauth2/v2.0/token', [
             'form_params' => [
                 'client_id' => $this->clientId,
@@ -36,6 +54,21 @@ class M_TokenOneD extends CI_Model {
     }
 
     public function getAccessToken() {
-        return $this->session->userdata('access_token');
+        // Define the file path of the JSON file
+        $filePath = APPPATH . 'tokens/token.json';
+
+        // Check if the file exists
+        if (!file_exists($filePath)) {
+            echo "Token file does not exist.";
+            return;
+        }
+
+        // Read the JSON file
+        $jsonData = read_file($filePath);
+
+        // Decode the JSON data to an associative array
+        $tokenData = json_decode($jsonData, true);
+
+        return $tokenData['access_token'];
     }
 }
