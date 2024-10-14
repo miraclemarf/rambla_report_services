@@ -48,8 +48,8 @@ class M_TokenOneD extends CI_Model {
         ]);
 
         $tokens = json_decode($response->getBody()->getContents(), true);
-        $this->session->set_userdata('access_token', $tokens['access_token']);
-        $this->session->set_userdata('refresh_token', $tokens['refresh_token']);
+        //$this->session->set_userdata('access_token', $tokens['access_token']);
+        //$this->session->set_userdata('refresh_token', $tokens['refresh_token']);
 
         $tokenData = array(
             'access_token' => $tokens['access_token'], // Generate a random token
