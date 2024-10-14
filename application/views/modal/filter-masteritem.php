@@ -82,6 +82,7 @@
                                             <option value=''>-- Pilih Data --</option>
                                             <option value='ACTIVE'>ACTIVE</option>
                                             <option value='PURGE'>PURGE</option>
+                                            <option value='DISCONTINUE'>DISCONTINUE</option>
                                         </select>
                                     </div>
                                 </div>

@@ -116,6 +116,11 @@
 
 <script>
     var tabel = null;
+    var tipe = '<?= $tipe; ?>';
+
+
+
+
     $(document).ready(function() {
 
         get_user_brand();
@@ -173,6 +178,12 @@
             }
         });
 
+        // $('.status-article .dropdown-item').on('click', function() {
+        //     console.log('test');
+        //     console.log($(this).attr('data'));
+        //     //$('#choose-store').html('<i class="typcn typcn-location mr-2"></i>'+$(this).text());
+        // })
+
         $('.btn-submit-filter').on("click", function() {
             if (store === '' || store == null) {
                 alert('Harap Pilih Store Dahulu')
@@ -217,6 +228,7 @@
                 "responsive": true,
                 "serverSide": true,
                 "bDestroy": true,
+                "stateSave": true,
                 "ordering": true, // Set true agar bisa di sorting
                 "order": [
                     [0, 'asc']
@@ -408,18 +420,33 @@
                         },
                     },
                     {
-                        "data": "status_article",
+                        "data": "",
                         "render": function(data, type, row) {
-                            if (data == 'ACTIVE') {
-                                return '<nobr><label class="badge badge-success">' + data + '</label></nobr>';
+                            var color = '';
+                            var id = row.article_number + row.branch_id;
+                            if (row.status_article == 'ACTIVE') {
+                                color = 'btn-success';
+                            } else if (row.status_article == 'PURGE') {
+                                color = 'btn-danger'
                             } else {
-                                return '<nobr><label class="badge badge-danger">' + data + '</label></nobr>';
+                                color = 'btn-warning'
                             }
+                            return `<nobr><div class="dropdown">
+                                <button class="btn ` + color + ` btn-sm dropdown-toggle" type="button" id="choose-status-` + id + `" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                    ` + row.status_article + `
+                                </button>
+                                <div class="dropdown-menu status-article-` + id + `" aria-labelledby="dropdownMenuSizeButton3" x-placement="top-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 0px, 0px);">
+                                    <a class="dropdown-item" onclick="change_status('` + id + `','ACTIVE','` + row.article_number + `','` + row.branch_id + `')">ACTIVE</a>
+                                    <a class="dropdown-item" onclick="change_status('` + id + `','PURGE','` + row.article_number + `','` + row.branch_id + `')">PURGE</a>
+                                    <a class="dropdown-item" onclick="change_status('` + id + `','DISCONTINUE','` + row.article_number + `','` + row.branch_id + `')">DISCONTINUE</a>
+                                </div>
+                                </div></nobr>`;
                         },
                     },
                 ],
             });
         }
+
 
         function get_user_brand() {
             $.ajax({
@@ -652,4 +679,42 @@
         });
         // END SUB DEPT
     });
+
+    function change_status(id, status, article_number, branch_id) {
+        // console.log(tipe);
+        if (tipe != '1' && tipe != '15') {
+            alert('Akses anda dibatasi!')
+            return false;
+        }
+        var prefix = id;
+        $('#choose-status-' + id).html(status);
+        if (status == 'ACTIVE') {
+            $('#choose-status-' + id).removeClass('btn-danger');
+            $('#choose-status-' + id).removeClass('btn-warning');
+            $('#choose-status-' + id).addClass('btn-success');
+        } else if (status == 'PURGE') {
+            $('#choose-status-' + id).removeClass('btn-success');
+            $('#choose-status-' + id).removeClass('btn-warning');
+            $('#choose-status-' + id).addClass('btn-danger');
+        } else if (status == 'DISCONTINUE') {
+            $('#choose-status-' + id).removeClass('btn-danger');
+            $('#choose-status-' + id).removeClass('btn-success');
+            $('#choose-status-' + id).addClass('btn-warning');
+            $('#choose-status-' + id).addClass('text-white');
+        }
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url('Laporan'); ?>/update_master_item",
+            dataType: "json",
+            data: {
+                "status": status,
+                "article_number": article_number,
+                "branch_id": branch_id
+            },
+            success: function(data) {
+                console.log(data);
+            },
+            beforeSend: function(xhr) {}
+        });
+    }
 </script>
