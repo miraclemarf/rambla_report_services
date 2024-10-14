@@ -49,6 +49,9 @@ class OneD extends CI_Controller {
 
         // Convert the array to JSON format
         $jsonData = json_encode($tokenData, JSON_PRETTY_PRINT);
+         // Define the file path to store the JSON file
+         $filePath = APPPATH . 'tokens/token.json'; // Store it in the "application/tokens" folder
+
 
         if (!write_file($filePath, $jsonData)) {
             echo "Unable to write the token to the file.";

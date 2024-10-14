@@ -50,6 +50,22 @@ class M_TokenOneD extends CI_Model {
         $tokens = json_decode($response->getBody()->getContents(), true);
         $this->session->set_userdata('access_token', $tokens['access_token']);
         $this->session->set_userdata('refresh_token', $tokens['refresh_token']);
+
+        $tokenData = array(
+            'access_token' => $tokens['access_token'], // Generate a random token
+            'refresh_token' => $tokens['refresh_token'] // Expiration time
+        );
+
+        // Convert the array to JSON format
+        $jsonData = json_encode($tokenData, JSON_PRETTY_PRINT);
+
+
+        if (!write_file($filePath, $jsonData)) {
+            echo "Unable to write the token to the file.";
+        } else {
+            echo "Token has been successfully written to the file.";
+        }
+
         return $tokens['access_token'];
     }
 
