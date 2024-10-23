@@ -682,10 +682,10 @@
 
     function change_status(id, status, article_number, branch_id) {
         // console.log(tipe);
-        if (tipe != '1' && tipe != '15') {
-            alert('Akses anda dibatasi!')
-            return false;
-        }
+        // if (tipe != '1' && tipe != '15') {
+        //     alert('Akses anda dibatasi!')
+        //     return false;
+        // }
         var prefix = id;
         $('#choose-status-' + id).html(status);
         if (status == 'ACTIVE') {

@@ -22,8 +22,7 @@ class Dashboard extends My_Controller
 
         $where = "";
 
-        $store = !$this->input->post('storeid') ? 'R001' : $this->input->post('storeid');
-        $data['storeid']        =  $store;
+        $data['store_name']     = "";
 
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
@@ -42,6 +41,13 @@ class Dashboard extends My_Controller
         on a.branch_id = b.branch_id
         where a.flagactv ='1'
         and username ='" . $data['username'] . "'")->result();
+
+        if ($data['site']) {
+            $data['store_name'] = $data['site'][0]->branch_name;
+        }
+
+        $store = !$this->input->post('storeid') ? $data['site'][0]->branch_id : $this->input->post('storeid');
+        $data['storeid']        =  $store;
 
         $data['year']           = $this->Models->showdata("SELECT DISTINCT YEAR(periode) as tahun from r_sales");
 
