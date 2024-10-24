@@ -44,10 +44,16 @@ class Dashboard extends My_Controller
 
         if ($data['site']) {
             $data['store_name'] = $data['site'][0]->branch_name;
+            $store = !$this->input->post('storeid') ? $data['site'][0]->branch_id : $this->input->post('storeid');
+        } else {
+            $data['store_name'] = 'Rambla Kelapa Gading';
+            $store = !$this->input->post('storeid') ? 'R001' : $this->input->post('storeid');
         }
 
-        $store = !$this->input->post('storeid') ? $data['site'][0]->branch_id : $this->input->post('storeid');
-        $data['storeid']        =  $store;
+
+
+
+        $data['storeid']        =  $store ? $store : 'R001';
 
         $data['year']           = $this->Models->showdata("SELECT DISTINCT YEAR(periode) as tahun from r_sales");
 
