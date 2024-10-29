@@ -19,7 +19,6 @@ class LaporanExt extends My_Controller
         $this->load->library('form_validation');
         $this->load->model('models', '', TRUE);
         $this->load->model('M_Horeca');
-        $this->ceklogin();
     }
     public function index($test){
         echo $test;
@@ -27,6 +26,8 @@ class LaporanExt extends My_Controller
 
     public function penjualan_hf()
     {
+        
+        $this->ceklogin();
         extract(populateform());
         $data['title'] = 'SMJ Tools | Laporan Penjualan Happy Fresh';
         $data['username'] = $this->input->cookie('cookie_invent_user');
