@@ -27,10 +27,16 @@
 <!-- Custom js for this page-->
 <script src="<?= base_url('assets/template/celestialui'); ?>/js/dashboard.js"></script>
 <!-- End custom js for this page-->
-
-<!-- Datatable -->
-<script src="<?= base_url('assets/data_tables/datatables.min.js'); ?>"></script>
-<!-- Datatable -->
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<!-- Buttons Extension JS -->
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<!-- JSZip for Excel Export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<!-- HTML5 export buttons for CSV, Excel -->
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/2.1.8/sorting/any-number.js"></script>
+<!-- Akhir Datatable -->
 
 <!-- SELECT2 -->
 <script src="<?= base_url('assets/template/celestialui'); ?>/vendors/select2/select2.min.js"></script>

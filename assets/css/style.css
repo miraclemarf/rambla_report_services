@@ -152,6 +152,10 @@ td {
     color: #9d9d9d;
   }
 
+  .dataTables_processing{
+    z-index: 100;
+  }
+
 .vertical-alignment-helper {
     display:table;
     height: 100%;

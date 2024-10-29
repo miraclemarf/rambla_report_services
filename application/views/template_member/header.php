@@ -15,18 +15,12 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="<?= base_url('assets/template/celestialui'); ?>/css/vertical-layout-light/style.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="<?= base_url('assets/ico/faviconrambla.png'); ?>" />
+    <link rel="shortcut icon" href="<?= base_url('assets/ico/faviconrambla.png'); ?>" />    
     <!-- Awal Sweet Alert -->
     <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/sweetalert/sweetalert.css">
     <script src="<?php echo base_url() ?>assets/sweetalert/sweetalert.min.js"></script>
     <!-- Akhir Sweet Alert -->
-    <script src="<?php echo base_url() ?>assets/js/jquery-3.4.1.min.js"></script>
-    <!-- Awal Datatable -->
-    <link href="<?= base_url('assets/data_tables/datatables.min.css'); ?>" rel="stylesheet">
-    
-    <!-- Datatable -->
-    <script src="<?= base_url('assets/data_tables/datatables.min.js'); ?>"></script>
-    <!-- Akhir Datatable -->
+    <script src="<?= base_url('assets/js/jquery-3.4.1.min.js'); ?>"></script>
 
     <!-- Awal Select2 -->
     <link rel="stylesheet" href="<?= base_url('assets/template/celestialui'); ?>/vendors/select2/select2.min.css">
@@ -37,15 +31,18 @@
     <script src="<?= base_url('assets/template/celestialui'); ?>/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
 
-    <link rel="stylesheet" href="<?php echo base_url() ?>assets/font-awesome/4.5.0/css/font-awesome.min.css" />
-
+    <link rel="stylesheet" href="<?php echo base_url() ?>assets/font-awesome/4.5.0/css/font-awesome.min.css" />    
+    <!-- Awal Datatable -->
+    <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+    <!-- Buttons Extension CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
     <!-- Awal Custom CSS -->
     <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/css/style.css">
     <!-- Akhir Custom CSS -->
     
 </head>
 
-<body>
+<body>       
     <script>
            function rupiahjs(bilangan) {
                 if(bilangan == null){
@@ -56,6 +53,14 @@
                 var rupiah = bilangan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                 return rupiah;
            }
+           const rupiah = (number)=>{
+                return new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                maximumFractionDigits: 0, 
+                minimumFractionDigits: 0, 
+                }).format(number);
+            }
     </script>
     <div class="row d-none" id="proBanner">
         <div class="col-12">
