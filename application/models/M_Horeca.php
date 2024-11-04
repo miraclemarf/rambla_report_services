@@ -45,7 +45,7 @@ class M_Horeca extends CI_Model
         $dbCentral->where('COALESCE(th.member_id, "") != ""');
         $dbCentral->where('COALESCE(mg.member_name, "") = ""');
         $dbCentral->like('ms.member_name', 'Happy Fresh', 'after');
-        $dbCentral->where(' date_format(th.trans_date, "%Y.%m") = date_format(NOW(), "%Y.%m") ');
+        //$dbCentral->where(' date_format(th.trans_date, "%Y.%m") = date_format(NOW(), "%Y.%m") ');
 
         $query = $dbCentral->get();
         $result = $query->result_array();
