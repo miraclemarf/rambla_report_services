@@ -32,8 +32,6 @@ class M_Store extends CI_Model
             $where .= " AND substring( tsth.trans_no, 9, 1 ) = '1'";
         } else if ($source == "FL2") {
             $where .= " AND substring( tsth.trans_no, 9, 1 ) = '2'";
-        } else if ($source == "FL3") {
-            $where .= " AND substring( tsth.trans_no, 9, 1 ) = '3'";
         } else if ($source == "ALLFL") {
             $where .= $allfloor;
         } else if ($source == "RD") {
