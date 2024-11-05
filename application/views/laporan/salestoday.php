@@ -250,31 +250,6 @@
                                         </td>
                                     </tr>
                                 <?php endif; ?>
-                                <?php if (isset($sales_fl3)): ?>
-                                    <tr>
-                                        <td style="padding:20px;"><label class="badge badge-light">
-                                                <h4 class="m-0"><b>
-                                                        <nobr>Sales Lantai 3</nobr>
-                                                    </b></h4>
-                                            </label></td>
-                                        <td>
-                                            <h4 class="m-0"><?= $sales_fl3[0]->tot_trx ?> trx</h4>
-                                        </td>
-                                        <td>
-                                            <h4 class="m-0"><?= $sales_fl3[0]->tot_qty ?> pcs</h4>
-                                        </td>
-                                        <td>
-                                            <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_fl3[0]->gross ?></h4>
-                                            </nobr>
-                                        </td>
-                                        <td>
-                                            <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_fl3[0]->net ?></h4>
-                                            </nobr>
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
                                 <?php if (isset($sales_rd)): ?>
                                     <tr>
                                         <td style="padding:20px;"><label class="badge badge-light">
