@@ -35,9 +35,9 @@ class M_Store extends CI_Model
         } else if ($source == "ALLFL") {
             $where .= $allfloor;
         } else if ($source == "RD") {
-            $where .= " AND left(tstd.category_code,2) = 'RD'";
+            $where .= " AND left(tstd.category_code,2) = 'RD' and substring( tsth.trans_no, 9, 1 ) != '3'";
         } else if ($source == "RS") {
-            $where .= " AND left(tstd.category_code,2) = 'RS'";
+            $where .= " AND left(tstd.category_code,2) = 'RS' and substring( tsth.trans_no, 9, 1 ) != '3'";
         } else if ($source == "BAZAAR") {
             $where .= " AND substring( tsth.trans_no, 9, 1 ) = '3'";
         }
