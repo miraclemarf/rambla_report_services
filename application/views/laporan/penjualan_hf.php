@@ -121,16 +121,20 @@
                                 return meta.row + meta.settings._iDisplayStart + 1;
                             } 
                 },
-                { "data": "trans_no" },
+                { "data": "trans_no", "type": "any-number", },
                 { 
                     "data": "periode",
                     "render": function(data, type, row, meta) {
-                                return moment(data).format("DD MMM YYYY");
-                            } 
+                            if(type === 'sort'){
+                                return moment(data).format("X");
+                            }
+                            return moment(data).format("DD MMM YYYY");
+                    } 
 
                  },
                 { 
                     "data": "trans_time",
+                    "type": "any-number",
                     "render": function(data, type, row) {
                             const jam = data.split(":");
                             return jam[0]+':'+jam[1];
