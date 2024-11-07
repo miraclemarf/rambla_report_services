@@ -27,7 +27,7 @@
                             data-x-placement="top-start" x-placement="bottom-start"
                             style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 35px, 0px);">
                             <h6 class="dropdown-header"></h6>
-                            <?php foreach($site as $row) :?>
+                            <?php foreach ($site as $row) : ?>
                                 <a class="dropdown-item" style="cursor:pointer" data="<?= $row->branch_id; ?>"><?= $row->branch_name; ?></a>
                             <?php endforeach; ?>
                             <!-- <a class="dropdown-item" style="cursor:pointer" data="R001">Rambla Kelapa Gading</a>
@@ -53,7 +53,7 @@
                         <div class="d-flex flex-column">
                             <div class="card-description h4 mb-1 font-weight-normal">Net Sales</div>
                             <h2 class="mb-2 mt-2  font-weight-bold">
-                                <?= empty($result[0]->tot_trx) ? '-' : 'Rp'.$result[0]->net ?>
+                                <?= empty($result[0]->tot_trx) ? '-' : 'Rp' . $result[0]->net ?>
                             </h2>
                         </div>
                         <div class="display-2 text-warning">
@@ -70,7 +70,7 @@
                         <div class="d-flex flex-column">
                             <div class="card-description h4 mb-1 font-weight-normal">Gross Sales</div>
                             <h2 class="mb-2 mt-2 font-weight-bold">
-                                <?= empty($result[0]->tot_trx) ? '-' : 'Rp'.$result[0]->gross ?>
+                                <?= empty($result[0]->tot_trx) ? '-' : 'Rp' . $result[0]->gross ?>
                             </h2>
                         </div>
                         <div class="display-2 text-success">
@@ -87,7 +87,7 @@
                         <div class="d-flex flex-column">
                             <div class="card-description h4 mb-1 font-weight-normal">Total Trx</div>
                             <h2 class="mb-2 mt-2 font-weight-bold">
-                                <?= empty($result[0]->tot_trx) ? '-' :  $result[0]->tot_trx?>
+                                <?= empty($result[0]->tot_trx) ? '-' :  $result[0]->tot_trx ?>
                             </h2>
 
                         </div>
@@ -122,91 +122,211 @@
                 <div class="card-body">
                     <!-- <h4 class="card-title">Target Today</h4> -->
                     <div class="table-responsive">
-                        <table class="table table-striped" >
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>
                                     </th>
                                     <th>
-                                        <label class="badge badge-info"><h4 class="m-0">Total Trx</h4></label>
+                                        <label class="badge badge-info">
+                                            <h4 class="m-0">Total Trx</h4>
+                                        </label>
                                     </th>
                                     <th>
-                                        <label class="badge badge-primary"><h4 class="m-0">Total Qty</h4></label>
+                                        <label class="badge badge-primary">
+                                            <h4 class="m-0">Total Qty</h4>
+                                        </label>
                                     </th>
                                     <th>
-                                        <label class="badge badge-success"><h4 class="m-0">Sales Gross</h4></label>
+                                        <label class="badge badge-success">
+                                            <h4 class="m-0">Sales Gross</h4>
+                                        </label>
                                     </th>
                                     <th>
-                                        <label class="badge badge-warning" style="color: #fff"><h4 class="m-0">Sales Nett</h4></label>
+                                        <label class="badge badge-warning" style="color: #fff">
+                                            <h4 class="m-0">Sales Nett</h4>
+                                        </label>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if(isset($sales_allfl)): ?>
-                                <tr>
-                                    <td style="padding:20px;"><label class="badge badge-light"><h4 class="m-0"><b><nobr>Sales Floor</nobr></b></h4></label></td>
-                                    <td><h4 class="m-0"><?= $sales_allfl[0]->tot_trx ?> trx</h4></td>
-                                    <td><h4 class="m-0"><?= $sales_allfl[0]->tot_qty ?> pcs</h4></td>
-                                    <td><nobr><h4 class="m-0">Rp <?= $sales_allfl[0]->gross ?></h4></nobr></td>
-                                    <td><nobr><h4 class="m-0">Rp <?= $sales_allfl[0]->net ?></h4></nobr></td>
-                                </tr>
+                                <?php if (isset($sales_allfl)): ?>
+                                    <tr>
+                                        <td style="padding:20px;"><label class="badge badge-light">
+                                                <h4 class="m-0"><b>
+                                                        <nobr>Sales Floor</nobr>
+                                                    </b></h4>
+                                            </label></td>
+                                        <td>
+                                            <h4 class="m-0"><?= $sales_allfl[0]->tot_trx ?> trx</h4>
+                                        </td>
+                                        <td>
+                                            <h4 class="m-0"><?= $sales_allfl[0]->tot_qty ?> pcs</h4>
+                                        </td>
+                                        <td>
+                                            <nobr>
+                                                <h4 class="m-0">Rp <?= $sales_allfl[0]->gross ?></h4>
+                                            </nobr>
+                                        </td>
+                                        <td>
+                                            <nobr>
+                                                <h4 class="m-0">Rp <?= $sales_allfl[0]->net ?></h4>
+                                            </nobr>
+                                        </td>
+                                    </tr>
                                 <?php endif; ?>
-                                <?php if(isset($sales_gf)): ?>
-                                <tr>
-                                    <td style="padding:20px;"><label class="badge badge-light"><h4 class="m-0"><b><nobr>Sales Ground Floor</nobr></b></h4></label></td>
-                                    <td><h4 class="m-0"><?= $sales_gf[0]->tot_trx ?> trx</h4></td>
-                                    <td><h4 class="m-0"><?= $sales_gf[0]->tot_qty ?> pcs</h4></td>
-                                    <td><nobr><h4 class="m-0">Rp <?= $sales_gf[0]->gross ?></h4></nobr></td>
-                                    <td><nobr><h4 class="m-0">Rp <?= $sales_gf[0]->net ?></h4></nobr></td>
-                                </tr>
+                                <?php if (isset($sales_gf)): ?>
+                                    <tr>
+                                        <td style="padding:20px;"><label class="badge badge-light">
+                                                <h4 class="m-0"><b>
+                                                        <nobr>Sales Ground Floor</nobr>
+                                                    </b></h4>
+                                            </label></td>
+                                        <td>
+                                            <h4 class="m-0"><?= $sales_gf[0]->tot_trx ?> trx</h4>
+                                        </td>
+                                        <td>
+                                            <h4 class="m-0"><?= $sales_gf[0]->tot_qty ?> pcs</h4>
+                                        </td>
+                                        <td>
+                                            <nobr>
+                                                <h4 class="m-0">Rp <?= $sales_gf[0]->gross ?></h4>
+                                            </nobr>
+                                        </td>
+                                        <td>
+                                            <nobr>
+                                                <h4 class="m-0">Rp <?= $sales_gf[0]->net ?></h4>
+                                            </nobr>
+                                        </td>
+                                    </tr>
                                 <?php endif; ?>
-                                <?php if(isset($sales_fl1)): ?>
-                                <tr>
-                                    <td style="padding:20px;"><label class="badge badge-light"><h4 class="m-0"><b><nobr>Sales Lantai 1</nobr></b></h4></label></td>
-                                    <td><h4 class="m-0"><?= $sales_fl1[0]->tot_trx ?> trx</h4></td>
-                                    <td><h4 class="m-0"><?= $sales_fl1[0]->tot_qty ?> pcs</h4></td>
-                                    <td><nobr><h4 class="m-0">Rp <?= $sales_fl1[0]->gross ?></h4></nobr></td>
-                                    <td><nobr><h4 class="m-0">Rp <?= $sales_fl1[0]->net ?></h4></nobr></td>
-                                </tr>
+                                <?php if (isset($sales_fl1)): ?>
+                                    <tr>
+                                        <td style="padding:20px;"><label class="badge badge-light">
+                                                <h4 class="m-0"><b>
+                                                        <nobr>Sales Lantai 1</nobr>
+                                                    </b></h4>
+                                            </label></td>
+                                        <td>
+                                            <h4 class="m-0"><?= $sales_fl1[0]->tot_trx ?> trx</h4>
+                                        </td>
+                                        <td>
+                                            <h4 class="m-0"><?= $sales_fl1[0]->tot_qty ?> pcs</h4>
+                                        </td>
+                                        <td>
+                                            <nobr>
+                                                <h4 class="m-0">Rp <?= $sales_fl1[0]->gross ?></h4>
+                                            </nobr>
+                                        </td>
+                                        <td>
+                                            <nobr>
+                                                <h4 class="m-0">Rp <?= $sales_fl1[0]->net ?></h4>
+                                            </nobr>
+                                        </td>
+                                    </tr>
                                 <?php endif; ?>
-                                <?php if(isset($sales_fl2)): ?>
-                                <tr>
-                                    <td style="padding:20px;"><label class="badge badge-light"><h4 class="m-0"><b><nobr>Sales Lantai 2</nobr></b></h4></label></td>
-                                    <td><h4 class="m-0"><?= $sales_fl2[0]->tot_trx ?> trx</h4></td>
-                                    <td><h4 class="m-0"><?= $sales_fl2[0]->tot_qty ?> pcs</h4></td>
-                                    <td><nobr><h4 class="m-0">Rp <?= $sales_fl2[0]->gross ?></h4></nobr></td>
-                                    <td><nobr><h4 class="m-0">Rp <?= $sales_fl2[0]->net ?></h4></nobr></td>
-                                </tr>
+                                <?php if (isset($sales_fl2)): ?>
+                                    <tr>
+                                        <td style="padding:20px;"><label class="badge badge-light">
+                                                <h4 class="m-0"><b>
+                                                        <nobr>Sales Lantai 2</nobr>
+                                                    </b></h4>
+                                            </label></td>
+                                        <td>
+                                            <h4 class="m-0"><?= $sales_fl2[0]->tot_trx ?> trx</h4>
+                                        </td>
+                                        <td>
+                                            <h4 class="m-0"><?= $sales_fl2[0]->tot_qty ?> pcs</h4>
+                                        </td>
+                                        <td>
+                                            <nobr>
+                                                <h4 class="m-0">Rp <?= $sales_fl2[0]->gross ?></h4>
+                                            </nobr>
+                                        </td>
+                                        <td>
+                                            <nobr>
+                                                <h4 class="m-0">Rp <?= $sales_fl2[0]->net ?></h4>
+                                            </nobr>
+                                        </td>
+                                    </tr>
                                 <?php endif; ?>
-                                <?php if(isset($sales_rd)): ?>
-                                <tr>
-                                    <td style="padding:20px;"><label class="badge badge-light"><h4 class="m-0 "><b><nobr>Sales Deptstore</nobr></b></h4></label></td>
-                                    <td><h4 class="m-0"><?= $sales_rd[0]->tot_trx ?> trx</h4></td>
-                                    <td><h4 class="m-0"><?= $sales_rd[0]->tot_qty ?> pcs</h4></td>
-                                    <td><nobr><h4 class="m-0">Rp <?= $sales_rd[0]->gross ?></h4></nobr></td>
-                                    <td><nobr><h4 class="m-0">Rp <?= $sales_rd[0]->net ?></h4></nobr></td>
-                                </tr>
+                                <?php if (isset($sales_rd)): ?>
+                                    <tr>
+                                        <td style="padding:20px;"><label class="badge badge-light">
+                                                <h4 class="m-0 "><b>
+                                                        <nobr>Sales Deptstore</nobr>
+                                                    </b></h4>
+                                            </label></td>
+                                        <td>
+                                            <h4 class="m-0"><?= $sales_rd[0]->tot_trx ?> trx</h4>
+                                        </td>
+                                        <td>
+                                            <h4 class="m-0"><?= $sales_rd[0]->tot_qty ?> pcs</h4>
+                                        </td>
+                                        <td>
+                                            <nobr>
+                                                <h4 class="m-0">Rp <?= $sales_rd[0]->gross ?></h4>
+                                            </nobr>
+                                        </td>
+                                        <td>
+                                            <nobr>
+                                                <h4 class="m-0">Rp <?= $sales_rd[0]->net ?></h4>
+                                            </nobr>
+                                        </td>
+                                    </tr>
                                 <?php endif; ?>
-                                <?php if(isset($sales_rs)): ?>
-                                <tr>
-                                    <td style="padding:20px;"><label class="badge badge-light"><h4 class="m-0 "><b><nobr>Sales Supermarket</nobr></b></h4></label></td>
-                                    <td><h4 class="m-0"><?= $sales_rs[0]->tot_trx ?> trx</h4></td>
-                                    <td><h4 class="m-0"><?= $sales_rs[0]->tot_qty ?> pcs</h4></td>
-                                    <td><nobr><h4 class="m-0">Rp <?= $sales_rs[0]->gross ?></h4></nobr></td>
-                                    <td><nobr><h4 class="m-0">Rp <?= $sales_rs[0]->net ?></h4></nobr></td>
-                                </tr>
+                                <?php if (isset($sales_rs)): ?>
+                                    <tr>
+                                        <td style="padding:20px;"><label class="badge badge-light">
+                                                <h4 class="m-0 "><b>
+                                                        <nobr>Sales Supermarket</nobr>
+                                                    </b></h4>
+                                            </label></td>
+                                        <td>
+                                            <h4 class="m-0"><?= $sales_rs[0]->tot_trx ?> trx</h4>
+                                        </td>
+                                        <td>
+                                            <h4 class="m-0"><?= $sales_rs[0]->tot_qty ?> pcs</h4>
+                                        </td>
+                                        <td>
+                                            <nobr>
+                                                <h4 class="m-0">Rp <?= $sales_rs[0]->gross ?></h4>
+                                            </nobr>
+                                        </td>
+                                        <td>
+                                            <nobr>
+                                                <h4 class="m-0">Rp <?= $sales_rs[0]->net ?></h4>
+                                            </nobr>
+                                        </td>
+                                    </tr>
                                 <?php endif; ?>
-                                <?php if(isset($sales_bazaar)): ?>
-                                <tr>
-                                    <td style="padding:20px;"><label class="badge badge-light"><h4 class="m-0 "><b><nobr>Sales Bazaar</nobr></b></h4></label></td>
-                                    <td><h4 class="m-0"><?= $sales_bazaar[0]->tot_trx ?> trx</h4></td>
-                                    <td><h4 class="m-0"><?= $sales_bazaar[0]->tot_qty ?> pcs</h4></td>
-                                    <td><nobr><h4 class="m-0">Rp <?= $sales_bazaar[0]->gross ?></h4></nobr></td>
-                                    <td><nobr><h4 class="m-0">Rp <?= $sales_bazaar[0]->net ?></h4></nobr></td>
-                                </tr>
+                                <?php if (isset($sales_bazaar)): ?>
+                                    <tr>
+                                        <td style="padding:20px;"><label class="badge badge-light">
+                                                <h4 class="m-0 "><b>
+                                                        <nobr>Sales Bazaar</nobr>
+                                                    </b></h4>
+                                            </label></td>
+                                        <td>
+                                            <h4 class="m-0"><?= $sales_bazaar[0]->tot_trx ?> trx</h4>
+                                        </td>
+                                        <td>
+                                            <h4 class="m-0"><?= $sales_bazaar[0]->tot_qty ?> pcs</h4>
+                                        </td>
+                                        <td>
+                                            <nobr>
+                                                <h4 class="m-0">Rp <?= $sales_bazaar[0]->gross ?></h4>
+                                            </nobr>
+                                        </td>
+                                        <td>
+                                            <nobr>
+                                                <h4 class="m-0">Rp <?= $sales_bazaar[0]->net ?></h4>
+                                            </nobr>
+                                        </td>
+                                    </tr>
                                 <?php endif; ?>
                             </tbody>
-                            
+
                         </table>
                     </div>
                 </div>
