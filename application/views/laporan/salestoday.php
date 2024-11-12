@@ -19,6 +19,10 @@
                                 $storename = 'Rambla Bandung';
                             if ($storeid == 'V001')
                                 $storename = 'Happy Harvest Bandung';
+                            if ($storeid == 'S002')
+                                $storename = 'Star SMS';
+                            if ($storeid == 'S003')
+                                $storename = 'Star SMB';
                             ?>
                             <i class="typcn typcn-location mr-2"></i>
                             <?= $storename ?>
