@@ -571,7 +571,12 @@
             } else if (store == 'V001') {
                 $opt = '<option value="">-- Pilih Data --</option><option value="0">FLOOR</option>';
                 $('.list_areatrx').html($opt);
-            } else {
+            }             
+            else if (store == 'S003'){
+                $opt = '<option value="">-- Pilih Data --</option><option value="0,1,2">FLOOR</option><option value="3">BAZZAR</option>';
+                $('.list_areatrx').html($opt);
+            }
+            else {
                 $opt = '<option value="">-- Pilih Data --</option>';
                 $('.list_areatrx').html($opt);
             }
