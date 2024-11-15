@@ -215,6 +215,7 @@
                         "params7": params7
                     },
                 },
+                "scrollX": true,
                 "deferRender": true,
                 "aLengthMenu": [
                     [10, 25, 50],

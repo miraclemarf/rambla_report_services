@@ -247,6 +247,7 @@
                     },
                 },
                 "deferRender": true,
+                "scrollX": true,
                 "aLengthMenu": [
                     [10, 25, 50],
                     [10, 25, 50]
