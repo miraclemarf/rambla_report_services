@@ -17,8 +17,6 @@
                                 $storename = 'Rambla Kelapa Gading';
                             if ($storeid == 'R002')
                                 $storename = 'Rambla Bandung';
-                            if ($storeid == 'S003')
-                                $storename = 'Star SMB';
                             if ($storeid == 'V001')
                                 $storename = 'Happy Harvest Bandung';
                             if ($storeid == 'S002')
