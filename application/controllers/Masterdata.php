@@ -17,16 +17,24 @@ class Masterdata extends My_Controller
     {
         extract(populateform());
         $data['username']       = $this->input->cookie('cookie_invent_user');
-        $where = "";
-        $where .= "AND brand in (
-            select distinct brand from m_user_brand 
-            where username = '" . $data['username'] . "'
-        )";
+        $data['tipe']           = $this->input->cookie('tipe');
 
-        $data['username']       = $this->input->cookie('cookie_invent_user');
-        $data['hasil']          = $this->Models->showdata("SELECT DISTINCT brand, brand_name from v_user_login_brand
-        where 1=1 $where order by brand asc");
-        echo "<option value=''>-- Pilih Data --</option>";
+        $where = "";
+
+        if ($data['tipe'] == 10) {
+            $where .= "AND brand in (
+                select distinct brand from m_user_brand 
+                where username = '" . $data['username'] . "'
+            )";
+            $data['hasil']          = $this->Models->showdata("SELECT DISTINCT brand, brand_name from v_user_login_brand
+            where 1=1 $where order by brand asc");
+            echo "<option value=''>-- Pilih Data --</option>";
+        } else {
+            $data['hasil']          = $this->Models->showdata("SELECT brand_code as brand, brand_name from m_brand order by brand_code asc");
+            echo "<option value=''>-- Pilih Data --</option>";
+        }
+
+
         foreach ($data['hasil'] as $row) {
             echo "<option value='" . $row->brand . "'>" . $row->brand_name . " (" . $row->brand . ")</option>";
         }
