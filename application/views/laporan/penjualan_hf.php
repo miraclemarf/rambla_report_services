@@ -82,7 +82,7 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody> 
+                            <tbody>
                             </tbody>
                         </table>
                     </div>
@@ -93,7 +93,7 @@
 </div>
 
 <script>
-     $(document).ready(function() {
+    $(document).ready(function() {
         var table = $("#tb_penjualanartikel_list").DataTable({
             "processing": true,
             "ajax": {
@@ -102,128 +102,158 @@
             },
             "scrollX": true,
             "dom": 'lBfrtip', // Add buttons to the DOM
-            "buttons": [
-                {
+            "buttons": [{
                     "extend": 'csvHtml5',
                     "title": 'Laporan Penjualan Happy Fresh',
-                    "filename": 'Sales-HFxHH-'+moment().format("YYYYMMDD")
+                    "filename": 'Sales-HFxHH-' + moment().format("YYYYMMDD")
                 },
                 {
                     "extend": 'excelHtml5',
                     "title": 'Laporan Penjualan Happy Fresh',
-                    "filename": 'Sales-HFxHH-'+moment().format("YYYYMMDD")
+                    "filename": 'Sales-HFxHH-' + moment().format("YYYYMMDD")
                 }
             ],
-            "columns": [
-                { 
-                    "data": "periode",  
-                    "render": function(data, type, row, meta) {
-                                return meta.row + meta.settings._iDisplayStart + 1;
-                            } 
-                },
-                { "data": "trans_no", "type": "any-number", },
-                { 
+            "columns": [{
                     "data": "periode",
                     "render": function(data, type, row, meta) {
-                            if(type === 'sort'){
-                                return moment(data).format("X");
-                            }
-                            return moment(data).format("DD MMM YYYY");
-                    } 
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    "data": "trans_no",
+                    "type": "any-number",
+                },
+                {
+                    "data": "periode",
+                    "render": function(data, type, row, meta) {
+                        if (type === 'sort') {
+                            return moment(data).format("X");
+                        }
+                        return moment(data).format("DD MMM YYYY");
+                    }
 
-                 },
-                { 
+                },
+                {
                     "data": "trans_time",
                     "type": "any-number",
                     "render": function(data, type, row) {
-                            const jam = data.split(":");
-                            return jam[0]+':'+jam[1];
-                        },
+                        const jam = data.split(":");
+                        return jam[0] + ':' + jam[1];
+                    },
 
-                 },
-                { "data": "DIVISION" },
-                { "data": "SUB_DIVISION" },
-                { "data": "DEPT" },
-                { "data": "SUB_DEPT" },
-                { "data": "article_code" },
-                { "data": "barcode" },
-                { "data": "brand_code" },
-                { "data": "brand_name" },
-                { "data": "article_name" },
-                { 
+                },
+                {
+                    "data": "DIVISION"
+                },
+                {
+                    "data": "SUB_DIVISION"
+                },
+                {
+                    "data": "DEPT"
+                },
+                {
+                    "data": "SUB_DEPT"
+                },
+                {
+                    "data": "article_code"
+                },
+                {
+                    "data": "barcode"
+                },
+                {
+                    "data": "brand_code"
+                },
+                {
+                    "data": "brand_name"
+                },
+                {
+                    "data": "article_name"
+                },
+                {
                     "data": "price",
                     "type": "any-number",
                     "render": function(data, type, row) {
-                            return  rupiah(data);
-                        },
+                        return rupiah(data);
+                    },
 
-                 },
-                { "data": "member_name" },
-                { "data": "tot_qty", "type": "any-number" },
-                { 
+                },
+                {
+                    "data": "member_name"
+                },
+                {
+                    "data": "tot_qty",
+                    "type": "any-number"
+                },
+                {
                     "data": "tot_berat",
                     "type": "any-number",
                     "render": function(data, type, row) {
                         data = parseFloat(data);
-                        if(data > 0){ 
-                            return data.toLocaleString("de-DE");}
-                        else{return '-';}
-                        },
+                        if (data > 0) {
+                            return data.toLocaleString("de-DE");
+                        } else {
+                            return '-';
+                        }
+                    },
                 },
-                { 
-                    "data": "disc_pct" ,
+                {
+                    "data": "disc_pct",
                     "type": "any-number",
                     "render": function(data, type, row) {
                         data = parseInt(data);
-                        if(data > 0){ 
-                            return data+"%";
+                        if (data > 0) {
+                            return data + "%";
+                        } else {
+                            return '-';
                         }
-                        else{return '-';}
-                        },
+                    },
 
                 },
-                { 
+                {
                     "data": "total_disc_amt",
                     "type": "any-number",
                     "render": function(data, type, row) {
                         data = parseInt(data);
-                        if(data > 0){ 
-                            return  rupiah(data);
+                        if (data > 0) {
+                            return rupiah(data);
+                        } else {
+                            return '-';
                         }
-                        else{return '-';}
-                        },
+                    },
 
-                 },
-                { 
-                    "data": "moredisc_pct" ,
+                },
+                {
+                    "data": "moredisc_pct",
                     "type": "any-number",
                     "render": function(data, type, row) {
-                        if(parseInt(data) > 0){ 
+                        if (parseInt(data) > 0) {
                             data = parseInt(data);
-                            return data+"%";
+                            return data + "%";
+                        } else {
+                            return '-';
                         }
-                        else{return '-';}
-                        },
+                    },
                 },
-                { 
+                {
                     "data": "total_moredisc_amt",
                     "type": "any-number",
                     "render": function(data, type, row) {
                         data = parseInt(data);
-                        if(data > 0){ 
-                            return  rupiah(data);
+                        if (data > 0) {
+                            return rupiah(data);
+                        } else {
+                            return '-';
                         }
-                        else{return '-';}
-                        },
+                    },
                 },
-                { 
+                {
                     "data": "gross",
                     "type": "any-number",
                     "render": function(data, type, row) {
                         return  data;
                         },
                 },
-                { 
+                {
                     "data": "net",
                     "type": "any-number",
                     "render": function(data, type, row) {
