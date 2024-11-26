@@ -220,14 +220,14 @@
                     "data": "gross",
                     "type": "any-number",
                     "render": function(data, type, row) {
-                        return  rupiah(data);
+                        return  data;
                         },
                 },
                 { 
                     "data": "net",
                     "type": "any-number",
                     "render": function(data, type, row) {
-                        return  rupiah(data);
+                        return  data;
                         },
                 }
             ]
