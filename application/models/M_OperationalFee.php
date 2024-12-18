@@ -34,6 +34,10 @@ class M_OperationalFee extends CI_Model
                 $kode = "02";
             } else if ($store == "V001") {
                 $kode = "03";
+            } else if ($store == "S002") {
+                $kode = "04";
+            } else if ($store == "S003") {
+                $kode = "05";
             }
         }
 
@@ -88,7 +92,10 @@ class M_OperationalFee extends CI_Model
             left join m_item_master mim on mc.article_number = mim.article_number and mim.branch_id = (CASE
             WHEN substring(th.trans_no,7,2) = '01' THEN 'R001'
             WHEN substring(th.trans_no,7,2) = '02' THEN 'R002'
-            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' END)
+            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' 
+            WHEN substring(th.trans_no,7,2) = '04' THEN 'S002'
+            WHEN substring(th.trans_no,7,2) = '05' THEN 'S003'
+            END)
             where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause 
             and substring(th.trans_no,7,2) = '$kode'
             and substring(th.trans_no,9,1) in ('0','1','2','5') 
@@ -126,7 +133,10 @@ class M_OperationalFee extends CI_Model
             left join m_item_master mim on mc.article_number = mim.article_number and mim.branch_id = (CASE
             WHEN substring(th.trans_no,7,2) = '01' THEN 'R001'
             WHEN substring(th.trans_no,7,2) = '02' THEN 'R002'
-            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' END)
+            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' 
+            WHEN substring(th.trans_no,7,2) = '04' THEN 'S002'
+            WHEN substring(th.trans_no,7,2) = '05' THEN 'S003'
+            END)
             where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause    
             and substring(th.trans_no,7,2) = '$kode' 
             and substring(th.trans_no,9,1) in ('3') 

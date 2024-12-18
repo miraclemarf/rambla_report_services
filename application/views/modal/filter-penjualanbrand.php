@@ -1,9 +1,9 @@
-<div class="modal fade" id="modal-filter-stock" tabindex="-1" role="dialog" aria-labelledby="openModal" aria-hidden="true">
+<div class="modal fade" id="modal-filter-penjualanbrand" tabindex="-1" role="dialog" aria-labelledby="openModal" aria-hidden="true">
     <div class="vertical-alignment-helper">
         <div class="modal-dialog vertical-align-center" role="document" style="width: 350px;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="openModal">Filter Data Stock</h5>
+                    <h5 class="modal-title" id="openModal">Filter Data Penjualan By Brand</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -12,7 +12,23 @@
                     <div class="row">
                         <div class="col-md-12">
                             <p class="text-center loading">Loading</p>
-                            <div id="filter-stock">
+                            <div id="filter-penjualanbrand">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="mt-1">Last Periode</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <?php $this->load->view('elements/daterange_picker_backdate'); ?>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <label class="mt-1">This Periode</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <?php $this->load->view('elements/daterange_picker'); ?>
+                                    </div>
+                                </div>
                                 <div class="row mt-2">
                                     <div class="col-md-4">
                                         <label class="mt-1">Store</label>
@@ -53,16 +69,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row mt-2">
-                                    <div class="col-md-4">
-                                        <label class="mt-1">Sub Dept</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <select class="js-example-basic-single list_sub_dept">
-                                            <option value=''>Please Wait...</option>
-                                        </select>
-                                    </div>
-                                </div>
+
                                 <div class="row mt-2">
                                     <div class="col-md-4">
                                         <label class="mt-1">Pilih Brand</label>
@@ -70,31 +77,6 @@
                                     <div class="col-md-8">
                                         <select class="js-example-basic-single list_user_brand">
                                             <option value=''>Please Wait...</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mt-2">
-                                    <div class="col-md-4">
-                                        <label class="mt-1">Article Type</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <select class="js-example-basic-single list_article_type">
-                                            <option value=''>-- Pilih Data --</option>
-                                            <option value="pcs">Pcs</option>
-                                            <option value="kg">Kilo</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mt-2">
-                                    <div class="col-md-4">
-                                        <label class="mt-1">Pilih Status</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <select class="js-example-basic-single list_article_status">
-                                            <option value=''>-- Pilih Data --</option>
-                                            <option value='ACTIVE'>ACTIVE</option>
-                                            <option value='PURGE'>PURGE</option>
-                                            <option value='DISCONTINUE'>DISCONTINUE</option>
                                         </select>
                                     </div>
                                 </div>

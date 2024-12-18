@@ -266,7 +266,7 @@ class Laporan extends My_Controller
         }
         // END CEK ADA KATEGORINYA NGGA
 
-        if ($params1 || $params2 || $params3 || $params4 || $params5 || $params6 || $params7) {
+        if ($params1 || $params2 || $params3 || $params4 || $params5 || $params6 || $params7 || $params8) {
             if ($params1) {
                 $filter1 = " AND brand_code = '" . $params1 . "'";
                 $filter .= $filter1;
@@ -298,6 +298,10 @@ class Laporan extends My_Controller
                     $filter7 = " AND tag_5 in ('TIMBANG')";
                 }
                 $filter .= $filter7;
+            }
+            if ($params8) {
+                $filter8 = " AND status_article = '" . $params8 . "'";
+                $filter .= $filter8;
             }
             $isWhere = $filter;
         } else {
@@ -455,7 +459,7 @@ class Laporan extends My_Controller
         echo $this->M_Datatables->get_tables_where($tables, $search, $where, $isWhere);
     }
 
-    function export_excel_stock($brand_code, $division, $sub_division, $dept, $sub_dept, $store, $art_type)
+    function export_excel_stock($brand_code, $division, $sub_division, $dept, $sub_dept, $store, $art_type, $article_status)
     {
         /* Data */
         $data['username'] = $this->input->cookie('cookie_invent_user');
@@ -515,6 +519,10 @@ class Laporan extends My_Controller
             }
         }
 
+        if ($article_status !== "null") {
+            $where .= " AND status_article = '" . $article_status . "'";
+        }
+
         $data = $this->db->query("SELECT * FROM r_s_item_stok WHERE 1=1 $where")->result_array();
 
         /* Spreadsheet Init */
@@ -542,13 +550,14 @@ class Laporan extends My_Controller
         $sheet->setCellValue('R1', 'last_stock');
         $sheet->setCellValue('S1', 'current price');
         $sheet->setCellValue('T1', 'retail value');
+        $sheet->setCellValue('U1', 'Article Status');
 
         /* Excel Data */
         $row_number = 2;
         foreach ($data as $key => $row) {
             $sheet->setCellValue('A' . $row_number, $key + 1);
             $sheet->setCellValue('B' . $row_number, $row['branch_id']);
-            $sheet->setCellValue('C' . $row_number, $row['periode']);
+            $sheet->setCellValue('C' . $row_number, substr($row['periode'], 0, 7));
             $sheet->setCellValue('D' . $row_number, $row['barcode']);
             $sheet->setCellValue('E' . $row_number, $row['article_code']);
             $sheet->setCellValue('F' . $row_number, $row['article_name']);
@@ -566,6 +575,7 @@ class Laporan extends My_Controller
             $sheet->setCellValue('R' . $row_number, $row['last_stock']);
             $sheet->setCellValue('S' . $row_number, $row['current_price']);
             $sheet->setCellValue('T' . $row_number, $row['current_price'] * $row['last_stock']);
+            $sheet->setCellValue('U' . $row_number, $row['status_article']);
             $row_number++;
         }
 
@@ -1221,7 +1231,7 @@ class Laporan extends My_Controller
         $writer->save('php://output');
     }
 
-    function export_csv_stock($brand_code, $division, $sub_division, $dept, $sub_dept, $store, $art_type)
+    function export_csv_stock($brand_code, $division, $sub_division, $dept, $sub_dept, $store, $art_type, $article_status)
     {
         $filename = 'stock_report.csv';
 
@@ -1286,10 +1296,14 @@ class Laporan extends My_Controller
             }
         }
 
-        $data = $this->db->query("SELECT branch_id,periode,barcode, article_code, article_name,varian_option1,varian_option2, vendor_code, vendor_name, brand_code,brand_name,category_code, DIVISION,SUB_DIVISION,DEPT,SUB_DEPT,last_stock, current_price, (last_stock * current_price) as retail_value FROM r_s_item_stok where 1=1 $where")->result_array();
+        if ($article_status !== "null") {
+            $where .= " AND status_article = '" . $article_status . "'";
+        }
+
+        $data = $this->db->query("SELECT branch_id,SUBSTRING(periode, 1, 7) as periode,barcode, article_code, article_name,varian_option1,varian_option2, vendor_code, vendor_name, brand_code,brand_name,category_code, DIVISION,SUB_DIVISION,DEPT,SUB_DEPT,last_stock, current_price, (last_stock * current_price) as retail_value, status_article FROM r_s_item_stok where 1=1 $where")->result_array();
         $file = fopen('php://output', 'w');
 
-        $header = array('branch_id', 'periode', 'barcode', 'article_code', 'article_name', 'varian_option1', 'varian_option2', 'vendor_code', 'vendor_name', 'brand_code', 'brand_name', 'Kode_Kategori', 'DIVISION', 'SUB_DIVISION', 'DEPT', 'SUB_DEPT', 'last_stock', 'current_price', 'retail_value');
+        $header = array('branch_id', 'periode', 'barcode', 'article_code', 'article_name', 'varian_option1', 'varian_option2', 'vendor_code', 'vendor_name', 'brand_code', 'brand_name', 'Kode_Kategori', 'DIVISION', 'SUB_DIVISION', 'DEPT', 'SUB_DEPT', 'last_stock', 'current_price', 'retail_value', 'article status');
 
         fputcsv($file, $header);
 
@@ -1676,7 +1690,6 @@ class Laporan extends My_Controller
 
     public function pembayaran_operational_fee()
     {
-
         $postData = $this->input->post();
         $data = $this->M_OperationalFee->getOperationalFee($postData);
         echo json_encode($data);
@@ -1720,6 +1733,7 @@ class Laporan extends My_Controller
         $store = $getData['store'];
         $deltype = $getData['deltype'];
         $paytype = $getData['paytype'];
+        $kode = "";
 
         $dbCentral = $this->load->database('dbcentral', TRUE);
 
@@ -1731,13 +1745,25 @@ class Laporan extends My_Controller
 
         $data['username'] = $this->input->cookie('cookie_invent_user');
 
-        $query = "SELECT distinct CASE WHEN ( substr( a.trans_no, 7, 2 ) = '01' ) THEN 'R001' WHEN ( substr( a.trans_no, 7, 2 ) = '02' ) THEN 'R002' WHEN ( substr( a.trans_no, 7, 2 ) = '03' ) THEN 'V001' END  AS branch_id,  DATE_FORMAT(a.trans_date,'%Y-%m-%d'), DATE_FORMAT(a.trans_date,'%m'), a.trans_no, a.no_ref, a.delivery_type, a.delivery_number, CASE left(tp.mop_code,2) when 'VA' THEN 'Virtual Account' WHEN 'VC' THEN 'Voucher' WHEN 'PP' THEN 'Point' WHEN 'CC' THEN 'Credit Card' WHEN 'CP' THEN 'Coupon' ELSE description end mop_name, card_name, tp.paid_amount FROM t_sales_trans_hdr a LEFT JOIN t_paid tp on tp.trans_no = a.trans_no LEFT JOIN m_mop mm on mm.mop_code = tp.mop_code where a.trans_status = '1' and substr( a.trans_no, 9, 1 )  = '5' ";
+        $query = "SELECT distinct CASE WHEN ( substr( a.trans_no, 7, 2 ) = '01' ) THEN 'R001' WHEN ( substr( a.trans_no, 7, 2 ) = '02' ) THEN 'R002' WHEN ( substr( a.trans_no, 7, 2 ) = '03' ) THEN 'V001' WHEN ( substr( a.trans_no, 7, 2 ) = '04' ) THEN 'S002' WHEN ( substr( a.trans_no, 7, 2 ) = '05' ) THEN 'S003' END  AS branch_id,  DATE_FORMAT(a.trans_date,'%Y-%m-%d'), DATE_FORMAT(a.trans_date,'%m'), a.trans_no, a.no_ref, a.delivery_type, a.delivery_number, CASE left(tp.mop_code,2) when 'VA' THEN 'Virtual Account' WHEN 'VC' THEN 'Voucher' WHEN 'PP' THEN 'Point' WHEN 'CC' THEN 'Credit Card' WHEN 'CP' THEN 'Coupon' ELSE description end mop_name, card_name, tp.paid_amount FROM t_sales_trans_hdr a LEFT JOIN t_paid tp on tp.trans_no = a.trans_no LEFT JOIN m_mop mm on mm.mop_code = tp.mop_code where a.trans_status = '1' and substr( a.trans_no, 9, 1 )  = '5' ";
 
         $whereClause = "";
-        if ($store != "") {
-            $store = $store == "V001" ? "03" : substr($store, -2);
-            $whereClause .= " and substr( a.trans_no, 7, 2 ) ='" . $store . "' ";
+
+        if ($store != '') {
+            if ($store == "R001") {
+                $kode = "01";
+            } else if ($store == "R002") {
+                $kode = "02";
+            } else if ($store == "V001") {
+                $kode = "03";
+            } else if ($store == "S002") {
+                $kode = "04";
+            } else if ($store == "S003") {
+                $kode = "05";
+            }
+            $whereClause .= " and substr( a.trans_no, 7, 2 ) ='" . $kode . "' ";
         }
+
         if ($fromdate != "" && $todate != "") {
             $whereClause .= " AND DATE_FORMAT(a.trans_date,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
         }
@@ -1784,15 +1810,26 @@ class Laporan extends My_Controller
         $store = $getData['store'];
         $deltype = $getData['deltype'];
         $paytype = $getData['paytype'];
+        $kode = "";
         $dbCentral = $this->load->database('dbcentral', TRUE);
         $data['username'] = $this->input->cookie('cookie_invent_user');
 
-        $query = "SELECT distinct CASE WHEN ( substr( a.trans_no, 7, 2 ) = '01' ) THEN 'R001' WHEN ( substr( a.trans_no, 7, 2 ) = '02' ) THEN 'R002' WHEN ( substr( a.trans_no, 7, 2 ) = '03' ) THEN 'V001' END  AS branch_id,  DATE_FORMAT(a.trans_date,'%Y-%m-%d') as periode, DATE_FORMAT(a.trans_date,'%m') as bulan, a.trans_no, a.no_ref, a.delivery_type, a.delivery_number, CASE left(tp.mop_code,2) when 'VA' THEN 'Virtual Account' WHEN 'VC' THEN 'Voucher' WHEN 'PP' THEN 'Point' WHEN 'CC' THEN 'Credit Card' WHEN 'CP' THEN 'Coupon' ELSE description end mop_name, card_name, tp.paid_amount FROM t_sales_trans_hdr a LEFT JOIN t_paid tp on tp.trans_no = a.trans_no LEFT JOIN m_mop mm on mm.mop_code = tp.mop_code where a.trans_status = '1' and substr( a.trans_no, 9, 1 )  = '5' ";
+        $query = "SELECT distinct CASE WHEN ( substr( a.trans_no, 7, 2 ) = '01' ) THEN 'R001' WHEN ( substr( a.trans_no, 7, 2 ) = '02' ) THEN 'R002' WHEN ( substr( a.trans_no, 7, 2 ) = '03' ) THEN 'V001' WHEN ( substr( a.trans_no, 7, 2 ) = '04' ) THEN 'S002' WHEN ( substr( a.trans_no, 7, 2 ) = '05' ) THEN 'S003' END  AS branch_id,  DATE_FORMAT(a.trans_date,'%Y-%m-%d') as periode, DATE_FORMAT(a.trans_date,'%m') as bulan, a.trans_no, a.no_ref, a.delivery_type, a.delivery_number, CASE left(tp.mop_code,2) when 'VA' THEN 'Virtual Account' WHEN 'VC' THEN 'Voucher' WHEN 'PP' THEN 'Point' WHEN 'CC' THEN 'Credit Card' WHEN 'CP' THEN 'Coupon' ELSE description end mop_name, card_name, tp.paid_amount FROM t_sales_trans_hdr a LEFT JOIN t_paid tp on tp.trans_no = a.trans_no LEFT JOIN m_mop mm on mm.mop_code = tp.mop_code where a.trans_status = '1' and substr( a.trans_no, 9, 1 )  = '5' ";
 
         $whereClause = "";
-        if ($store != "") {
-            $store = $store == "V001" ? "03" : substr($store, -2);
-            $whereClause .= " and substr( a.trans_no, 7, 2 ) ='" . $store . "' ";
+        if ($store != '') {
+            if ($store == "R001") {
+                $kode = "01";
+            } else if ($store == "R002") {
+                $kode = "02";
+            } else if ($store == "V001") {
+                $kode = "03";
+            } else if ($store == "S002") {
+                $kode = "04";
+            } else if ($store == "S003") {
+                $kode = "05";
+            }
+            $whereClause .= " and substr( a.trans_no, 7, 2 ) ='" . $kode . "' ";
         }
         if ($fromdate != "" && $todate != "") {
             $whereClause .= " AND DATE_FORMAT(a.trans_date,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
@@ -1895,6 +1932,10 @@ class Laporan extends My_Controller
                 $kode = "02";
             } else if ($store == "V001") {
                 $kode = "03";
+            } else if ($store == "S002") {
+                $kode = "04";
+            } else if ($store == "S003") {
+                $kode = "05";
             }
         }
         if ($fromdate != "" && $todate != "") {
@@ -1939,7 +1980,10 @@ class Laporan extends My_Controller
             left join m_item_master mim on mc.article_number = mim.article_number and mim.branch_id = (CASE
             WHEN substring(th.trans_no,7,2) = '01' THEN 'R001'
             WHEN substring(th.trans_no,7,2) = '02' THEN 'R002'
-            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' END)
+            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' 
+            WHEN substring(th.trans_no,7,2) = '04' THEN 'S002'
+            WHEN substring(th.trans_no,7,2) = '05' THEN 'S003'
+            END)
             where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause 
             and substring(th.trans_no,7,2) = '$kode'
             and substring(th.trans_no,9,1) in ('0','1','2','5') 
@@ -1977,7 +2021,10 @@ class Laporan extends My_Controller
             left join m_item_master mim on mc.article_number = mim.article_number and mim.branch_id = (CASE
             WHEN substring(th.trans_no,7,2) = '01' THEN 'R001'
             WHEN substring(th.trans_no,7,2) = '02' THEN 'R002'
-            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' END)
+            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001'
+            WHEN substring(th.trans_no,7,2) = '04' THEN 'S002'
+            WHEN substring(th.trans_no,7,2) = '05' THEN 'S003'
+            END)
             where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause    
             and substring(th.trans_no,7,2) = '$kode' 
             and substring(th.trans_no,9,1) in ('3') 
@@ -2025,6 +2072,10 @@ class Laporan extends My_Controller
                 $kode = "02";
             } else if ($store == "V001") {
                 $kode = "03";
+            } else if ($store == "S002") {
+                $kode = "04";
+            } else if ($store == "S003") {
+                $kode = "05";
             }
         }
         if ($fromdate != "" && $todate != "") {
@@ -2069,7 +2120,10 @@ class Laporan extends My_Controller
             left join m_item_master mim on mc.article_number = mim.article_number and mim.branch_id = (CASE
             WHEN substring(th.trans_no,7,2) = '01' THEN 'R001'
             WHEN substring(th.trans_no,7,2) = '02' THEN 'R002'
-            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' END)
+            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001'
+            WHEN substring(th.trans_no,7,2) = '04' THEN 'S002'
+            WHEN substring(th.trans_no,7,2) = '05' THEN 'S003'
+            END)
             where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause 
             and substring(th.trans_no,7,2) = '$kode'
             and substring(th.trans_no,9,1) in ('0','1','2','5') 
@@ -2107,7 +2161,10 @@ class Laporan extends My_Controller
             left join m_item_master mim on mc.article_number = mim.article_number and mim.branch_id = (CASE
             WHEN substring(th.trans_no,7,2) = '01' THEN 'R001'
             WHEN substring(th.trans_no,7,2) = '02' THEN 'R002'
-            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' END)
+            WHEN substring(th.trans_no,7,2) = '03' THEN 'V001'
+            WHEN substring(th.trans_no,7,2) = '04' THEN 'S002'
+            WHEN substring(th.trans_no,7,2) = '05' THEN 'S003'
+            END)
             where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause    
             and substring(th.trans_no,7,2) = '$kode' 
             and substring(th.trans_no,9,1) in ('3') 

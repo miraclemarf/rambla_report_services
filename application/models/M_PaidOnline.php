@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class M_PaidOnline extends CI_Model
 {
@@ -9,9 +9,9 @@ class M_PaidOnline extends CI_Model
 
     function getPaidOnline($postData = null)
     {
-        
+
         $dbCentral = $this->load->database('dbcentral', TRUE);
-        $response = array();        
+        $response = array();
 
         $draw = $postData['draw'];
         $start = $postData['start'];
@@ -20,14 +20,15 @@ class M_PaidOnline extends CI_Model
         $columnName = $postData['columns'][$columnIndex]['data']; // Column name
         $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
         $searchValue = $postData['search']['value']; // Search value
-        
+
         $store = $postData['store'] ? $postData['store'] : '';
         $date = $postData['params3'] ? $postData['params3'] : '';
         $deltype = $postData['deltype'] ? $postData['deltype'] : '';
         $paytype = $postData['paytype'] ? $postData['paytype'] : '';
-        
-        
-        $query = "SELECT distinct a.trans_date, CASE WHEN ( substr( a.trans_no, 7, 2 ) = '01' ) THEN 'R001' WHEN ( substr( a.trans_no, 7, 2 ) = '02' ) THEN 'R002' WHEN ( substr( a.trans_no, 7, 2 ) = '03' ) THEN 'V001' END  AS branch_id, a.trans_no, a.no_ref, a.delivery_type, a.delivery_number, tp.seq, tp.mop_code, CASE left(tp.mop_code,2) when 'VA' THEN 'Virtual Account' WHEN 'VC' THEN 'Voucher' WHEN 'PP' THEN 'Point' WHEN 'CC' THEN 'Credit Card' WHEN 'CP' THEN 'Coupon' ELSE description end mop_name, card_name, tp.paid_amount FROM t_sales_trans_hdr a LEFT JOIN t_paid tp on tp.trans_no = a.trans_no LEFT JOIN m_mop mm on mm.mop_code = tp.mop_code where a.trans_status = '1' and substr( a.trans_no, 9, 1 )  = '5' ";
+
+        $kode = "";
+
+        $query = "SELECT distinct a.trans_date, CASE WHEN ( substr( a.trans_no, 7, 2 ) = '01' ) THEN 'R001' WHEN ( substr( a.trans_no, 7, 2 ) = '02' ) THEN 'R002' WHEN ( substr( a.trans_no, 7, 2 ) = '03' ) THEN 'V001' WHEN ( substr( a.trans_no, 7, 2 ) = '04' ) THEN 'S002' WHEN ( substr( a.trans_no, 7, 2 ) = '05' ) THEN 'S003' END  AS branch_id, a.trans_no, a.no_ref, a.delivery_type, a.delivery_number, tp.seq, tp.mop_code, CASE left(tp.mop_code,2) when 'VA' THEN 'Virtual Account' WHEN 'VC' THEN 'Voucher' WHEN 'PP' THEN 'Point' WHEN 'CC' THEN 'Credit Card' WHEN 'CP' THEN 'Coupon' ELSE description end mop_name, card_name, tp.paid_amount FROM t_sales_trans_hdr a LEFT JOIN t_paid tp on tp.trans_no = a.trans_no LEFT JOIN m_mop mm on mm.mop_code = tp.mop_code where a.trans_status = '1' and substr( a.trans_no, 9, 1 )  = '5' ";
         ## Search 
         $searchQuery = "";
         if ($searchValue != '') {
@@ -35,11 +36,22 @@ class M_PaidOnline extends CI_Model
         }
 
         $whereClause = "";
-        if($store != ''){
-            $store = $store == "V001" ? "03" : substr($store, -2);
-            $whereClause .= " and substr( a.trans_no, 7, 2 ) ='".$store."' ";
+        if ($store != '') {
+            if ($store == "R001") {
+                $kode = "01";
+            } else if ($store == "R002") {
+                $kode = "02";
+            } else if ($store == "V001") {
+                $kode = "03";
+            } else if ($store == "S002") {
+                $kode = "04";
+            } else if ($store == "S003") {
+                $kode = "05";
+            }
+            $whereClause .= " and substr( a.trans_no, 7, 2 ) ='" . $kode . "' ";
         }
-        if($date != ''){
+
+        if ($date != '') {
             if (strpos($date, '-') !== false) {
                 $tgl = explode("-", $date);
                 $fromdate = date("Y-m-d", strtotime($tgl[0]));
@@ -47,15 +59,14 @@ class M_PaidOnline extends CI_Model
             }
             $whereClause .= " AND DATE_FORMAT(a.trans_date,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
         }
-        if($deltype != ''){
-            $whereClause .= " and a.delivery_type ='".$deltype."' ";
+        if ($deltype != '') {
+            $whereClause .= " and a.delivery_type ='" . $deltype . "' ";
         }
-        if($paytype != ''){
-            if($paytype == 'VA' || $paytype == 'VC' || $paytype == 'PP' || $paytype == 'CC' || $paytype == 'CP'){
-                $whereClause .= " and left(tp.mop_code,2) ='".$paytype."' ";
-            }
-            else{
-                $whereClause .= " and mm.description ='".$paytype."' ";
+        if ($paytype != '') {
+            if ($paytype == 'VA' || $paytype == 'VC' || $paytype == 'PP' || $paytype == 'CC' || $paytype == 'CP') {
+                $whereClause .= " and left(tp.mop_code,2) ='" . $paytype . "' ";
+            } else {
+                $whereClause .= " and mm.description ='" . $paytype . "' ";
             }
         }
 
@@ -70,19 +81,19 @@ class M_PaidOnline extends CI_Model
         // //$records = $this->dbCentral->query($query)->result();
         //     $totalRecordwithFilter = $dbCentral->query($query.$whereClause)->num_rows();
         // }c
-        
-        
-        $totalRecords = $dbCentral->query($query.$whereClause)->num_rows();
+
+
+        $totalRecords = $dbCentral->query($query . $whereClause)->num_rows();
 
         ## Fetch records
         //$dbCentral->select('*');
-        if ($searchQuery != ''){
+        if ($searchQuery != '') {
             $dbCentral->where($searchQuery);
         }
-        $totalRecordwithFilter = $dbCentral->query($query.$whereClause)->num_rows();
+        $totalRecordwithFilter = $dbCentral->query($query . $whereClause)->num_rows();
         // $dbCentral->order_by($columnName, $columnSortOrder);
         $limitStart = ' LIMIT ' . $rowperpage . ' OFFSET ' . $start;
-        $records = $dbCentral->query($query.$whereClause.$orderBy.$limitStart)->result();
+        $records = $dbCentral->query($query . $whereClause . $orderBy . $limitStart)->result();
 
         //var_dump($query.$whereClause.$limitStart);
         $data = array();
@@ -113,5 +124,4 @@ class M_PaidOnline extends CI_Model
 
         return $response;
     }
-
 }

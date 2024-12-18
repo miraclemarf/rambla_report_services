@@ -11,6 +11,7 @@ class Dashboard extends My_Controller
         $this->load->library('form_validation');
         $this->load->model('models', '', TRUE);
         $this->load->model('M_Categories');
+        $this->load->model('M_Division');
         $this->ceklogin();
     }
 
@@ -24,10 +25,19 @@ class Dashboard extends My_Controller
 
         $data['store_name']     = "";
 
+
+        $data['site'] = $this->db->query("SELECT a.branch_id, b.branch_name from m_user_site a
+        inner join m_branches b
+        on a.branch_id = b.branch_id
+        where a.flagactv ='1'
+        and username ='" . $data['username'] . "'")->result();
+
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
         if ($cek_user_category) {
             $where .= $this->M_Categories->get_category($data['username']);
+        } else if ($data['site']) {
+            $where = $this->M_Division->get_division($data['username'], $data['site'][0]->branch_id);
         } else {
             $where .= "AND brand_code in (
                 select distinct brand from m_user_brand 
@@ -36,12 +46,6 @@ class Dashboard extends My_Controller
         }
         // END CEK ADA KATEGORINYA NGGA
 
-        $data['site'] = $this->db->query("SELECT a.branch_id, b.branch_name from m_user_site a
-        inner join m_branches b
-        on a.branch_id = b.branch_id
-        where a.flagactv ='1'
-        and username ='" . $data['username'] . "'")->result();
-
         if ($data['site']) {
             $data['store_name'] = $data['site'][0]->branch_name;
             $store = !$this->input->post('storeid') ? $data['site'][0]->branch_id : $this->input->post('storeid');
@@ -49,18 +53,14 @@ class Dashboard extends My_Controller
             $data['store_name'] = 'Rambla Kelapa Gading';
             $store = !$this->input->post('storeid') ? 'R001' : $this->input->post('storeid');
         }
-
-
-
-
         $data['storeid']        =  $store ? $store : 'R001';
 
-        $data['year']           = $this->Models->showdata("SELECT DISTINCT YEAR(periode) as tahun from r_sales");
+        // $data['year']           = $this->Models->showdata("SELECT DISTINCT YEAR(periode) as tahun from r_sales");
 
-        $data['list_brand']     = $this->Models->showdata("SELECT DISTINCT brand, brand_name from m_user_brand a
-        inner join m_brand b
-        on a.brand = b.brand_code
-        where username ='" . $data['username'] . "'");
+        // $data['list_brand']     = $this->Models->showdata("SELECT DISTINCT brand, brand_name from m_user_brand a
+        // inner join m_brand b
+        // on a.brand = b.brand_code
+        // where username ='" . $data['username'] . "'");
 
         // $data['omset_date']      = $this->Models->showdata("SELECT * from r_sales
         // WHERE MONTH(periode) ='" . date('m') . "' and YEAR(periode) ='" . date('Y') . "' $where  GROUP BY periode order by periode");
@@ -176,20 +176,14 @@ class Dashboard extends My_Controller
         $data['username']       = $this->input->cookie('cookie_invent_user');
         $where = "";
 
-        // if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02) or ($this->input->cookie('cookie_invent_tipe') == 13)){
-        //     $where.= "AND brand_code in (
-        //         select distinct brand from m_user_brand 
-        //         where username = '".$data['username']."'
-        //     )";
-        // }else if($this->input->cookie('cookie_invent_tipe') == 15){
-        //     $where.= $this->M_Categories->get_category($data['username']);
-        // }else{
-        //     $where.= "error";
-        // }
+
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
         if ($cek_user_category) {
             $where .= $this->M_Categories->get_category($data['username']);
+        } else if ($cek_user_site) {
+            $where .= $this->M_Division->get_division($data['username'], $store);
         } else {
             $where .= "AND brand_code in (
                 select distinct brand from m_user_brand 
@@ -230,59 +224,59 @@ class Dashboard extends My_Controller
     }
 
 
-    function fetch_data_omset()
-    {
-        extract(populateform());
-        $data['username']       = $this->input->cookie('cookie_invent_user');
-        $where = "";
-        $from = date('Y-m-01');
-        $to = date('Y-m-d');
+    // function fetch_data_omset()
+    // {
+    //     extract(populateform());
+    //     $data['username']       = $this->input->cookie('cookie_invent_user');
+    //     $where = "";
+    //     $from = date('Y-m-01');
+    //     $to = date('Y-m-d');
 
-        if (strlen($bulan) == '1') {
-            $bulan = '0' . $bulan;
-        } else {
-            $bulan;
-        }
-        if ($bulan || $tahun || $brand) {
-            $from   = $tahun . '-' . $bulan . '-' . '01';
-            if ($bulan == date('m')) {
-                $to     = $tahun . '-' . $bulan . '-' . date('d');
-            } else {
-                $to     = $this->db->query("SELECT LAST_DAY('" . $from . "') as last_day")->row();
-                $to     = $to->last_day;
-            }
+    //     if (strlen($bulan) == '1') {
+    //         $bulan = '0' . $bulan;
+    //     } else {
+    //         $bulan;
+    //     }
+    //     if ($bulan || $tahun || $brand) {
+    //         $from   = $tahun . '-' . $bulan . '-' . '01';
+    //         if ($bulan == date('m')) {
+    //             $to     = $tahun . '-' . $bulan . '-' . date('d');
+    //         } else {
+    //             $to     = $this->db->query("SELECT LAST_DAY('" . $from . "') as last_day")->row();
+    //             $to     = $to->last_day;
+    //         }
 
-            if ($brand == "all") {
-                $where = "and brand_code in 
-                (
-                select DISTINCT brand from m_user_brand
-                where username ='" . $data['username'] . "'
-                )";
-            } else {
-                $where = "and brand_code ='" . $brand . "'";
-            }
-            if ($fa == 0) {
-                $where .= " and substring(trans_no, 9, 1) != '5'";
-            } else if ($fa == 1) {
-                $where .= " and substring(trans_no, 9, 1) = '5'";
-            }
-            $data = $this->db->query("SELECT IFNULL(net, 0) as net,aa.periode from (
-                SELECT DATE_ADD(DATE_ADD(DATE_ADD(LAST_DAY('" . $from . "'), INTERVAL 1 DAY), INTERVAL -1 MONTH), INTERVAL help_topic_id DAY) as periode
-                FROM mysql.help_topic order by help_topic_id asc limit 31
-            ) aa left join (
-                SELECT SUM(net_af) as net, date_format(periode,'%Y-%m-%d') as periode
-                from r_sales
-                WHERE MONTH(periode) ='" . $bulan . "' 
-                and YEAR(periode) ='" . $tahun . "' 
-                $where
-                GROUP BY periode
-                order by periode
-            ) bb on aa.periode = bb.periode    
-            where aa.periode between '" . $from . "' and '" . $to . "'")->result();
-        } else {
-            $data = array('Data Kosong');
-        }
+    //         if ($brand == "all") {
+    //             $where = "and brand_code in 
+    //             (
+    //             select DISTINCT brand from m_user_brand
+    //             where username ='" . $data['username'] . "'
+    //             )";
+    //         } else {
+    //             $where = "and brand_code ='" . $brand . "'";
+    //         }
+    //         if ($fa == 0) {
+    //             $where .= " and substring(trans_no, 9, 1) != '5'";
+    //         } else if ($fa == 1) {
+    //             $where .= " and substring(trans_no, 9, 1) = '5'";
+    //         }
+    //         $data = $this->db->query("SELECT IFNULL(net, 0) as net,aa.periode from (
+    //             SELECT DATE_ADD(DATE_ADD(DATE_ADD(LAST_DAY('" . $from . "'), INTERVAL 1 DAY), INTERVAL -1 MONTH), INTERVAL help_topic_id DAY) as periode
+    //             FROM mysql.help_topic order by help_topic_id asc limit 31
+    //         ) aa left join (
+    //             SELECT SUM(net_af) as net, date_format(periode,'%Y-%m-%d') as periode
+    //             from r_sales
+    //             WHERE MONTH(periode) ='" . $bulan . "' 
+    //             and YEAR(periode) ='" . $tahun . "' 
+    //             $where
+    //             GROUP BY periode
+    //             order by periode
+    //         ) bb on aa.periode = bb.periode    
+    //         where aa.periode between '" . $from . "' and '" . $to . "'")->result();
+    //     } else {
+    //         $data = array('Data Kosong');
+    //     }
 
-        echo json_encode($data);
-    }
+    //     echo json_encode($data);
+    // }
 }

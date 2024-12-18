@@ -70,6 +70,15 @@ class SalesToday extends My_Controller
             $data['sales_rd'] = $this->M_Store->get_sales_today_all($store, 'RD');
             $data['sales_rs'] = $this->M_Store->get_sales_today_all($store, 'RS');
             $data['sales_bazaar'] = $this->M_Store->get_sales_today_all($store, 'BAZAAR');
+        } else if ($store == "S002") {
+            $data['result'] = $this->M_Store->get_sales_today_all($store, null);
+            $data['sales_allfl'] = $this->M_Store->get_sales_today_all($store, 'ALLFL');
+            $data['sales_gf'] = $this->M_Store->get_sales_today_all($store, 'GF');
+            $data['sales_fl1'] = $this->M_Store->get_sales_today_all($store, 'FL1');
+            $data['sales_fl2'] = $this->M_Store->get_sales_today_all($store, 'FL2');
+            $data['sales_rd'] = $this->M_Store->get_sales_today_all($store, 'RD');
+            $data['sales_rs'] = $this->M_Store->get_sales_today_all($store, 'RS');
+            $data['sales_bazaar'] = $this->M_Store->get_sales_today_all($store, 'BAZAAR');
         } else if ($store == "S003") {
             $data['result'] = $this->M_Store->get_sales_today_all($store, null);
             $data['sales_allfl'] = $this->M_Store->get_sales_today_all($store, 'ALLFL');

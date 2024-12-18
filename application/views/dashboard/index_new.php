@@ -2,7 +2,7 @@
     .loader {
         border: 16px solid #f3f3f3;
         border-radius: 50%;
-        border-top: 16px solid #3498db;
+        border-top: 16px solid #f2125e;
         width: 120px;
         height: 120px;
         -webkit-animation: spin 2s linear infinite;
@@ -84,49 +84,49 @@
                             <table class="table table-striped table-dark" id="tb_ranking">
                                 <thead class="">
                                     <tr>
-                                        <th style="background-color: #2E20C7; color: white">
+                                        <th style="background-color: #f2125e; color: white">
                                             <nobr>Ranking</nobr>
                                         </th>
-                                        <th style="background-color: #2E20C7; color: white">
+                                        <th style="background-color: #f2125e; color: white">
                                             <nobr>Periode</nobr>
                                         </th>
-                                        <th style="background-color: #2E20C7; color: white">
+                                        <th style="background-color: #f2125e; color: white">
                                             <nobr>Brand Name</nobr>
                                         </th>
-                                        <th style="background-color: #2E20C7; color: white">
+                                        <th style="background-color: #f2125e; color: white">
                                             <nobr>Tot Qty</nobr>
                                         </th>
-                                        <th style="background-color: #2E20C7; color: white">
+                                        <th style="background-color: #f2125e; color: white">
                                             <nobr>Tot Net</nobr>
                                         </th>
-                                        <th style="background-color: #0F5ED5FF; color: white">
+                                        <th style="background-color: #392ccd; color: white">
                                             <nobr>Ranking</nobr>
                                         </th>
-                                        <th style="background-color: #0F5ED5FF; color: white">
+                                        <th style="background-color: #392ccd; color: white">
                                             <nobr>Periode</nobr>
                                         </th>
-                                        <th style="background-color: #0F5ED5FF; color: white">
+                                        <th style="background-color: #392ccd; color: white">
                                             <nobr>Brand Name</nobr>
                                         </th>
-                                        <th style="background-color: #0F5ED5FF; color: white">
+                                        <th style="background-color: #392ccd; color: white">
                                             <nobr>Tot Qty</nobr>
                                         </th>
-                                        <th style="background-color: #0F5ED5FF; color: white">
+                                        <th style="background-color: #392ccd; color: white">
                                             <nobr>Tot Net</nobr>
                                         </th>
-                                        <th style="background-color: #2b80ff; color: white;">
+                                        <th style="background-color: #ff8300; color: white;">
                                             <nobr>Ranking</nobr>
                                         </th>
-                                        <th style="background-color: #2b80ff; color: white;">
+                                        <th style="background-color: #ff8300; color: white;">
                                             <nobr>Periode</nobr>
                                         </th>
-                                        <th style="background-color: #2b80ff; color: white;">
+                                        <th style="background-color: #ff8300; color: white;">
                                             <nobr>Brand Name</nobr>
                                         </th>
-                                        <th style="background-color: #2b80ff; color: white;">
+                                        <th style="background-color: #ff8300; color: white;">
                                             <nobr>Tot Qty</nobr>
                                         </th>
-                                        <th style="background-color: #2b80ff; color: white;">
+                                        <th style="background-color: #ff8300; color: white;">
                                             <nobr>Tot Net</nobr>
                                         </th>
                                     </tr>
@@ -171,7 +171,7 @@
                 $('#loader-wrapper').show();
             },
             success: function(data) { 
-                // console.log(data["hasil"]);
+                console.log(data["hasil"]);
                 $('.top10sales').show();
                 $('#loader-wrapper').hide();
                 var html = '';
