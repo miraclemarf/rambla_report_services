@@ -1,91 +1,108 @@
+<style>
+    table,
+    th,
+    td {
+        border: 1px solid white;
+    }
+</style>
 <div class="content-wrapper">
-    <?php $this->load->view('modal/export-stock', true); ?>
-    <?php $this->load->view('modal/filter-stock', true); ?>
+    <?php $this->load->view('modal/export-penjualanbrand', true); ?>
+    <?php $this->load->view('modal/filter-penjualanbrand', true); ?>
     <div class="row">
         <div class="col-lg-12 d-flex grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex flex-wrap justify-content-between mb-3">
                         <div>
-                            <h4 class="card-title mb-0">Laporan Stock</h4>
-                            <p class="text-muted mb-2">Data Per : <?=
-                                                                    date("l, d F Y", strtotime("-1 days")) ?></p>
+                            <h4 class="card-title mb-0">Laporan Penjualan By Brand</h4>
+                            <p class="text-muted mb-2">Terapkan filter untuk menampilkan data.</p>
                         </div>
                         <div class="align-self-end">
-                            <button type="button" class="btn btn-success btn-sm btn-icon-text btn-export-stock ml-2" style="float:right">
+                            <button type="button" class="btn btn-success btn-sm btn-icon-text btn-export-penjualanbrand ml-2" style="float:right">
                                 <i class="typcn typcn-download btn-icon-prepend"></i>
                                 Export File
                             </button>
-                            <button type="button" class="btn btn-info btn-sm btn-icon-text btn-filter-stock" style="float:right">
+                            <button type="button" class="btn btn-info btn-sm btn-icon-text btn-filter-pejualanbrand" style="float:right">
                                 <i class="typcn typcn-filter"></i>
                                 Filter
                             </button>
                         </div>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table table-striped table-custom" id="tb_stock_list">
+                    <div class="">
+                        <table class="table table-striped table-custom d-none" id="tb_penjualanbrand_list">
                             <thead class="table-rambla">
                                 <tr>
-                                    <th>#</th>
-                                    <th>
+                                    <th rowspan="2" style="vertical-align: middle; text-align:center;">#</th>
+                                    <th rowspan="2" style="vertical-align: middle; text-align:center;">
                                         <nobr>Store</nobr>
                                     </th>
-                                    <th>
-                                        <nobr>Periode</nobr>
+                                    <th rowspan="2" style="vertical-align: middle; text-align:center;">
+                                        <nobr>SBU</nobr>
                                     </th>
-                                    <th>
-                                        <nobr>Barcode</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Article Code</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Article Name</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Varian Option1</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Varian Option2</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Vendor Code</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Vendor Name</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Brand Code</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Brand Name</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Category Code</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>DIVISION</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>SUB DIVISION</nobr>
-                                    </th>
-                                    <th>
+                                    <th rowspan="2" style="vertical-align: middle; text-align:center;">
                                         <nobr>DEPT</nobr>
                                     </th>
+                                    <th rowspan="2" style="vertical-align: middle; text-align:center;">
+                                        <nobr>BRAND</nobr>
+                                    </th>
+                                    <th colspan="6" style="vertical-align: middle; text-align:center; background-color:#ff5252">FLOOR</td>
+                                    <th colspan="6" style="vertical-align: middle; text-align:center; background-color: #ff5252">ATRIUM</td>
+                                    <th colspan="6" style="vertical-align: middle; text-align:center; background-color: #ff5252">TOTAL</td>
+                                </tr>
+                                <tr>
                                     <th>
-                                        <nobr>SUB DEPT</nobr>
+                                        <nobr>LP Sales</nobr>
                                     </th>
                                     <th>
-                                        <nobr>Last Stock</nobr>
+                                        <nobr>TP Target</nobr>
                                     </th>
                                     <th>
-                                        <nobr>Current Price</nobr>
+                                        <nobr>TP Sales</nobr>
                                     </th>
                                     <th>
-                                        <nobr>Retail Value</nobr>
+                                        <nobr>%Achieve</nobr>
                                     </th>
                                     <th>
-                                        <nobr>Article Status</nobr>
+                                        <nobr>%Growth</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>%Margin</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>LP Sales</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>TP Target</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>TP Sales</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>%Achieve</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>%Growth</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>%Margin</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>LP Sales</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>TP Target</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>TP Sales</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>%Achieve</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>%Growth</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>%Margin</nobr>
                                     </th>
                                 </tr>
                             </thead>
@@ -100,69 +117,68 @@
 <script>
     var tabel = null;
     $(document).ready(function() {
+        get_store();
         get_user_brand();
         get_division();
         get_sub_division();
         get_dept();
         get_list_dept();
-        get_store();
 
+        // get_list_barcode();
         var brand_code = null;
+        var source = null;
         var division = null;
         var sub_division = null;
         var dept = null;
         var sub_dept = null;
         var store = null;
-        var art_type = null;
-        var article_status = null;
         var params1 = null;
         var params2 = null;
-        var params3 = null;
+        var params3 = last_periode;
         var params4 = null;
         var params5 = null;
         var params6 = null;
         var params7 = null;
+        var params8 = null;
+        var params9 = periode;
         var format = null;
+        var areatrx = null;
 
-        //load_data_stock(params1,params2,params3,params4,params5,params6, params7);
+        //load_data_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8,params9);
 
-        $('#modal-filter-stock').modal('show');
+        $('#modal-filter-penjualanbrand').modal('show');
 
-        $('.btn-export-stock').on("click", function() {
-            $('#modal-export-stock').modal('show');
+        $('.btn-export-penjualanbrand').on("click", function() {
+            $('#modal-export-penjualanbrand').modal('show');
         });
 
-        $('.btn-filter-stock').on("click", function() {
-            $('#modal-filter-stock').modal('show');
+        $('.btn-filter-pejualanbrand').on("click", function() {
+            $('#modal-filter-penjualanbrand').modal('show');
         });
 
         $('.list_user_brand').on('change', function(e) {
             brand_code = this.value;
         });
 
-        $('.list_barcode').on('change', function(e) {
-            barcode = this.value;
+        $('.list_source').on('change', function(e) {
+            source = this.value;
         });
 
         $('.format-file-export').on('change', function(e) {
             format = this.value;
         });
 
+
         $('.btn-submit-filter').on("click", function() {
-            if (store === '' || store == null) {
-                alert('Harap Pilih Store Dahulu')
-                return false;
-            }
-
             params1 = brand_code;
-            params2 = division;
-            params3 = sub_division;
-            params4 = dept;
-            params5 = sub_dept;
-            params6 = store;
-            params7 = art_type;
-            params8 = article_status;
-
+            params2 = source;
+            params3 = last_periode;
+            params4 = division;
+            params5 = sub_division;
+            params6 = dept;
+            params7 = sub_dept;
+            params8 = store;
+            params9 = periode;
             if (params1 === "") {
                 params1 = null;
             }
@@ -184,23 +200,70 @@
             if (params7 === "") {
                 params7 = null;
             }
-            if (params8 === "") {
+            if (params8 === "" || params8 == null) {
                 params8 = null;
+                alert('Store Harus Dipilih')
+                return false;
             }
-
-            load_data_stock(params1, params2, params3, params4, params5, params6, params7, params8);
+            if (params9 === "") {
+                params9 = null;
+            }
+            // console.log(params1, params2, params3, params4, params5, params6, params7, params8, params9);
+            load_data_penjualanbrand(params1, params2, params3, params4, params5, params6, params7, params8, params9);
         });
 
         $('.btn-export').on("click", function() {
-            if (format == "csv") {
-                window.location.href = "<?= base_url('Laporan/export_csv_stock/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7 + '/' + params8;
-            } else if (format == "xls") {
-                window.location.href = "<?= base_url('Laporan/export_excel_stock/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7 + '/' + params8;
-            }
+            export_penjualanbrand(params1, params2, params3, params4, params5, params6, params7, params8, params9);
         });
 
-        function load_data_stock(params1, params2, params3, params4, params5, params6, params7, params8) {
-            tabel = $('#tb_stock_list').DataTable({
+        function export_penjualanbrand(params1, params2, params3, params4, params5, params6, params7, params8, params9) {
+            //console.log(params9)
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url('LaporanKhusus/generate_date'); ?>",
+                dataType: "JSON",
+                data: {
+                    "last_periode": params3,
+                    "this_periode": params9
+                },
+                success: function(data) {
+                    window.location.href = "<?= base_url('LaporanKhusus/export_excel_penjualanbrand/'); ?>" + data.fromdate1 + '/' + data.todate1 + '/' + data.fromdate2 + '/' + data.todate2 + '/' + params1 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7 + '/' + params8;
+                }
+            });
+        }
+
+        // params4 = division;
+        //     params5 = sub_division;
+        //     params6 = dept;
+        //     params7 = sub_dept;
+        //     params8 = store;
+
+        // function load_data_penjualanartikeltest(params1, params2, params3, params4, params5, params6, params7, params8, params9) {
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "<?= base_url('LaporanKhusus/penjualan_brand_where'); ?>",
+        //         dataType: "JSON",
+        //         data: {
+        //             "params1": params1,
+        //             "params2": params2,
+        //             "params3": params3,
+        //             "params4": params4,
+        //             "params5": params5,
+        //             "params6": params6,
+        //             "params7": params7,
+        //             "params8": params8,
+        //             "params9": params9
+        //         },
+        //         success: function(data) {
+        //             console.log(data);
+        //         }
+        //     });
+        // }
+
+
+        function load_data_penjualanbrand(params1, params2, params3, params4, params5, params6, params7, params8, params9) {
+            $('#tb_penjualanbrand_list').removeClass('d-none');
+            tabel = $('#tb_penjualanbrand_list').DataTable({
                 "processing": true,
                 "responsive": true,
                 "serverSide": true,
@@ -210,7 +273,7 @@
                     [0, 'asc']
                 ], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
                 "ajax": {
-                    "url": "<?= base_url('Laporan/stock_where'); ?>", // URL file untuk proses select datanya
+                    "url": "<?= base_url('LaporanKhusus/penjualan_brand_where'); ?>", // URL file untuk proses select datanya
                     "type": "POST",
                     "data": {
                         "params1": params1,
@@ -220,107 +283,32 @@
                         "params5": params5,
                         "params6": params6,
                         "params7": params7,
-                        "params8": params8
+                        "params8": params8,
+                        "params9": params9
                     },
                 },
                 "scrollX": true,
+                "stateSave": true,
                 "deferRender": true,
                 "aLengthMenu": [
                     [10, 25, 50],
                     [10, 25, 50]
                 ], // Combobox Limit
                 "columns": [{
-                        "data": 'barcode',
+                        "data": 'STORE',
                         "sortable": false,
-                        // "render": function ( data, type, row, meta ) {
-                        //     var i = meta.row + meta.settings._iDisplayStart + 1;
-                        //     return '<div class="form-check"><label class="form-check-label text-muted"><input type="checkbox" class="form-check-input" name="checkbox_'+i+'"><i class="input-helper"></i></label></div>';
-                        // },
                         "render": function(data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         },
                     },
                     {
-                        "data": "branch_id",
+                        "data": "STORE",
                         "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
                         },
                     },
                     {
-                        "data": "periode",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data.substring(0, 7) + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "barcode",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    }, // Tampilkan kategori
-                    {
-                        "data": "article_code",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    }, // Tampilkan kategori
-                    {
-                        "data": "article_name",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "varian_option1",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    }, // Tampilkan penulis
-                    {
-                        "data": "varian_option2",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    }, // Tampilkan tgl posting
-                    {
-                        "data": "vendor_code",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "vendor_name",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    }, // Tampilkan judul
-                    {
-                        "data": "brand_code",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "brand_name",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    }, // Tampilkan judul
-                    {
-                        "data": "category_code",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    }, // Tampilkan tgl posting
-                    // Tampilkan tgl posting
-                    {
-                        "data": "DIVISION",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    }, // Tampilkan tgl posting
-                    {
-                        "data": "SUB_DIVISION",
+                        "data": "SBU",
                         "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
                         },
@@ -332,42 +320,117 @@
                         },
                     },
                     {
-                        "data": "SUB_DEPT",
+                        "data": "BRAND",
                         "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
                         },
                     },
                     {
-                        "data": "last_stock",
+                        "data": "LP_Sales1",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Target1",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Sales1",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "Achieve1",
                         "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
                         },
                     },
                     {
-                        "data": "current_price",
+                        "data": "Growth1",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(Math.round(data)) + '</nobr>';
+                            return '<nobr>' + data + '%</nobr>';
                         },
                     },
                     {
-                        "data": "",
+                        "data": "Margin1",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(Math.round(row.current_price) * row.last_stock) + '</nobr>';
+                            return '<nobr>' + data + '</nobr>';
                         },
                     },
                     {
-                        "data": "",
+                        "data": "LP_Sales2",
                         "render": function(data, type, row) {
-                            var color = '';
-                            var id = row.article_number + row.branch_id;
-                            if (row.status_article == 'ACTIVE') {
-                                color = 'badge-success';
-                            } else if (row.status_article == 'PURGE') {
-                                color = 'badge-danger'
-                            } else {
-                                color = 'badge-warning'
-                            }
-                            return `<nobr><label class="badge ` + color + `">` + row.status_article + `</label></nobr>`;
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Target2",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Sales2",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "Achieve2",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "Growth2",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '%</nobr>';
+                        },
+                    },
+                    {
+                        "data": "Margin2",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "LP_Sales3",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Target3",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Sales3",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "Achieve3",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "Growth3",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '%</nobr>';
+                        },
+                    },
+                    {
+                        "data": "Margin3",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
                     },
                 ],
@@ -381,15 +444,15 @@
                 dataType: "html",
                 success: function(data) {
                     $(".loading").hide();
-                    $("#export-stock").show();
-                    $("#filter-stock").show();
+                    $("#export-penjualanbrand").show();
+                    $("#filter-penjualanbrand").show();
                     $('.list_user_brand').html(data);
                 },
                 beforeSend: function(xhr) {
                     // console.log(xhr);
                     $(".loading").show();
-                    $("#filter-stock").hide();
-                    $("#export-stock").hide();
+                    $("#filter-penjualanbrand").hide();
+                    $("#export-penjualanbrand").hide();
                 }
             });
         }
@@ -401,17 +464,15 @@
                 url: "<?= base_url('Masterdata'); ?>/get_store",
                 dataType: "html",
                 success: function(data) {
-                    console.log(data);
                     $(".loading").hide();
-                    $("#export-penjualanartikel").show();
-                    $("#filter-penjualanartikel").show();
+                    $("#export-penjualanbrand").show();
+                    $("#filter-penjualanbrand").show();
                     $('.list_store').html(data);
                 },
                 beforeSend: function(xhr) {
-                    console.log(xhr);
                     $(".loading").show();
-                    $("#filter-penjualanartikel").hide();
-                    $("#export-penjualanartikel").hide();
+                    $("#filter-penjualanbrand").hide();
+                    $("#export-penjualanbrand").hide();
                 }
             });
         }
@@ -436,6 +497,16 @@
                 }
             });
         })
+
+        $('.list_areatrx').on('change', function(e) {
+            areatrx = this.value;
+        })
+        $('.list_areatrx').parent().on('click', function(e) {
+            if (store === '' || store == null) {
+                alert('Harap Pilih Store Dahulu')
+                return false;
+            }
+        })
         // END STORE
 
         // START DIVISION
@@ -447,15 +518,15 @@
                 success: function(data) {
                     //console.log(data);
                     $(".loading").hide();
-                    $("#export-penjualanartikel").show();
-                    $("#filter-penjualanartikel").show();
+                    $("#export-penjualanbrand").show();
+                    $("#filter-penjualanbrand").show();
                     $('.list_division').html(data);
                 },
                 beforeSend: function(xhr) {
                     // console.log(xhr);
                     $(".loading").show();
-                    $("#filter-penjualanartikel").hide();
-                    $("#export-penjualanartikel").hide();
+                    $("#filter-penjualanbrand").hide();
+                    $("#export-penjualanbrand").hide();
                 }
             });
         }
@@ -483,12 +554,6 @@
         })
         // END DIVISION
 
-        // START STATUS
-        $('.list_article_status').on('change', function(e) {
-            article_status = this.value;
-        })
-        // END STATUS
-
         // START SUB DIVISION
         function get_sub_division() {
             $.ajax({
@@ -498,15 +563,15 @@
                 success: function(data) {
                     //console.log(data);
                     $(".loading").hide();
-                    $("#export-penjualanartikel").show();
-                    $("#filter-penjualanartikel").show();
+                    $("#export-penjualanbrand").show();
+                    $("#filter-penjualanbrand").show();
                     $('.list_sub_division').html(data);
                 },
                 beforeSend: function(xhr) {
                     // console.log(xhr);
                     $(".loading").show();
-                    $("#filter-penjualanartikel").hide();
-                    $("#export-penjualanartikel").hide();
+                    $("#filter-penjualanbrand").hide();
+                    $("#export-penjualanbrand").hide();
                 }
             });
         }
@@ -543,15 +608,15 @@
                 dataType: "html",
                 success: function(data) {
                     $(".loading").hide();
-                    $("#export-penjualanartikel").show();
-                    $("#filter-penjualanartikel").show();
+                    $("#export-penjualanbrand").show();
+                    $("#filter-penjualanbrand").show();
                     $('.list_dept').html(data);
                 },
                 beforeSend: function(xhr) {
                     // console.log(xhr);
                     $(".loading").show();
-                    $("#filter-penjualanartikel").hide();
-                    $("#export-penjualanartikel").hide();
+                    $("#filter-penjualanbrand").hide();
+                    $("#export-penjualanbrand").hide();
                 }
             });
         }
@@ -588,15 +653,15 @@
                 dataType: "html",
                 success: function(data) {
                     $(".loading").hide();
-                    $("#export-penjualanartikel").show();
-                    $("#filter-penjualanartikel").show();
+                    $("#export-penjualanbrand").show();
+                    $("#filter-penjualanbrand").show();
                     $('.list_sub_dept').html(data);
                 },
                 beforeSend: function(xhr) {
                     // console.log(xhr);
                     $(".loading").show();
-                    $("#filter-penjualanartikel").hide();
-                    $("#export-penjualanartikel").hide();
+                    $("#filter-penjualanbrand").hide();
+                    $("#export-penjualanbrand").hide();
                 }
             });
         }
@@ -606,11 +671,6 @@
         });
         // END SUB DEPT
 
-        // START ARTICLE TYPE
-        $('.list_article_type').on('change', function(e) {
-            art_type = this.value;
-            console.log(art_type);
-        })
-        // END ARTICLE TYPE
+
     });
 </script>

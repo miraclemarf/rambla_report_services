@@ -21,7 +21,16 @@ class Masterdata extends My_Controller
 
         $where = "";
 
-        if ($data['tipe'] == 10) {
+        $cek_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+        if ($cek_site) {
+            $data['hasil']          = $this->Models->showdata("SELECT brand_code as brand, brand_name from m_brand
+            where brand_code in 
+            (
+            select DISTINCT brand from r_item_master
+            )
+            order by brand_code asc");
+            echo "<option value=''>-- Pilih Data --</option>";
+        } else {
             $where .= "AND brand in (
                 select distinct brand from m_user_brand 
                 where username = '" . $data['username'] . "'
@@ -29,11 +38,7 @@ class Masterdata extends My_Controller
             $data['hasil']          = $this->Models->showdata("SELECT DISTINCT brand, brand_name from v_user_login_brand
             where 1=1 $where order by brand asc");
             echo "<option value=''>-- Pilih Data --</option>";
-        } else {
-            $data['hasil']          = $this->Models->showdata("SELECT brand_code as brand, brand_name from m_brand order by brand_code asc");
-            echo "<option value=''>-- Pilih Data --</option>";
         }
-
 
         foreach ($data['hasil'] as $row) {
             echo "<option value='" . $row->brand . "'>" . $row->brand_name . " (" . $row->brand . ")</option>";
@@ -115,7 +120,7 @@ class Masterdata extends My_Controller
 
         $cek_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
         if ($cek_site) {
-            $data['hasil']          = $this->M_Division->get_division_filter($data['username'], $store);
+            $data['hasil']          = $this->M_Division->get_division_filter($data['username'], $cek_site->branch_id);
         } else {
             $data['hasil']          = $this->Models->showdata("SELECT DISTINCT DIVISION, KODE_DIVISION from m_kategori_list WHERE category_code in (
                 select category_code from m_vendor_category
@@ -142,13 +147,20 @@ class Masterdata extends My_Controller
         if ($division) {
             $and .= "AND DIVISION = '" . $division . "'";
         }
-        $data['hasil']          = $this->Models->showdata("SELECT DISTINCT KODE_SUB_DIVISION, SUB_DIVISION from m_kategori_list
-        where DIVISION in 
-        (
-        SELECT DISTINCT DIVISION from m_kategori_list WHERE category_code in (
-            select category_code from m_vendor_category
-            WHERE 1=1 $where and isactive = '1')
-        ) $and");
+
+        $cek_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+        if ($cek_site) {
+            $data['hasil']          = $this->Models->showdata("SELECT DISTINCT KODE_SUB_DIVISION, SUB_DIVISION from m_kategori_list
+            where DIVISION = '" . $division . "' $and");
+        } else {
+            $data['hasil']          = $this->Models->showdata("SELECT DISTINCT KODE_SUB_DIVISION, SUB_DIVISION from m_kategori_list
+            where DIVISION in 
+            (
+            SELECT DISTINCT DIVISION from m_kategori_list WHERE category_code in (
+                select category_code from m_vendor_category
+                WHERE 1=1 $where and isactive = '1')
+            ) $and");
+        }
 
         echo "<option value=''>-- Pilih Data --</option>";
         foreach ($data['hasil'] as $row) {
@@ -169,15 +181,22 @@ class Masterdata extends My_Controller
         if ($sub_division) {
             $and .= "AND SUB_DIVISION = '" . $sub_division . "'";
         }
-        $data['hasil']          = $this->Models->showdata("SELECT DISTINCT DEPT, KODE_DEPT from m_kategori_list where SUB_DIVISION in 
-        (
-            SELECT DISTINCT SUB_DIVISION from m_kategori_list
-            where DIVISION in 
+
+        $cek_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+        if ($cek_site) {
+            $data['hasil']          = $this->Models->showdata("SELECT DISTINCT DEPT, KODE_DEPT from m_kategori_list where SUB_DIVISION ='" . $sub_division . "' $and");
+        } else {
+            $data['hasil']          = $this->Models->showdata("SELECT DISTINCT DEPT, KODE_DEPT from m_kategori_list where SUB_DIVISION in 
             (
-            SELECT DISTINCT DIVISION from m_kategori_list WHERE category_code in (
-                select category_code from m_vendor_category
-                WHERE 1=1 $where and isactive = '1')
-        ))$and");
+                SELECT DISTINCT SUB_DIVISION from m_kategori_list
+                where DIVISION in 
+                (
+                SELECT DISTINCT DIVISION from m_kategori_list WHERE category_code in (
+                    select category_code from m_vendor_category
+                    WHERE 1=1 $where and isactive = '1')
+            ))$and");
+        }
+
 
         echo "<option value=''>-- Pilih Data --</option>";
         foreach ($data['hasil'] as $row) {

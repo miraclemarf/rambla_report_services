@@ -37,7 +37,16 @@ class LaporanExt extends My_Controller
         $cek_operation = $this->db->query("SELECT * from m_login where username ='" . $data['username'] . "'")->row();
         $cek_operation = $cek_operation->login_type_id;
 
-        $data['happyFreshSales'] = $this->M_Horeca->getHappyFreshSales();
+        // $postData = array(
+        //     'trans_no' => '241003035050002',
+        //     'barcode'  => ''
+        // );
+
+        // $data['happyFreshSales'] = $this->M_Horeca->getHappyFreshSales($postData);
+
+        // var_dump($data['happyFreshSales']);
+        // die;
+
 
         $this->load->view('template_member/header', $data);
         $this->load->view('template_member/navbar', $data);
@@ -48,8 +57,14 @@ class LaporanExt extends My_Controller
 
     public function list_sales_hf()
     {
+        $postData = array(
+            'trans_no' => '241003035050002',
+            'barcode'  => '8998288850719'
+        );
+
         $draw = intval($this->input->post('draw'));
-        $happyFreshSales = $this->M_Horeca->getHappyFreshSales();
+        $happyFreshSales = $this->M_Horeca->getHappyFreshSales($postData);
+
 
         $response = array(
             'draw' => $draw,
@@ -71,13 +86,13 @@ class LaporanExt extends My_Controller
         }
     }
 
-    public function testRedis()
-    {
-        // Load the Redis library
-        $this->load->library('redislib');
+    // public function testRedis()
+    // {
+    //     // Load the Redis library
+    //     $this->load->library('redislib');
 
-        // Set and Get Redis values
-        $this->redislib->set('test_key', 'Hello, Redis!');
-        echo $this->redislib->get('test_key');
-    }
+    //     // Set and Get Redis values
+    //     $this->redislib->set('test_key', 'Hello, Redis!');
+    //     echo $this->redislib->get('test_key');
+    // }
 }

@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="">
-                        <table class="table table-striped table-custom d-none" id="tb_penjualanartikel_list">
+                        <table class="table table-striped table-custom d-none table-responsive" id="tb_penjualanartikel_list">
                             <thead class="table-rambla">
                                 <tr>
                                     <th>#</th>
@@ -71,7 +71,7 @@
 
 <script>
     var tabel = null;
-    $(document).ready(function () {
+    $(document).ready(function() {
         get_store();
 
         // get_list_barcode();
@@ -85,20 +85,20 @@
 
         $('#modal-filter-penjualanartikel').modal('show');
 
-        $('.btn-export-penjualanartikel').on("click", function () {
+        $('.btn-export-penjualanartikel').on("click", function() {
             $('#modal-export-penjualanartikel').modal('show');
         });
 
-        $('.btn-filter-pejualanartikel').on("click", function () {
+        $('.btn-filter-pejualanartikel').on("click", function() {
             $('#modal-filter-penjualanartikel').modal('show');
         });
 
-        $('.format-file-export').on('change', function (e) {
+        $('.format-file-export').on('change', function(e) {
             format = this.value;
         });
 
 
-        $('.btn-submit-filter').on("click", function () {
+        $('.btn-submit-filter').on("click", function() {
             params3 = periode;
             if (params3 === "") {
                 params3 = null;
@@ -106,7 +106,7 @@
             load_data_pembayaranonline(store, params3, params8);
         });
 
-        $('.btn-export').on("click", function () {
+        $('.btn-export').on("click", function() {
             export_pembayaranonline(store, params3, params8, paytype, deltype);
         });
 
@@ -116,8 +116,10 @@
                 type: "POST",
                 url: "<?= base_url('Laporan/generate_date'); ?>",
                 dataType: "JSON",
-                data: { "periode": params3 },
-                success: function (data) {
+                data: {
+                    "periode": params3
+                },
+                success: function(data) {
                     if (format == "csv") {
                         window.location.href = "<?= base_url('Laporan/export_csv_pembayaran_online/'); ?>?fromdate=" + data.fromdate + '&todate=' + data.todate + '&store=' + store + '&deltype=' + deltype + '&paytype=' + paytype;
                     } else if (format == "xls") {
@@ -137,60 +139,70 @@
                 "serverMethod": "post",
                 "bDestroy": true,
                 "ordering": true, // Set true agar bisa di sorting
-                "order": [[0, "asc"]], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
-                "ajax":
-                {
+                "order": [
+                    [0, "asc"]
+                ], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
+                "ajax": {
                     "url": "<?= base_url('Laporan/pembayaran_online_list'); ?>", // URL file untuk proses select datanya
                     "type": "POST",
-                    "data": { "store": store, "params3": params3, "params8": params8, "deltype": deltype, "paytype": paytype },
+                    "data": {
+                        "store": store,
+                        "params3": params3,
+                        "params8": params8,
+                        "deltype": deltype,
+                        "paytype": paytype
+                    },
                 },
                 "scrollX": true,
                 "deferRender": true,
-                "aLengthMenu": [[10, 25, 50], [10, 25, 50]], // Combobox Limit
-                "columns": [
-                    {
-                        "data": 'periode', "sortable": false,
+                "aLengthMenu": [
+                    [10, 25, 50],
+                    [10, 25, 50]
+                ], // Combobox Limit
+                "columns": [{
+                        "data": 'periode',
+                        "sortable": false,
                         // "render": function ( data, type, row, meta ) {
                         //     var i = meta.row + meta.settings._iDisplayStart + 1;
                         //     return '<div class="form-check"><label class="form-check-label text-muted"><input type="checkbox" class="form-check-input" name="checkbox_'+i+'"><i class="input-helper"></i></label></div>';
                         // },
-                        "render": function (data, type, row, meta) {
+                        "render": function(data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         },
                     },
                     {
                         "data": "branch_id",
-                        "render": function (data, type, row) {
+                        "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
                         },
                     },
                     {
                         "data": "trans_date",
-                        "render": function (data, type, row) {
+                        "render": function(data, type, row) {
                             return '<nobr>' + data.substring(0, 10) + '</nobr>';
                         },
                     }, // Tampilkan judul
                     {
                         "data": "trans_date",
-                        "render": function (data, type, row) {
+                        "render": function(data, type, row) {
                             return '<nobr>' + data.substring(5, 7) + '</nobr>';
                         },
                     },
                     {
                         "data": "trans_no",
-                        "render": function (data, type, row) {
+                        "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
                         },
                     },
                     {
                         "data": "no_ref",
-                        "render": function (data, type, row) {
+                        "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
                         },
                     },
                     {
                         "data": "delivery_type",
-                        "render": function (data, type, row) {
+                        "render": function(data, type, row) {
                             var result = '';
                             if (data == 'P')
                                 result = 'Pickup'
@@ -203,25 +215,25 @@
                     },
                     {
                         "data": "delivery_number",
-                        "render": function (data, type, row) {
+                        "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
                         },
                     },
                     {
                         "data": "mop_name",
-                        "render": function (data, type, row) {
+                        "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
                         },
                     },
                     {
                         "data": "card_name",
-                        "render": function (data, type, row) {
+                        "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
                         },
                     },
                     {
                         "data": "paid_amount",
-                        "render": function (data, type, row) {
+                        "render": function(data, type, row) {
                             return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
                         },
                     },
@@ -236,28 +248,28 @@
                 type: "GET",
                 url: "<?= base_url('Masterdata'); ?>/get_store",
                 dataType: "html",
-                success: function (data) {
+                success: function(data) {
                     $(".loading").hide();
                     $("#export-penjualanartikel").show();
                     $("#filter-penjualanartikel").show();
                     $('.list_store').html(data);
                 },
-                beforeSend: function (xhr) {
+                beforeSend: function(xhr) {
                     $(".loading").show();
                     $("#filter-penjualanartikel").hide();
                     $("#export-penjualanartikel").hide();
                 }
             });
         }
-        $('.list_store').on('change', function (e) {
+        $('.list_store').on('change', function(e) {
             store = this.value;
         })
 
-        $('.list_deltype').on('change', function (e) {
+        $('.list_deltype').on('change', function(e) {
             deltype = this.value;
         })
 
-        $('.list_paytype').on('change', function (e) {
+        $('.list_paytype').on('change', function(e) {
             paytype = this.value;
         })
         // END STORE        

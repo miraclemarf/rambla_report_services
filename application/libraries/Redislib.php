@@ -1,10 +1,12 @@
 <?php
 
-class Redislib {
+class Redislib
+{
 
     private $client;
 
-    public function __construct() {
+    public function __construct()
+    {
         // Create Redis client with timeout settings and no persistence
         $this->client = new Predis\Client([
             'scheme'   => 'tcp',
@@ -16,19 +18,54 @@ class Redislib {
         ]);
     }
 
-    public function set($key, $value) {
+    public function set($key, $value)
+    {
         return $this->client->set($key, $value);
     }
 
-    public function get($key) {
+    public function get($key)
+    {
         return $this->client->get($key);
     }
+    // Get array (list) from Redis by key
+    public function getArray($key)
+    {
+        return $this->client->lrange($key, 0, -1);  // Get all elements from list stored in Redis
+    }
 
-    public function del($key) {
+    // Set array (list) in Redis under a key
+    public function setArray($key, $values)
+    {
+        return $this->client->lpush($key, $values);
+    }
+
+    public function hset($hash, $field, $value)
+    {
+        return $this->client->hSet($hash, $field, $value);
+    }
+
+    public function hget($hash, $field)
+    {
+        return $this->client->hGet($hash, $field);
+    }
+
+    public function del($key)
+    {
         return $this->client->del([$key]);
     }
 
-    public function exists($key) {
+    public function lPush($key, $value)
+    {
+        return $this->client->lpush($key, $value);
+    }
+
+    public function lRange($key, $start, $end)
+    {
+        return $this->client->lrange($key, $start, $end);
+    }
+
+    public function exists($key)
+    {
         return $this->client->exists($key);
     }
 }

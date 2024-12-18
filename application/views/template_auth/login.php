@@ -160,8 +160,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-6 p-0">
-				<img src="<?= base_url('assets/images'); ?>/login.png" alt="" style="width:100%; height:100%; background-attachment: fixed; background-repeat: no-repeat;">
+			<div class="col-md-6 d-none d-md-flex bg-images; display: flex !important">
+				<img src="<?= base_url('assets/images'); ?>/login.png" alt="" style="width:100%; height:auto; background-attachment: fixed;background-size: cover; background-repeat: no-repeat;">
 				<!-- <img src="<?= base_url('assets/images'); ?>/bottomimageweb-01.jpg" alt="" style="width:100%; height:100%; background-attachment: fixed; background-repeat: no-repeat;"> -->
 			</div>
 		</div>

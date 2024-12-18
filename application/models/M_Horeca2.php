@@ -12,11 +12,38 @@ class M_Horeca extends CI_Model
         $this->load->library('redislib');
     }
 
-    public function getHappyFreshSales()
+    // public function getHappyFreshSales()
+    // {
+    //     // Check if cached data exists
+    //     if ($this->redislib->exists($this->redis_key_list)) {
+    //         return json_decode($this->redislib->get($this->redis_key_list), true);
+    //     }
+    //     return $this->setRedisHappyFreshSales();
+    // }
+
+    public function getHappyFreshSales($postData = null)
     {
         // Check if cached data exists
         if ($this->redislib->exists($this->redis_key_list)) {
-            return json_decode($this->redislib->get($this->redis_key_list), true);
+            $data = json_decode($this->redislib->get($this->redis_key_list), true);
+            if ($postData) {
+                $filtredArray = [];
+                foreach ($postData as $key => $value) {
+                    foreach ($data as $index => $item) {
+                        if (array_key_exists($key, $item) && in_array($value, $postData)) {
+                            if ($item[$key] == $value) {
+                                $filtredArray[$index] = $item;
+                            } else {
+                                continue;
+                            }
+                        }
+                    }
+                }
+            } else {
+                $filtredArray = $data;
+            }
+            // UNTUK REINDEX ARRAY DARI 0
+            return array_values($filtredArray);
         }
         return $this->setRedisHappyFreshSales();
     }
