@@ -26,6 +26,7 @@ class Laporan extends My_Controller
         $this->load->model('M_OperationalFee');
         $this->load->model('M_Categories');
         $this->load->model('M_Division');
+        $this->load->model('M_Stock');
         $this->ceklogin();
     }
 
@@ -129,6 +130,30 @@ class Laporan extends My_Controller
         $this->load->view('template_member/navbar', $data);
         $this->load->view('template_member/sidebar', $data);
         $this->load->view('laporan/stok', $data);
+        $this->load->view('template_member/footer', $data);
+    }
+
+    public function list_stok_v2()
+    {
+        extract(populateform());
+        $data['title'] = 'Rambla | Laporan Stock';
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+        $data['vendor'] = $this->input->cookie('cookie_invent_vendor');
+
+        $postData = array(
+            'category_code' => 'RSF1CFLCCS',
+            'sku_code'      => '1000000000023001'
+        );
+
+        $data['list_stock'] = $this->M_Stock->getListStock($postData);
+
+        var_dump($data['list_stock']);
+        die;
+
+        $this->load->view('template_member/header', $data);
+        $this->load->view('template_member/navbar', $data);
+        $this->load->view('template_member/sidebar', $data);
+        $this->load->view('laporan/stok_v2', $data);
         $this->load->view('template_member/footer', $data);
     }
 
