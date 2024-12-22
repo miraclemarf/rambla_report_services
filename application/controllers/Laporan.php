@@ -140,21 +140,40 @@ class Laporan extends My_Controller
         $data['username'] = $this->input->cookie('cookie_invent_user');
         $data['vendor'] = $this->input->cookie('cookie_invent_vendor');
 
-        $postData = array(
-            'category_code' => 'RSF1CFLCCS',
-            'sku_code'      => '1000000000023001'
-        );
+        // $postData = array(
+        //     'branch_id'      => 'R001',
+        //     'DIVISION'       => 'Supermarket'
+        // );
 
-        $data['list_stock'] = $this->M_Stock->getListStock($postData);
+        // $data['list_stock'] = $this->M_Stock->getListStock($postData);
 
-        var_dump($data['list_stock']);
-        die;
+        // var_dump($data['list_stock']);
+        // die;
 
         $this->load->view('template_member/header', $data);
         $this->load->view('template_member/navbar', $data);
         $this->load->view('template_member/sidebar', $data);
         $this->load->view('laporan/stok_v2', $data);
         $this->load->view('template_member/footer', $data);
+    }
+
+    public function stockv2_where()
+    {
+        $postData = array(
+            'branch_id'      => 'R001',
+            'DIVISION'       => 'Supermarket'
+        );
+        $draw = intval($this->input->post('draw'));
+        $happyFreshSales = $this->M_Stock->getListStock($postData);
+
+        $response = array(
+            'draw' => $draw,
+            'recordsTotal' => count($happyFreshSales),
+            'recordsFiltered' => count($happyFreshSales),
+            'data' => $happyFreshSales
+        );
+
+        echo json_encode($response);
     }
 
     public function list_promo()

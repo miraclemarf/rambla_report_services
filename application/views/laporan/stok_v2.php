@@ -210,7 +210,7 @@
                     [0, 'asc']
                 ], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
                 "ajax": {
-                    "url": "<?= base_url('Laporan/stock_where'); ?>", // URL file untuk proses select datanya
+                    "url": "<?= base_url('Laporan/stockv2_where'); ?>", // URL file untuk proses select datanya
                     "type": "POST",
                     "data": {
                         "params1": params1,
