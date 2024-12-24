@@ -68,4 +68,15 @@ class Redislib
     {
         return $this->client->exists($key);
     }
+
+    // Function to flush the Redis database
+    public function flush_db()
+    {
+        try {
+            return $this->client->flushdb();
+        } catch (Exception $e) {
+            log_message('error', 'Error flushing Redis DB: ' . $e->getMessage());
+            return false;
+        }
+    }
 }
