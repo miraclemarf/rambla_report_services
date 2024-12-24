@@ -32,10 +32,10 @@ class M_Stock extends CI_Model
         $searchValue = $postData['search']['value']; // Search value
 
         $brand_code = $postData['params1'] ? " AND brand_code = '" . $postData['params1'] . "'"  : '';
-        $division = $postData['params2'] ? " AND DIVISION = '" . str_replace("%20", " ", $postData['params2']) . "'" : '';
-        $sub_division = $postData['params3'] ? "AND SUB_DIVISION = '" . str_replace("%20", " ", $postData['params3']) . "'" : '';
-        $dept = $postData['params4'] ? "AND DEPT = '" . str_replace("%20", " ", $postData['params4']) . "'" : '';
-        $sub_dept = $postData['params5'] ? "AND SUB_DEPT = '" . str_replace("%20", " ", $postData['params5']) . "'" : '';
+        $division = $postData['params2'] ? " AND DIVISION = '" .  $postData['params2'] . "'" : '';
+        $sub_division = $postData['params3'] ? "AND SUB_DIVISION = '" .  $postData['params3'] . "'" : '';
+        $dept = $postData['params4'] ? "AND DEPT = '" .  $postData['params4'] . "'" : '';
+        $sub_dept = $postData['params5'] ? "AND SUB_DEPT = '" .  $postData['params5'] . "'" : '';
         $store = $postData['params6'] ? "AND branch_id = '" . $postData['params6'] . "'" : '';
         $uom = $postData['params7'] ? ($postData['params7'] == "pcs" ? " AND tag_5 in ('TIMBANG') is not true" : " AND tag_5 in ('TIMBANG')") : '';
         $article_status = $postData['params8'] ? "AND status_article = '" . $postData['params8'] . "'" : '';
