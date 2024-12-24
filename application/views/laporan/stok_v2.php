@@ -193,9 +193,9 @@
 
         $('.btn-export').on("click", function() {
             if (format == "csv") {
-                window.location.href = "<?= base_url('Laporan/export_csv_stock/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7 + '/' + params8;
+                window.location.href = "<?= base_url('Laporan/export_csv_stockv2/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7 + '/' + params8;
             } else if (format == "xls") {
-                window.location.href = "<?= base_url('Laporan/export_excel_stock/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7 + '/' + params8;
+                window.location.href = "<?= base_url('Laporan/export_excel_stockv2/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7 + '/' + params8;
             }
         });
 
