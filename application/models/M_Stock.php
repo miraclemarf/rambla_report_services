@@ -23,12 +23,12 @@ class M_Stock extends CI_Model
     {
         $response = array();
         $data['username'] = $this->input->cookie('cookie_invent_user');
-        $draw = $postData['draw'];
-        $start = $postData['start'];
-        $rowperpage = $postData['length']; // Rows display per page
-        $columnIndex = $postData['order'][0]['column']; // Column index
-        $columnName = $postData['columns'][$columnIndex]['data']; // Column name
-        $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+        $draw = $postData['draw'] ? $postData['draw'] : 0;
+        $start = $postData['start'] ? $postData['start'] : 0;
+        $rowperpage = $postData['length'] ? $postData['length'] : 0; // Rows display per page
+        // $columnIndex = $postData['order'][0]['column']; // Column index
+        // $columnName = $postData['columns'][$columnIndex]['data']; // Column name
+        // $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
         $searchValue = $postData['search']['value']; // Search value
 
         $brand_code = $postData['params1'] ? " AND brand_code = '" . $postData['params1'] . "'"  : '';

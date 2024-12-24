@@ -141,12 +141,16 @@ class Laporan extends My_Controller
         $data['vendor'] = $this->input->cookie('cookie_invent_vendor');
 
         // $postData = array(
-        //     'params1'      => 'LTE',
+        //     'draw'         => 1,
+        //     'start'        => 0,
+        //     'length'       => 10,
+        //     'search'       => array('value' => null),
+        //     'params1'      => null,
         //     'params2'      => 'Supermarket',
         //     'params3'      => null,
         //     'params4'      => null,
         //     'params5'      => null,
-        //     'params6'      => 'R001',
+        //     'params6'      => 'V001',
         //     'params7'      => null,
         //     'params8'      => null,
         // );
