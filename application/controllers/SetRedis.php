@@ -12,6 +12,8 @@ class SetRedis extends My_Controller
 
     public function __construct()
     {
+        set_time_limit(0);
+        ini_set('memory_limit', '20000M');
         parent::__construct();
         $this->load->database('dbcentral', TRUE);
         $this->load->model('M_Stock');
@@ -48,7 +50,7 @@ class SetRedis extends My_Controller
                 'params8'      => null,
             );
             $this->M_Stock->getListStock($postData);
-
+            sleep(10);
             // $division = $this->db->query("SELECT DISTINCT DIVISION FROM report_service.r_s_item_stok where branch_id ='" . $row->branch_id . "'")->result();
 
             // foreach ($division as $row2) {
