@@ -1043,6 +1043,8 @@ class Laporan extends My_Controller
             $row_number++;
         }
 
+        $sheet->getStyle('C2:E' . $row_number . '')->getNumberFormat()->setFormatCode('#');
+
         /* Excel File Format */
         $writer = new Xlsx($spreadsheet);
         $filename = 'masteritem_report';
