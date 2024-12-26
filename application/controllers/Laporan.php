@@ -649,7 +649,7 @@ class Laporan extends My_Controller
         $sub_division = ($sub_division !== "null") ? "AND SUB_DIVISION = '" . $sub_division . "'" : '';
         $dept = ($dept !== "null") ? "AND DEPT = '" . $dept . "'" : '';
         $sub_dept = ($sub_dept !== "null") ? "AND SUB_DEPT = '" . $sub_dept . "'" : '';
-        $store = ($branch_id !== "null") ? "AND branch_id = '" . $branch_id . "'" : '';
+        $store = ($branch_id !== "null") ? "AND a.branch_id = '" . $branch_id . "'" : '';
         $uom = ($art_type !== "null") ? ($art_type == "pcs" ? " AND tag_5 in ('TIMBANG') is not true" : " AND tag_5 in ('TIMBANG')") : '';
         $article_status = ($article_status !== "null") ? "AND status_article = '" . $article_status . "'" : '';
 
@@ -686,50 +686,50 @@ class Laporan extends My_Controller
         $sheet = $spreadsheet->getActiveSheet();
 
         /* Excel Header */
-        $sheet->setCellValue('A1', '#');
-        $sheet->setCellValue('B1', 'store');
-        $sheet->setCellValue('C1', 'periode');
-        $sheet->setCellValue('D1', 'barcode');
-        $sheet->setCellValue('E1', 'article_code');
-        $sheet->setCellValue('F1', 'article_name');
-        $sheet->setCellValue('G1', 'varian_option1');
-        $sheet->setCellValue('H1', 'varian_option2');
-        $sheet->setCellValue('I1', 'vendor_code');
-        $sheet->setCellValue('J1', 'vendor_name');
-        $sheet->setCellValue('K1', 'brand_code');
-        $sheet->setCellValue('L1', 'brand_name');
-        $sheet->setCellValue('M1', 'category_code');
-        $sheet->setCellValue('N1', 'DIVISION');
-        $sheet->setCellValue('O1', 'SUB_DIVISION');
-        $sheet->setCellValue('P1', 'DEPT');
-        $sheet->setCellValue('Q1', 'SUB_DEPT');
-        $sheet->setCellValue('R1', 'last_stock');
-        $sheet->setCellValue('S1', 'current price');
+        $sheet->setCellValue('A1', 'store');
+        $sheet->setCellValue('B1', 'periode');
+        $sheet->setCellValue('C1', 'barcode');
+        $sheet->setCellValue('D1', 'article_code');
+        $sheet->setCellValue('E1', 'article_name');
+        $sheet->setCellValue('F1', 'varian_option1');
+        $sheet->setCellValue('G1', 'varian_option2');
+        $sheet->setCellValue('H1', 'vendor_code');
+        $sheet->setCellValue('i1', 'vendor_name');
+        $sheet->setCellValue('J1', 'brand_code');
+        $sheet->setCellValue('K1', 'brand_name');
+        $sheet->setCellValue('L1', 'category_code');
+        $sheet->setCellValue('M1', 'DIVISION');
+        $sheet->setCellValue('N1', 'SUB_DIVISION');
+        $sheet->setCellValue('O1', 'DEPT');
+        $sheet->setCellValue('P1', 'SUB_DEPT');
+        $sheet->setCellValue('Q1', 'last_stock');
+        $sheet->setCellValue('R1', 'current price');
+        $sheet->setCellValue('S1', 'pruchase price');
         $sheet->setCellValue('T1', 'retail value');
         $sheet->setCellValue('U1', 'Article Status');
 
         /* Excel Data */
         $row_number = 2;
         foreach ($data as $key => $row) {
-            $sheet->setCellValue('A' . $row_number, $key + 1);
-            $sheet->setCellValue('B' . $row_number, $row['branch_id']);
-            $sheet->setCellValue('C' . $row_number, substr($row['periode'], 0, 7));
-            $sheet->setCellValue('D' . $row_number, $row['barcode']);
-            $sheet->setCellValue('E' . $row_number, $row['article_code']);
-            $sheet->setCellValue('F' . $row_number, $row['article_name']);
-            $sheet->setCellValue('G' . $row_number, $row['varian_option1']);
-            $sheet->setCellValue('H' . $row_number, $row['varian_option2']);
-            $sheet->setCellValue('I' . $row_number, $row['vendor_code']);
-            $sheet->setCellValue('J' . $row_number, $row['vendor_name']);
-            $sheet->setCellValue('K' . $row_number, $row['brand_code']);
-            $sheet->setCellValue('L' . $row_number, $row['brand_name']);
-            $sheet->setCellValue('M' . $row_number, $row['category_code']);
-            $sheet->setCellValue('N' . $row_number, $row['DIVISION']);
-            $sheet->setCellValue('O' . $row_number, $row['SUB_DIVISION']);
-            $sheet->setCellValue('P' . $row_number, $row['DEPT']);
-            $sheet->setCellValue('Q' . $row_number, $row['SUB_DEPT']);
-            $sheet->setCellValue('R' . $row_number, $row['last_stock']);
-            $sheet->setCellValue('S' . $row_number, $row['current_price']);
+            $sheet->setCellValue('A' . $row_number, $row['branch_id']);
+            $sheet->setCellValue('B' . $row_number, substr($row['periode'], 0, 7));
+            $sheet->setCellValue('C' . $row_number, $row['barcode']);
+            $sheet->setCellValue('D' . $row_number, $row['article_code']);
+            $sheet->setCellValue('E' . $row_number, $row['article_name']);
+            $sheet->setCellValue('F' . $row_number, $row['varian_option1']);
+            $sheet->setCellValue('G' . $row_number, $row['varian_option2']);
+            $sheet->setCellValue('H' . $row_number, $row['vendor_code']);
+            $sheet->setCellValue('I' . $row_number, $row['vendor_name']);
+            $sheet->setCellValue('J' . $row_number, $row['brand_code']);
+            $sheet->setCellValue('K' . $row_number, $row['brand_name']);
+            $sheet->setCellValue('L' . $row_number, $row['category_code']);
+            $sheet->setCellValue('M' . $row_number, $row['DIVISION']);
+            $sheet->setCellValue('N' . $row_number, $row['SUB_DIVISION']);
+            $sheet->setCellValue('O' . $row_number, $row['DEPT']);
+            $sheet->setCellValue('P' . $row_number, $row['SUB_DEPT']);
+            $sheet->setCellValue('Q' . $row_number, $row['last_stock']);
+            $sheet->setCellValue('R' . $row_number, $row['current_price']);
+            $sheet->setCellValue('S' . $row_number, $row['purchase_price']);
             $sheet->setCellValue('T' . $row_number, $row['current_price'] * $row['last_stock']);
             $sheet->setCellValue('U' . $row_number, $row['status_article']);
             $row_number++;
@@ -1486,7 +1486,7 @@ class Laporan extends My_Controller
         $sub_division = ($sub_division !== "null") ? "AND SUB_DIVISION = '" . $sub_division . "'" : '';
         $dept = ($dept !== "null") ? "AND DEPT = '" . $dept . "'" : '';
         $sub_dept = ($sub_dept !== "null") ? "AND SUB_DEPT = '" . $sub_dept . "'" : '';
-        $store = ($branch_id !== "null") ? "AND branch_id = '" . $branch_id . "'" : '';
+        $store = ($branch_id !== "null") ? "AND a.branch_id = '" . $branch_id . "'" : '';
         $uom = ($art_type !== "null") ? ($art_type == "pcs" ? " AND tag_5 in ('TIMBANG') is not true" : " AND tag_5 in ('TIMBANG')") : '';
         $article_status = ($article_status !== "null") ? "AND status_article = '" . $article_status . "'" : '';
 
@@ -1518,18 +1518,46 @@ class Laporan extends My_Controller
             redirect(base_url() . "Laporan/list_stok_v2");
         }
 
+
         header("Content-Description: File Transfer");
         header("Content-Disposition: attachment; filename=" . $filename);
         header("Content-Type: application/csv;");
 
         $file = fopen('php://output', 'w');
 
-        $header = array('store', 'periode', 'barcode', 'article_code', 'article_name', 'varian_option1', 'varian_option2', 'vendor_code', 'vendor_name', 'brand_code', 'brand_name', 'category_code', 'DIVISION', 'SUB_DIVISION', 'DEPT', 'SUB_DEPT', 'last_stock', 'current_price', 'retail_value', 'article status');
+        $header = array('store', 'periode', 'barcode', 'article_code', 'article_name', 'varian_option1', 'varian_option2', 'vendor_code', 'vendor_name', 'brand_code', 'brand_name', 'category_code', 'DIVISION', 'SUB_DIVISION', 'DEPT', 'SUB_DEPT', 'last_stock', 'current_price', 'purchase_price', 'retail_value', 'article status');
 
         fputcsv($file, $header);
 
         foreach ($data as $key => $value) {
-            fputcsv($file, $value);
+
+            $value['retail_value'] = ($value['last_stock'] * $value['current_price']);
+
+            $column = [
+                $value['branch_id'],
+                $value['periode'],
+                $value['barcode'],
+                $value['article_code'],
+                $value['article_name'],
+                $value['varian_option1'],
+                $value['varian_option2'],
+                $value['vendor_code'],
+                $value['vendor_name'],
+                $value['brand_code'],
+                $value['brand_name'],
+                $value['category_code'],
+                $value['DIVISION'],
+                $value['SUB_DIVISION'],
+                $value['DEPT'],
+                $value['SUB_DEPT'],
+                $value['last_stock'],
+                $value['current_price'],
+                $value['purchase_price'],
+                $value['retail_value'],
+                $value['status_article'],
+            ];
+            // Write the selected column to the CSV file
+            fputcsv($file, $column);
         }
         fclose($file);
         exit;

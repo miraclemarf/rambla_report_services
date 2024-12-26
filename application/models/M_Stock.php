@@ -36,7 +36,7 @@ class M_Stock extends CI_Model
         $sub_division = $postData['params3'] ? "AND SUB_DIVISION = '" .  $postData['params3'] . "'" : '';
         $dept = $postData['params4'] ? "AND DEPT = '" .  $postData['params4'] . "'" : '';
         $sub_dept = $postData['params5'] ? "AND SUB_DEPT = '" .  $postData['params5'] . "'" : '';
-        $store = $postData['params6'] ? "AND branch_id = '" . $postData['params6'] . "'" : '';
+        $store = $postData['params6'] ? "AND a.branch_id = '" . $postData['params6'] . "'" : '';
         $uom = $postData['params7'] ? ($postData['params7'] == "pcs" ? " AND tag_5 in ('TIMBANG') is not true" : " AND tag_5 in ('TIMBANG')") : '';
         $article_status = $postData['params8'] ? "AND status_article = '" . $postData['params8'] . "'" : '';
         // $deltype = $postData['deltype'] ? $postData['deltype'] : '';
@@ -66,7 +66,10 @@ class M_Stock extends CI_Model
             return json_decode($cached_data, true);
         }
 
-        $query = "SELECT * FROM r_s_item_stok WHERE 1=1 $whereClause";
+        $query = "SELECT a.*,b.PURCHPRICE as purchase_price FROM r_s_item_stok a
+        LEFT JOIN r_purchaseprice b
+        on a.branch_id = b.branch_id and a.sku_code = b.SKU and a.vendor_code = b.SUPPLIER WHERE 1=1 $whereClause";
+
         $searchQuery = "";
         if ($searchValue != '') {
             $searchQuery = " (vendor_code like '%" . $searchValue . "%' or vendor_name like '%" . $searchValue . "%' or brand_code like'%" . $searchValue . "%' ) ";
@@ -112,21 +115,10 @@ class M_Stock extends CI_Model
                 "article_name"      => $record->article_name,
                 "varian_option1"    => $record->varian_option1,
                 "varian_option2"    => $record->varian_option2,
-                "tag_5"             => $record->tag_5,
-                "first_stock"       => $record->first_stock,
-                "receipt"           => $record->receipt,
-                "issue"             => $record->issue,
-                "sales"             => $record->sales,
-                "refund"            => $record->refund,
-                "adj_in"            => $record->adj_in,
-                "adj_out"           => $record->adj_out,
-                "transfer_in"       => $record->transfer_in,
-                "transfer_out"      => $record->transfer_out,
                 "last_stock"        => $record->last_stock,
-                "import_date"       => $record->import_date,
                 "current_price"     => $record->current_price,
-                "publish"           => $record->publish,
-                "isactive"          => $record->isactive,
+                "purchase_price"    => $record->purchase_price,
+                "retail_value"      => ($record->last_stock * $record->current_price),
                 "status_article"    => $record->status_article
             );
         }
