@@ -734,6 +734,7 @@ class Laporan extends My_Controller
             $sheet->setCellValue('U' . $row_number, $row['status_article']);
             $row_number++;
         }
+        $sheet->getStyle('C2:D' . $row_number . '')->getNumberFormat()->setFormatCode('#');
 
         /* Excel File Format */
         $writer = new Xlsx($spreadsheet);
@@ -1209,6 +1210,8 @@ class Laporan extends My_Controller
             $sheet->setCellValue('AI' . $row_number, $row['no_ref']);
             $row_number++;
         }
+        $sheet->getStyle('K2:L' . $row_number . '')->getNumberFormat()->setFormatCode('#');
+        $sheet->getStyle('AH2:AI' . $row_number . '')->getNumberFormat()->setFormatCode('#');
 
         /* Excel File Format */
         $writer = new Xlsx($spreadsheet);

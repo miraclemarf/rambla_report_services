@@ -219,14 +219,19 @@ class Masterdata extends My_Controller
             $and .= "AND DEPT = '" . $dept . "'";
         }
 
-        $data['hasil']          = $this->Models->showdata("SELECT DISTINCT KODE_SUB_DEPT, SUB_DEPT from m_kategori_list where DEPT in (
-        SELECT DISTINCT DEPT from m_kategori_list where DIVISION in 
-        (
-            SELECT DISTINCT DIVISION from m_kategori_list WHERE category_code in (
-                select category_code from m_vendor_category
-                WHERE 1=1 $where and isactive = '1')
-            )
-        )$and");
+        $cek_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+        if ($cek_site) {
+            $data['hasil']          = $this->Models->showdata("SELECT DISTINCT KODE_SUB_DEPT, SUB_DEPT from m_kategori_list where SUB_DIVISION ='" . $sub_division . "'");
+        } else {
+            $data['hasil']          = $this->Models->showdata("SELECT DISTINCT KODE_SUB_DEPT, SUB_DEPT from m_kategori_list where DEPT in (
+            SELECT DISTINCT DEPT from m_kategori_list where DIVISION in 
+            (
+                SELECT DISTINCT DIVISION from m_kategori_list WHERE category_code in (
+                    select category_code from m_vendor_category
+                    WHERE 1=1 $where and isactive = '1')
+                )
+            )$and");
+        }
 
         echo "<option value=''>-- Pilih Data --</option>";
         foreach ($data['hasil'] as $row) {
