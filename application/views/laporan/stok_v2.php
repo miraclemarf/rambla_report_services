@@ -82,6 +82,9 @@
                                         <nobr>Current Price</nobr>
                                     </th>
                                     <th>
+                                        <nobr>Purchase Price</nobr>
+                                    </th>
+                                    <th>
                                         <nobr>Retail Value</nobr>
                                     </th>
                                     <th>
@@ -350,9 +353,15 @@
                         },
                     },
                     {
-                        "data": "",
+                        "data": "purchase_price",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(Math.round(row.current_price) * row.last_stock) + '</nobr>';
+                            return '<nobr>Rp ' + rupiahjs(Math.round(data)) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "retail_value",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(Math.round(data)) + '</nobr>';
                         },
                     },
                     {
