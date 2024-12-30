@@ -71,7 +71,7 @@ class M_Supermarket extends CI_Model
         $dbCentral->join('m_brand mb', 'mim.brand = mb.brand_code', 'left');
         $dbCentral->join('m_kategori_list mkl', 'td.category_code = mkl.category_code', 'left');
         $dbCentral->join('m_vendor mv', 'mim.vendor_code = mv.vendor_code', 'left');
-        $dbCentral->join('l_member_master_goodie mg', 'mg.member_id = th.member_id', 'left');
+        $dbCentral->join('l_master_member_starry mg', 'mg.member_id = th.member_id', 'left');
         $dbCentral->join('l_member_master_special ms', 'ms.member_id = th.member_id', 'left');
         $dbCentral->join('t_promo_hdr tp', 'td.promo_id = tp.promo_id', 'left');
 
