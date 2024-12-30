@@ -26,6 +26,7 @@ class Laporan extends My_Controller
         $this->load->model('M_OperationalFee');
         $this->load->model('M_Categories');
         $this->load->model('M_Division');
+        $this->load->model('M_Stock');
         $this->ceklogin();
     }
 
@@ -130,6 +131,47 @@ class Laporan extends My_Controller
         $this->load->view('template_member/sidebar', $data);
         $this->load->view('laporan/stok', $data);
         $this->load->view('template_member/footer', $data);
+    }
+
+    public function list_stok_v2()
+    {
+        extract(populateform());
+        $data['title'] = 'Rambla | Laporan Stock';
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+        $data['vendor'] = $this->input->cookie('cookie_invent_vendor');
+
+        // $postData = array(
+        //     'draw'         => 1,
+        //     'start'        => 0,
+        //     'length'       => 10,
+        //     'search'       => array('value' => null),
+        //     'params1'      => null,
+        //     'params2'      => 'Supermarket',
+        //     'params3'      => null,
+        //     'params4'      => null,
+        //     'params5'      => null,
+        //     'params6'      => 'V001',
+        //     'params7'      => null,
+        //     'params8'      => null,
+        // );
+
+        // $data['list_stock'] = $this->M_Stock->getListStock($postData);
+
+        // var_dump($data['list_stock']);
+        // die;
+
+        $this->load->view('template_member/header', $data);
+        $this->load->view('template_member/navbar', $data);
+        $this->load->view('template_member/sidebar', $data);
+        $this->load->view('laporan/stok_v2', $data);
+        $this->load->view('template_member/footer', $data);
+    }
+
+    public function stockv2_where()
+    {
+        $postData = $this->input->post();
+        $data = $this->M_Stock->getListStock($postData);
+        echo json_encode($data);
     }
 
     public function list_promo()
@@ -523,6 +565,7 @@ class Laporan extends My_Controller
             $where .= " AND status_article = '" . $article_status . "'";
         }
 
+
         $data = $this->db->query("SELECT * FROM r_s_item_stok WHERE 1=1 $where")->result_array();
 
         /* Spreadsheet Init */
@@ -578,6 +621,120 @@ class Laporan extends My_Controller
             $sheet->setCellValue('U' . $row_number, $row['status_article']);
             $row_number++;
         }
+
+        /* Excel File Format */
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'stock_report';
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save('php://output');
+    }
+
+    function export_excel_stockv2($brand_code, $division, $sub_division, $dept, $sub_dept, $branch_id, $art_type, $article_status)
+    {
+        /* Data */
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+
+        $division = str_replace("%20", " ", $division);
+        $sub_division = str_replace("%20", " ", $sub_division);
+        $dept = str_replace("%20", " ", $dept);
+        $sub_dept = str_replace("%20", " ", $sub_dept);
+
+        $brand_code = ($brand_code !== "null") ?  " AND brand_code = '" . $brand_code . "'"  : '';
+        $division = ($division !== "null") ? " AND DIVISION = '" . $division . "'" : '';
+        $sub_division = ($sub_division !== "null") ? "AND SUB_DIVISION = '" . $sub_division . "'" : '';
+        $dept = ($dept !== "null") ? "AND DEPT = '" . $dept . "'" : '';
+        $sub_dept = ($sub_dept !== "null") ? "AND SUB_DEPT = '" . $sub_dept . "'" : '';
+        $store = ($branch_id !== "null") ? "AND a.branch_id = '" . $branch_id . "'" : '';
+        $uom = ($art_type !== "null") ? ($art_type == "pcs" ? " AND tag_5 in ('TIMBANG') is not true" : " AND tag_5 in ('TIMBANG')") : '';
+        $article_status = ($article_status !== "null") ? "AND status_article = '" . $article_status . "'" : '';
+
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+        if ($cek_user_category) {
+            $whereClause = $this->M_Categories->get_category($data['username']);
+        } else if ($cek_user_site) {
+            $whereClause = $this->M_Division->get_division($data['username'], $branch_id);
+        } else {
+            // UNTUK MD
+            $whereClause = "AND brand_code in (
+                select distinct brand from m_user_brand 
+                where username = '" . $data['username'] . "'
+            )";
+        }
+
+        $whereClause .= $brand_code . $division . $sub_division . $dept . $sub_dept . $store . $uom . $article_status;
+
+        $cache_key_export = "getExportStock_search_" . md5($whereClause);
+        $cached_data = $this->redislib->get($cache_key_export); // Try to fetch cached data
+
+        if ($cached_data) {
+            $data = json_decode($cached_data, true);
+        } else {
+            $this->session->set_flashdata('message-failed', 'Export Data Gagal! Silakan di coba kembali');
+            redirect(base_url() . "Laporan/list_stok_v2");
+        }
+
+        /* Spreadsheet Init */
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        /* Excel Header */
+        $sheet->setCellValue('A1', 'store');
+        $sheet->setCellValue('B1', 'periode');
+        $sheet->setCellValue('C1', 'barcode');
+        $sheet->setCellValue('D1', 'article_code');
+        $sheet->setCellValue('E1', 'article_name');
+        $sheet->setCellValue('F1', 'varian_option1');
+        $sheet->setCellValue('G1', 'varian_option2');
+        $sheet->setCellValue('H1', 'vendor_code');
+        $sheet->setCellValue('i1', 'vendor_name');
+        $sheet->setCellValue('J1', 'brand_code');
+        $sheet->setCellValue('K1', 'brand_name');
+        $sheet->setCellValue('L1', 'category_code');
+        $sheet->setCellValue('M1', 'DIVISION');
+        $sheet->setCellValue('N1', 'SUB_DIVISION');
+        $sheet->setCellValue('O1', 'DEPT');
+        $sheet->setCellValue('P1', 'SUB_DEPT');
+        $sheet->setCellValue('Q1', 'last_stock');
+        $sheet->setCellValue('R1', 'current price');
+        $sheet->setCellValue('S1', 'pruchase price');
+        $sheet->setCellValue('T1', 'retail value');
+        $sheet->setCellValue('U1', 'Article Status');
+
+        /* Excel Data */
+        $row_number = 2;
+        foreach ($data as $key => $row) {
+            $sheet->setCellValue('A' . $row_number, $row['branch_id']);
+            $sheet->setCellValue('B' . $row_number, substr($row['periode'], 0, 7));
+            $sheet->setCellValue('C' . $row_number, $row['barcode']);
+            $sheet->setCellValue('D' . $row_number, $row['article_code']);
+            $sheet->setCellValue('E' . $row_number, $row['article_name']);
+            $sheet->setCellValue('F' . $row_number, $row['varian_option1']);
+            $sheet->setCellValue('G' . $row_number, $row['varian_option2']);
+            $sheet->setCellValue('H' . $row_number, $row['vendor_code']);
+            $sheet->setCellValue('I' . $row_number, $row['vendor_name']);
+            $sheet->setCellValue('J' . $row_number, $row['brand_code']);
+            $sheet->setCellValue('K' . $row_number, $row['brand_name']);
+            $sheet->setCellValue('L' . $row_number, $row['category_code']);
+            $sheet->setCellValue('M' . $row_number, $row['DIVISION']);
+            $sheet->setCellValue('N' . $row_number, $row['SUB_DIVISION']);
+            $sheet->setCellValue('O' . $row_number, $row['DEPT']);
+            $sheet->setCellValue('P' . $row_number, $row['SUB_DEPT']);
+            $sheet->setCellValue('Q' . $row_number, $row['last_stock']);
+            $sheet->setCellValue('R' . $row_number, $row['current_price']);
+            $sheet->setCellValue('S' . $row_number, $row['purchase_price']);
+            $sheet->setCellValue('T' . $row_number, $row['current_price'] * $row['last_stock']);
+            $sheet->setCellValue('U' . $row_number, $row['status_article']);
+            $row_number++;
+        }
+        $sheet->getStyle('C2:D' . $row_number . '')->getNumberFormat()->setFormatCode('#');
 
         /* Excel File Format */
         $writer = new Xlsx($spreadsheet);
@@ -886,6 +1043,8 @@ class Laporan extends My_Controller
             $row_number++;
         }
 
+        $sheet->getStyle('C2:E' . $row_number . '')->getNumberFormat()->setFormatCode('#');
+
         /* Excel File Format */
         $writer = new Xlsx($spreadsheet);
         $filename = 'masteritem_report';
@@ -1053,6 +1212,8 @@ class Laporan extends My_Controller
             $sheet->setCellValue('AI' . $row_number, $row['no_ref']);
             $row_number++;
         }
+        $sheet->getStyle('K2:L' . $row_number . '')->getNumberFormat()->setFormatCode('#');
+        $sheet->getStyle('AH2:AI' . $row_number . '')->getNumberFormat()->setFormatCode('#');
 
         /* Excel File Format */
         $writer = new Xlsx($spreadsheet);
@@ -1309,6 +1470,99 @@ class Laporan extends My_Controller
 
         foreach ($data as $key => $value) {
             fputcsv($file, $value);
+        }
+        fclose($file);
+        exit;
+    }
+
+    function export_csv_stockv2($brand_code, $division, $sub_division, $dept, $sub_dept, $branch_id, $art_type, $article_status)
+    {
+        $filename = 'stock_report.csv';
+        /* Data */
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+
+        $division = str_replace("%20", " ", $division);
+        $sub_division = str_replace("%20", " ", $sub_division);
+        $dept = str_replace("%20", " ", $dept);
+        $sub_dept = str_replace("%20", " ", $sub_dept);
+
+        $brand_code = ($brand_code !== "null") ?  " AND brand_code = '" . $brand_code . "'"  : '';
+        $division = ($division !== "null") ? " AND DIVISION = '" . $division . "'" : '';
+        $sub_division = ($sub_division !== "null") ? "AND SUB_DIVISION = '" . $sub_division . "'" : '';
+        $dept = ($dept !== "null") ? "AND DEPT = '" . $dept . "'" : '';
+        $sub_dept = ($sub_dept !== "null") ? "AND SUB_DEPT = '" . $sub_dept . "'" : '';
+        $store = ($branch_id !== "null") ? "AND a.branch_id = '" . $branch_id . "'" : '';
+        $uom = ($art_type !== "null") ? ($art_type == "pcs" ? " AND tag_5 in ('TIMBANG') is not true" : " AND tag_5 in ('TIMBANG')") : '';
+        $article_status = ($article_status !== "null") ? "AND status_article = '" . $article_status . "'" : '';
+
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+        if ($cek_user_category) {
+            $whereClause = $this->M_Categories->get_category($data['username']);
+        } else if ($cek_user_site) {
+            $whereClause = $this->M_Division->get_division($data['username'], $branch_id);
+        } else {
+            // UNTUK MD
+            $whereClause = "AND brand_code in (
+                select distinct brand from m_user_brand 
+                where username = '" . $data['username'] . "'
+            )";
+        }
+
+        $whereClause .= $brand_code . $division . $sub_division . $dept . $sub_dept . $store . $uom . $article_status;
+
+        $cache_key_export = "getExportStock_search_" . md5($whereClause);
+        $cached_data = $this->redislib->get($cache_key_export); // Try to fetch cached data
+
+        if ($cached_data) {
+            $data = json_decode($cached_data, true);
+        } else {
+            $this->session->set_flashdata('message-failed', 'Export Data Gagal! Silakan di coba kembali');
+            redirect(base_url() . "Laporan/list_stok_v2");
+        }
+
+
+        header("Content-Description: File Transfer");
+        header("Content-Disposition: attachment; filename=" . $filename);
+        header("Content-Type: application/csv;");
+
+        $file = fopen('php://output', 'w');
+
+        $header = array('store', 'periode', 'barcode', 'article_code', 'article_name', 'varian_option1', 'varian_option2', 'vendor_code', 'vendor_name', 'brand_code', 'brand_name', 'category_code', 'DIVISION', 'SUB_DIVISION', 'DEPT', 'SUB_DEPT', 'last_stock', 'current_price', 'purchase_price', 'retail_value', 'article status');
+
+        fputcsv($file, $header);
+
+        foreach ($data as $key => $value) {
+
+            $value['retail_value'] = ($value['last_stock'] * $value['current_price']);
+
+            $column = [
+                $value['branch_id'],
+                $value['periode'],
+                $value['barcode'],
+                $value['article_code'],
+                $value['article_name'],
+                $value['varian_option1'],
+                $value['varian_option2'],
+                $value['vendor_code'],
+                $value['vendor_name'],
+                $value['brand_code'],
+                $value['brand_name'],
+                $value['category_code'],
+                $value['DIVISION'],
+                $value['SUB_DIVISION'],
+                $value['DEPT'],
+                $value['SUB_DEPT'],
+                $value['last_stock'],
+                $value['current_price'],
+                $value['purchase_price'],
+                $value['retail_value'],
+                $value['status_article'],
+            ];
+            // Write the selected column to the CSV file
+            fputcsv($file, $column);
         }
         fclose($file);
         exit;

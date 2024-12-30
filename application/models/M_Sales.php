@@ -2,16 +2,17 @@
 
 class M_Sales extends CI_Model
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
+        $this->load->library('redislib');
     }
 
-    function getPenjualanBrand($postData = null)
+    public function getPenjualanBrand($postData = null)
     {
         $response = array();
 
-        $draw = $postData['draw'];
+        $draw = $postData['draw'] ? $postData['draw'] : 0;
         $start = $postData['start'];
         $rowperpage = $postData['length']; // Rows display per page
         $columnIndex = $postData['order'][0]['column']; // Column index
@@ -82,6 +83,13 @@ class M_Sales extends CI_Model
 
         if ($brand != '') {
             $whereClause .= " AND brand_code ='" . $brand . "'";
+        }
+
+        $cache_key = "getPenjualanBrand_{$start}_length_{$rowperpage}_draw_{$draw}_store_{$store}_tp_{$this_period}_lp_{$last_period}_search_" . md5($whereClause);
+        $cached_data = $this->redislib->get($cache_key); // Try to fetch cached data
+
+        if ($cached_data) {
+            return json_decode($cached_data, true);
         }
 
         $query = "SELECT CASE WHEN LP.branch_id is null then TP.branch_id else LP.branch_id end as STORE, 
@@ -247,10 +255,13 @@ class M_Sales extends CI_Model
             "aaData" => $data
         );
 
+        // Cache the result in Redis
+        $this->redislib->set($cache_key, json_encode($response));
+
         return $response;
     }
 
-    function getPenjualanKategori($postData = null)
+    public function getPenjualanKategori($postData = null)
     {
         $response = array();
 
@@ -315,6 +326,13 @@ class M_Sales extends CI_Model
 
         if ($sub_division != '') {
             $whereClause .= " AND SUB_DIVISION ='" . $sub_division . "'";
+        }
+
+        $cache_key = "getPenjualanKategori_{$start}_length_{$rowperpage}_draw_{$draw}_store_{$store}_tp_{$this_period}_lp_{$last_period}_search_" . md5($whereClause);
+        $cached_data = $this->redislib->get($cache_key); // Try to fetch cached data
+
+        if ($cached_data) {
+            return json_decode($cached_data, true);
         }
 
         $query = "SELECT CASE WHEN LP.branch_id is null then TP.branch_id else LP.branch_id end as STORE, 
@@ -474,6 +492,8 @@ class M_Sales extends CI_Model
             "iTotalDisplayRecords" => $totalRecordwithFilter,
             "aaData" => $data
         );
+
+        $this->redislib->set($cache_key, json_encode($response));
 
         return $response;
     }

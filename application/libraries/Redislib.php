@@ -12,9 +12,9 @@ class Redislib
             'scheme'   => 'tcp',
             'host'     => '127.0.0.1',
             'port'     => 6379,
-            'timeout'  => 10,               // 10 seconds timeout
+            'timeout'  => 600,               // 10 seconds timeout
             'persistent' => false,          // Disable persistent connections
-            'read_write_timeout' => 10,     // Read/write timeout
+            'read_write_timeout' => 600,     // Read/write timeout
         ]);
     }
 
@@ -67,5 +67,16 @@ class Redislib
     public function exists($key)
     {
         return $this->client->exists($key);
+    }
+
+    // Function to flush the Redis database
+    public function flush_db()
+    {
+        try {
+            return $this->client->flushdb();
+        } catch (Exception $e) {
+            log_message('error', 'Error flushing Redis DB: ' . $e->getMessage());
+            return false;
+        }
     }
 }
