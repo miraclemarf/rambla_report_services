@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 
 class OneD extends CI_Controller {
     private $clientId = 'b627b77d-5a2a-4be8-87dd-6a7e04fa0d17';
-    private $clientSecret = 'rWe8Q~XjnimO2Ekm6evC8QnU3O6IOn5udcIxsc-y';
+    private $clientSecret = 'dvP8Q~r6oP4CJ3t8P.mhzlYYJ3BWuECmz2gTicy-';
     private $redirectUri = 'https://sales.rambla.id/oned/token';
     private $client;
 
