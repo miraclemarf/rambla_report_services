@@ -361,7 +361,8 @@
                                 var data_areatrx = '';
                                 if(data.substring(8,9) != '5'){
                                     data_areatrx = data.substring(8,9) == '3' ? 'BAZZAR' : 'FLOOR'
-                                }
+                                }                                
+                                else{data_areatrx = 'ONLINE';}
                                 return '<nobr>'+data_areatrx+'</nobr>';
                         },
                     },
