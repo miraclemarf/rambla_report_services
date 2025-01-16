@@ -1206,6 +1206,9 @@ class Laporan extends My_Controller
             if (substr($row['trans_no'], 8, 1) != '5') {
                 $data_areatrx = substr($row['trans_no'], 8, 1) == '3' ? 'BAZAAR' : 'FLOOR';
             }
+            else{
+                $data_areatrx = "ONLINE"
+            }
             $sheet->setCellValue('AF' . $row_number, $data_areatrx);
             $sheet->setCellValue('AG' . $row_number, $row['source_data']);
             $sheet->setCellValue('AH' . $row_number, $row['trans_no']);
@@ -1372,6 +1375,9 @@ class Laporan extends My_Controller
             $sheet->setCellValue('AC' . $row_number, $row['net_af']);
             if (substr($row['trans_no'], 8, 1) != '5') {
                 $data_areatrx = substr($row['trans_no'], 8, 1) == '3' ? 'BAZAAR' : 'FLOOR';
+            }
+            else{
+                $data_areatrx = "ONLINE"
             }
             $sheet->setCellValue('AD' . $row_number, $data_areatrx);
             $sheet->setCellValue('AE' . $row_number, $row['source_data']);
@@ -1827,7 +1833,7 @@ class Laporan extends My_Controller
             if (substr($value['areatrx'], 8, 1) != '5') {
                 $value['areatrx'] = substr($value['areatrx'], 8, 1) == '3' ? 'BAZAAR' : 'FLOOR';
             } else {
-                $value['areatrx'] = '';
+                $value['areatrx'] = 'ONLINE';
             }
             fputcsv($file, $value, $delimiter);
         }
@@ -1924,7 +1930,7 @@ class Laporan extends My_Controller
             if (substr($value['areatrx'], 8, 1) != '5') {
                 $value['areatrx'] = substr($value['areatrx'], 8, 1) == '3' ? 'BAZAAR' : 'FLOOR';
             } else {
-                $value['areatrx'] = '';
+                $value['areatrx'] = 'ONLINE';
             }
             fputcsv($file, $value, $delimiter);
         }
