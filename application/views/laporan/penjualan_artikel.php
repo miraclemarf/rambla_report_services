@@ -178,9 +178,9 @@
             brand_code = this.value;
         });
 
-        $('.list_source').on('change', function(e) {
-            source = this.value;
-        });
+        // $('.list_source').on('change', function(e) {
+        //     source = this.value;
+        // });
 
         $('.format-file-export').on('change', function(e) {
             format = this.value;
@@ -563,15 +563,19 @@
         $('.list_store').on('change', function(e) {
             store = this.value;
             if (store == 'R001') {
-                $opt = '<option value="">-- Pilih Data --</option><option value="1,2">FLOOR</option><option value="3">BAZZAR</option>';
+                $opt = '<option value="">-- Pilih Data --</option><option value="1,2">FLOOR</option><option value="3">BAZZAR</option><option value="5">ONLINE</option>';
                 $('.list_areatrx').html($opt);
             } else if (store == 'R002') {
-                $opt = '<option value="">-- Pilih Data --</option><option value="0,1">FLOOR</option>';
+                $opt = '<option value="">-- Pilih Data --</option><option value="0,1">FLOOR</option><option value="3">BAZZAR</option><option value="5">ONLINE</option>';
                 $('.list_areatrx').html($opt);
             } else if (store == 'V001') {
-                $opt = '<option value="">-- Pilih Data --</option><option value="0">FLOOR</option>';
+                $opt = '<option value="">-- Pilih Data --</option><option value="0">FLOOR</option><option value="3">BAZZAR</option><option value="5">ONLINE</option>';
                 $('.list_areatrx').html($opt);
-            }             
+            }                          
+            else if (store == 'S002'){
+                $opt = '<option value="">-- Pilih Data --</option><option value="1,2">FLOOR</option><option value="3">BAZZAR</option>';
+                $('.list_areatrx').html($opt);
+            }            
             else if (store == 'S003'){
                 $opt = '<option value="">-- Pilih Data --</option><option value="0,1,2">FLOOR</option><option value="3">BAZZAR</option>';
                 $('.list_areatrx').html($opt);

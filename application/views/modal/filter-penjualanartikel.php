@@ -83,23 +83,11 @@
                                 </div>
                                 <div class="row mt-2">
                                     <div class="col-md-4">
-                                        <label class="mt-1">Area Transaksi</label>
+                                        <label class="mt-1">Pilih Source</label>
                                     </div>
                                     <div class="col-md-8">
                                         <select class="js-example-basic-single list_areatrx">
                                             <option value=''>-- Pilih Data --</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mt-2">
-                                    <div class="col-md-4">
-                                        <label class="mt-1">Pilih Source</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <select class="js-example-basic-single list_source">
-                                        <option value=''>-- Pilih Data --</option>
-                                        <option value="OFFLINE">OFFLINE</option>
-                                        <option value="ONLINE">ONLINE</option>
                                         </select>
                                     </div>
                                 </div>
