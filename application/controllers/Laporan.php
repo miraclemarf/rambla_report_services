@@ -1207,7 +1207,7 @@ class Laporan extends My_Controller
                 $data_areatrx = substr($row['trans_no'], 8, 1) == '3' ? 'BAZAAR' : 'FLOOR';
             }
             else{
-                $data_areatrx = "ONLINE"
+                $data_areatrx = "ONLINE";
             }
             $sheet->setCellValue('AF' . $row_number, $data_areatrx);
             $sheet->setCellValue('AG' . $row_number, $row['source_data']);
@@ -1377,7 +1377,7 @@ class Laporan extends My_Controller
                 $data_areatrx = substr($row['trans_no'], 8, 1) == '3' ? 'BAZAAR' : 'FLOOR';
             }
             else{
-                $data_areatrx = "ONLINE"
+                $data_areatrx = "ONLINE";
             }
             $sheet->setCellValue('AD' . $row_number, $data_areatrx);
             $sheet->setCellValue('AE' . $row_number, $row['source_data']);
