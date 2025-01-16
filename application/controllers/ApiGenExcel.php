@@ -75,6 +75,10 @@ class ApiGenExcel extends CI_Controller
         $store = $this->input->get('storeid');
         $date = $this->input->get('tgl');
         $data = $this->M_Supermarket->getSalesDaily($store, $date);
+        $data = array_map(function ($item) {
+            unset($item['member_id']); // Remove the 'member_id' key
+            return $item;
+        }, $data);
         /* Spreadsheet Init */
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -298,6 +302,68 @@ class ApiGenExcel extends CI_Controller
         header('Content-Type: application/json');
         echo json_encode($data);
 
+    }
+
+    public function groSalesMemberSummary(){
+        $store = $this->input->get('storeid');
+        $date = $this->input->get('tgl');
+        $data = $this->M_Supermarket->getSalesDaily($store, $date);        
+
+        $filteredData = array_filter($data, function ($item) {
+            return isset($item['Member']) && $item['Member'] === 'Y';
+        });
+        // Specify the keys you want to keep
+        $keysToKeep = ['periode', 'Jam','trans_no', 'member_id', 'member_phone', 'member_name', 'article_code', 'barcode', 'article_name', 'gross'];
+        // Use array_map to filter and reorder keys
+        $reorderData = array_map(function ($item) use ($keysToKeep) {
+            //return array_intersect_key($item, array_flip($keysToKeep));
+            $orderedItem = [];
+            foreach ($keysToKeep as $key) {
+                if (isset($item[$key])) {
+                    $orderedItem[$key] = $item[$key];
+                }
+            }
+            return $orderedItem;
+        }, $filteredData);
+
+        /* Spreadsheet Init */
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        //$spreadsheet->getDefaultStyle()->getNumberFormat()->setFormatCode('#');
+
+        $headerColumns = array_keys(reset($reorderData));
+        $columnIndex = 'A';
+        $row = 1;
+
+        foreach ($headerColumns as $columnName) {
+            $sheet->setCellValue($columnIndex . $row, $columnName);
+            $columnIndex = $this->incrementColumn($columnIndex);
+        }
+        // /* Excel Data */
+        $row_number = 2;
+        $lastRow = count($reorderData) + $row_number;
+        $spreadsheet->getActiveSheet()->getStyle('C' . $row_number . ':C' . $lastRow)->getNumberFormat()->setFormatCode('#');
+        $spreadsheet->getActiveSheet()->getStyle('D' . $row_number . ':D' . $lastRow)->getNumberFormat()->setFormatCode('#');
+        $spreadsheet->getActiveSheet()->getStyle('E' . $row_number . ':E' . $lastRow)->getNumberFormat()->setFormatCode('+#');
+        $spreadsheet->getActiveSheet()->getStyle('G' . $row_number . ':G' . $lastRow)->getNumberFormat()->setFormatCode('#');
+        $spreadsheet->getActiveSheet()->getStyle('H' . $row_number . ':H' . $lastRow)->getNumberFormat()->setFormatCode('#');
+        foreach ($reorderData as $key => $row) {
+            $columnIndex2 = 'A';
+            foreach ($headerColumns as $columnName) {
+                $sheet->setCellValue($columnIndex2 . $row_number, $row[$columnName]);
+                $columnIndex2 = $this->incrementColumn($columnIndex2);
+            }
+            $row_number++;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $prefixFn = $store == '03' ? 'HH-V001-SalesMember_' : 'RSMKG-BARU_';
+        $filename = $prefixFn . date('d-m-Y', !$date ? strtotime('-1 day') : strtotime($date));
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save('D:/upload/' . $filename . '.xlsx');
+        
     }
 
     private function incrementColumn($currentColumn)

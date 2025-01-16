@@ -1814,6 +1814,8 @@ class Laporan extends My_Controller
             $where .= " AND DATE_FORMAT(periode,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
         }
 
+        $delimiter = ';';
+
         $data = $this->db->query("SELECT branch_id, SUBSTRING(periode, 1, 10) as periode,SUBSTRING(periode, 6, 2) as bulan, DIVISION,SUB_DIVISION,tag_5,category_code,DEPT,SUB_DEPT,article_code,barcode,brand_code,brand_name,article_name,varian_option1,varian_option2,price,vendor_code,vendor_name, tot_qty,tot_berat, disc_pct,total_disc_amt,total_moredisc_amt,moredisc_pct,margin,gross_after_margin,gross,net_bf,net_af,trans_no as areatrx,source_data,trans_no, no_ref FROM r_sales where 1=1 $where order by periode")->result_array();
         $file = fopen('php://output', 'w');
 
@@ -1827,7 +1829,7 @@ class Laporan extends My_Controller
             } else {
                 $value['areatrx'] = '';
             }
-            fputcsv($file, $value);
+            fputcsv($file, $value, $delimiter);
         }
         fclose($file);
         exit;
@@ -1909,6 +1911,8 @@ class Laporan extends My_Controller
             $where .= " AND DATE_FORMAT(periode,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
         }
 
+        $delimiter = ';';
+
         $data = $this->db->query("SELECT branch_id, SUBSTRING(periode, 1, 10) as periode,SUBSTRING(periode, 6, 2) as bulan, DIVISION,SUB_DIVISION,tag_5,category_code,DEPT,SUB_DEPT,article_code,barcode,brand_code,brand_name,article_name,varian_option1,varian_option2,price,vendor_code,vendor_name, tot_qty,tot_berat, disc_pct,total_disc_amt,total_moredisc_amt,moredisc_pct,margin,gross_after_margin,gross,net_bf,net_af,trans_no as areatrx,source_data,trans_no, no_ref FROM r_sales where 1=1 $where order by periode")->result_array();
         $file = fopen('php://output', 'w');
 
@@ -1922,7 +1926,7 @@ class Laporan extends My_Controller
             } else {
                 $value['areatrx'] = '';
             }
-            fputcsv($file, $value);
+            fputcsv($file, $value, $delimiter);
         }
         fclose($file);
         exit;
