@@ -351,8 +351,8 @@ class ApiGenExcel extends CI_Controller
         $spreadsheet->getActiveSheet()->getStyle('C' . $row_number . ':C' . $lastRow)->getNumberFormat()->setFormatCode('#');
         $spreadsheet->getActiveSheet()->getStyle('D' . $row_number . ':D' . $lastRow)->getNumberFormat()->setFormatCode('#');
         $spreadsheet->getActiveSheet()->getStyle('E' . $row_number . ':E' . $lastRow)->getNumberFormat()->setFormatCode('+#');
-        $spreadsheet->getActiveSheet()->getStyle('G' . $row_number . ':G' . $lastRow)->getNumberFormat()->setFormatCode('#');
         $spreadsheet->getActiveSheet()->getStyle('H' . $row_number . ':H' . $lastRow)->getNumberFormat()->setFormatCode('#');
+        $spreadsheet->getActiveSheet()->getStyle('I' . $row_number . ':I' . $lastRow)->getNumberFormat()->setFormatCode('#');
         foreach ($reorderData as $key => $row) {
             $columnIndex2 = 'A';
             foreach ($headerColumns as $columnName) {
