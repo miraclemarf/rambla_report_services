@@ -307,10 +307,15 @@ class ApiGenExcel extends CI_Controller
     public function groSalesMemberSummary(){
         $store = $this->input->get('storeid');
         $date = $this->input->get('tgl');
-        $data = $this->M_Supermarket->getSalesDaily($store, $date);        
+        $data = $this->M_Supermarket->getSalesDaily($store, $date);
+        
+        $allowedMemberIds = [
+            '99209367980335', '99229794171224', '99275453029036', '99484080074871', '99562254077372', '99592221471508', '99632758603251', '99644593218740', '99647476464508', '99811126579633'
+        ];
 
-        $filteredData = array_filter($data, function ($item) {
-            return isset($item['Member']) && $item['Member'] === 'Y';
+        $filteredData = array_filter($data, function ($item) use ($allowedMemberIds) {
+            return isset($item['Member'], $item['member_id']) && $item['Member'] === 'Y' && 
+           !in_array($item['member_id'], $allowedMemberIds);
         });
         // Specify the keys you want to keep
         $keysToKeep = ['periode', 'Jam','trans_no', 'member_id', 'member_phone', 'member_name', 'article_code', 'barcode', 'article_name', 'gross'];
@@ -363,6 +368,34 @@ class ApiGenExcel extends CI_Controller
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save('D:/upload/' . $filename . '.xlsx');
+
+        $targetDir = rawurlencode('/STAR/Trx Mbr Non Mbr/V001_SalesMember');
+        $accessToken = $this->M_TokenOneD->getAccessToken();
+
+        $url = 'https://graph.microsoft.com/v1.0/me/drive/root:' . $targetDir . '/' . rawurlencode($filename. '.xlsx') . ':/content';
+        $fileContent = file_get_contents('D:/upload/' . $filename . '.xlsx');
+
+        $response = $this->uploadToOneDrive($url, $fileContent, $accessToken);
+
+        // If the token was invalid, refresh the token and retry
+        if ($response['status'] === 'InvalidAuthenticationToken') {
+            $accessToken = $this->M_TokenOneD->refreshToken();
+            if ($accessToken) {
+                $response = $this->uploadToOneDrive($url, $fileContent, $accessToken);
+            } else {
+                echo json_encode(['error' => 'Failed to refresh token.']);
+                return;
+            }
+        }
+
+        // Only unlink the temporary file if the upload is successful
+        if ($response['status'] === 'success') {
+            unlink('D:/upload/' . $filename . '.xlsx'); // Delete the temporary file
+        }       
+
+
+        header('Content-Type: application/json');
+        echo json_encode($reorderData);
         
     }
 
