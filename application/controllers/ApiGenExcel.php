@@ -318,7 +318,7 @@ class ApiGenExcel extends CI_Controller
            !in_array($item['member_id'], $allowedMemberIds);
         });
         // Specify the keys you want to keep
-        $keysToKeep = ['periode', 'Jam','trans_no', 'member_id', 'member_phone', 'member_name', 'article_code', 'barcode', 'article_name', 'gross'];
+        $keysToKeep = ['periode', 'Jam','trans_no', 'member_id', 'member_phone', 'member_name', 'member_tier', 'article_code', 'barcode', 'article_name', 'gross'];
         // Use array_map to filter and reorder keys
         $reorderData = array_map(function ($item) use ($keysToKeep) {
             //return array_intersect_key($item, array_flip($keysToKeep));
