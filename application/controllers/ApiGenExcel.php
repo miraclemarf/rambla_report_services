@@ -382,15 +382,30 @@ class ApiGenExcel extends CI_Controller
             }
             $row_number++;
         }
+        $storeConfig = [
+            '03' => [
+                'prefix' => 'HH-V001-SalesMember_',
+                'dir' => '/V001_SalesMember'
+            ],            
+            '06' => [
+                'prefix' => 'HH-V002-SalesMember_',
+                'dir' => '/V002_SalesMember'
+            ],          
+            '07' => [
+                'prefix' => 'HH-V003-SalesMember_',
+                'dir' => '/V003_SalesMember'
+            ]
+        ];
+        $prefixFn = $storeConfig[$store]['prefix'] ?? 'default-prefix_';
+        $dirName = $storeConfig[$store]['dir'] ?? '/default';
+        // $prefixFn = $store == '03' ? 'HH-V001-SalesMember_' : 'RSMKG-BARU_';
+        $filename = $prefixFn . date('d-m-Y', !$date ? strtotime('-1 day') : strtotime($date));        
 
         $writer = new Xlsx($spreadsheet);
-        $prefixFn = $store == '03' ? 'HH-V001-SalesMember_' : 'RSMKG-BARU_';
-        $filename = $prefixFn . date('d-m-Y', !$date ? strtotime('-1 day') : strtotime($date));
-
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save('D:/upload/' . $filename . '.xlsx');
 
-        $targetDir = rawurlencode('/STAR/Trx Mbr Non Mbr/V001_SalesMember');
+        $targetDir = rawurlencode('/STAR/Trx Mbr Non Mbr'.$dirName);
         $accessToken = $this->M_TokenOneD->getAccessToken();
 
         $url = 'https://graph.microsoft.com/v1.0/me/drive/root:' . $targetDir . '/' . rawurlencode($filename. '.xlsx') . ':/content';
