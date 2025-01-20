@@ -110,13 +110,34 @@ class ApiGenExcel extends CI_Controller
             $row_number++;
         }
 
-        $writer = new Xlsx($spreadsheet);
-        $prefixFn = $store == '03' ? 'HH-sales-article_' : 'RSMKG-sales-article_';
-        $dirName = $store == '03' ? '/HH/V001_SUMMABA' : '/RSMKG';
+        $storeConfig = [            
+            '01' => [
+                'prefix' => 'RSMKG-sales-article_',
+                'dir' => '/RSMKG'
+            ],
+            '03' => [
+                'prefix' => 'HH-sales-article_',
+                'dir' => '/HH/V001_SUMMABA'
+            ],            
+            '06' => [
+                'prefix' => 'HH-sales-article_',
+                'dir' => '/HH/V002_BOGOR'
+            ],          
+            '07' => [
+                'prefix' => 'HH-sales-article_',
+                'dir' => '/HH/V003_SMB'
+            ]
+        ];
+        $prefixFn = $storeConfig[$store]['prefix'] ?? 'default-prefix_';
+        $dirName = $storeConfig[$store]['dir'] ?? '/default';
+
+        // $prefixFn = $store == '03' ? 'HH-sales-article_' : 'RSMKG-sales-article_';
+        // $dirName = $store == '03' ? '/HH/V001_SUMMABA' : '/RSMKG';
         $filename = $prefixFn . date('d-m-Y', !$date ? strtotime('-1 day') : strtotime($date));
         $targetDir = rawurlencode('/STAR/RSHH'.$dirName);
         $accessToken = $this->M_TokenOneD->getAccessToken();
-
+        
+        $writer = new Xlsx($spreadsheet);
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save('D:/upload/' . $filename . '.xlsx');
 
