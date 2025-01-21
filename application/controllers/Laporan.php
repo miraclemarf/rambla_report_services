@@ -1205,8 +1205,7 @@ class Laporan extends My_Controller
             $sheet->setCellValue('AE' . $row_number, $row['net_af']);
             if (substr($row['trans_no'], 8, 1) != '5') {
                 $data_areatrx = substr($row['trans_no'], 8, 1) == '3' ? 'BAZAAR' : 'FLOOR';
-            }
-            else{
+            } else {
                 $data_areatrx = "ONLINE";
             }
             $sheet->setCellValue('AF' . $row_number, $data_areatrx);
@@ -1375,8 +1374,7 @@ class Laporan extends My_Controller
             $sheet->setCellValue('AC' . $row_number, $row['net_af']);
             if (substr($row['trans_no'], 8, 1) != '5') {
                 $data_areatrx = substr($row['trans_no'], 8, 1) == '3' ? 'BAZAAR' : 'FLOOR';
-            }
-            else{
+            } else {
                 $data_areatrx = "ONLINE";
             }
             $sheet->setCellValue('AD' . $row_number, $data_areatrx);
@@ -1827,7 +1825,7 @@ class Laporan extends My_Controller
 
         $header = array('Store', 'Periode', 'Bulan', 'DIVISION', 'SUB DIVISION', 'Tipe Artikel', 'Kode Kategori', 'DEPT', 'SUB DEPT', 'Article Code', 'Barcode', 'Kode Brand', 'Nama Brand', 'Nama Produk', 'Varian Option1', 'Varian Option2', 'Harga', 'Kode Vendor', 'Nama Vendor', 'Total Qty(Pcs)', 'Total Berat(Kg)', 'Disc(%)', 'Total Disc', 'Disc. Tambahan(Rp)', 'Disc. Tambahan(%)', 'Margin', 'Gross After Margin', 'Gross(Rp)', 'Net Before(Rp)', 'Net After(Rp)', 'Area Transaksi', 'Source Data', 'Trans No', 'No Ref');
 
-        fputcsv($file, $header);
+        fputcsv($file, $header, $delimiter);
 
         foreach ($data as $key => $value) {
             if (substr($value['areatrx'], 8, 1) != '5') {
@@ -1924,7 +1922,7 @@ class Laporan extends My_Controller
 
         $header = array('Store', 'Periode', 'Bulan', 'DIVISION', 'SUB DIVISION', 'Tipe Artikel', 'Kode Kategori', 'DEPT', 'SUB DEPT', 'Article Code', 'Barcode', 'Kode Brand', 'Nama Brand', 'Nama Produk', 'Varian Option1', 'Varian Option2', 'Harga', 'Kode Vendor', 'Nama Vendor', 'Total Qty(Pcs)', 'Total Berat(Kg)', 'Disc(%)', 'Total Disc', 'Disc. Tambahan(Rp)', 'Disc. Tambahan(%)', 'Margin', 'Gross After Margin', 'Gross(Rp)', 'Net Before(Rp)', 'Net After(Rp)', 'Area Transaksi', 'Source Data', 'Trans No', 'No Ref');
 
-        fputcsv($file, $header);
+        fputcsv($file, $header, $delimiter);
 
         foreach ($data as $key => $value) {
             if (substr($value['areatrx'], 8, 1) != '5') {
@@ -2009,7 +2007,7 @@ class Laporan extends My_Controller
 
         $data['username'] = $this->input->cookie('cookie_invent_user');
 
-        $query = "SELECT distinct CASE WHEN ( substr( a.trans_no, 7, 2 ) = '01' ) THEN 'R001' WHEN ( substr( a.trans_no, 7, 2 ) = '02' ) THEN 'R002' WHEN ( substr( a.trans_no, 7, 2 ) = '03' ) THEN 'V001' WHEN ( substr( a.trans_no, 7, 2 ) = '04' ) THEN 'S002' WHEN ( substr( a.trans_no, 7, 2 ) = '05' ) THEN 'S003' END  AS branch_id,  DATE_FORMAT(a.trans_date,'%Y-%m-%d'), DATE_FORMAT(a.trans_date,'%m'), a.trans_no, a.no_ref, a.delivery_type, a.delivery_number, CASE left(tp.mop_code,2) when 'VA' THEN 'Virtual Account' WHEN 'VC' THEN 'Voucher' WHEN 'PP' THEN 'Point' WHEN 'CC' THEN 'Credit Card' WHEN 'CP' THEN 'Coupon' ELSE description end mop_name, card_name, tp.paid_amount FROM t_sales_trans_hdr a LEFT JOIN t_paid tp on tp.trans_no = a.trans_no LEFT JOIN m_mop mm on mm.mop_code = tp.mop_code where a.trans_status = '1' and substr( a.trans_no, 9, 1 )  = '5' ";
+        $query = "SELECT distinct CASE WHEN ( substr( a.trans_no, 7, 2 ) = '01' ) THEN 'R001' WHEN ( substr( a.trans_no, 7, 2 ) = '02' ) THEN 'R002' WHEN ( substr( a.trans_no, 7, 2 ) = '03' ) THEN 'V001' WHEN ( substr( a.trans_no, 7, 2 ) = '04' ) THEN 'S002' WHEN ( substr( a.trans_no, 7, 2 ) = '05' ) THEN 'S003' WHEN ( substr( a.trans_no, 7, 2 ) = '06' ) THEN 'V002' WHEN ( substr( a.trans_no, 7, 2 ) = '07' ) THEN 'V003' END AS branch_id,  DATE_FORMAT(a.trans_date,'%Y-%m-%d'), DATE_FORMAT(a.trans_date,'%m'), a.trans_no, a.no_ref, a.delivery_type, a.delivery_number, CASE left(tp.mop_code,2) when 'VA' THEN 'Virtual Account' WHEN 'VC' THEN 'Voucher' WHEN 'PP' THEN 'Point' WHEN 'CC' THEN 'Credit Card' WHEN 'CP' THEN 'Coupon' ELSE description end mop_name, card_name, tp.paid_amount FROM t_sales_trans_hdr a LEFT JOIN t_paid tp on tp.trans_no = a.trans_no LEFT JOIN m_mop mm on mm.mop_code = tp.mop_code where a.trans_status = '1' and substr( a.trans_no, 9, 1 )  = '5' ";
 
         $whereClause = "";
 
@@ -2024,6 +2022,10 @@ class Laporan extends My_Controller
                 $kode = "04";
             } else if ($store == "S003") {
                 $kode = "05";
+            } else if ($store == "V002") {
+                $kode = "06";
+            } else if ($store == "V003") {
+                $kode = "07";
             }
             $whereClause .= " and substr( a.trans_no, 7, 2 ) ='" . $kode . "' ";
         }
@@ -2200,6 +2202,10 @@ class Laporan extends My_Controller
                 $kode = "04";
             } else if ($store == "S003") {
                 $kode = "05";
+            } else if ($store == "V002") {
+                $kode = "06";
+            } else if ($store == "V003") {
+                $kode = "07";
             }
         }
         if ($fromdate != "" && $todate != "") {
@@ -2247,6 +2253,8 @@ class Laporan extends My_Controller
             WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' 
             WHEN substring(th.trans_no,7,2) = '04' THEN 'S002'
             WHEN substring(th.trans_no,7,2) = '05' THEN 'S003'
+            WHEN substring(th.trans_no,7,2) = '06' THEN 'V002'
+            WHEN substring(th.trans_no,7,2) = '07' THEN 'V003'
             END)
             where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause 
             and substring(th.trans_no,7,2) = '$kode'
@@ -2288,6 +2296,8 @@ class Laporan extends My_Controller
             WHEN substring(th.trans_no,7,2) = '03' THEN 'V001'
             WHEN substring(th.trans_no,7,2) = '04' THEN 'S002'
             WHEN substring(th.trans_no,7,2) = '05' THEN 'S003'
+            WHEN substring(th.trans_no,7,2) = '06' THEN 'V002'
+            WHEN substring(th.trans_no,7,2) = '07' THEN 'V003'
             END)
             where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause    
             and substring(th.trans_no,7,2) = '$kode' 
@@ -2340,6 +2350,10 @@ class Laporan extends My_Controller
                 $kode = "04";
             } else if ($store == "S003") {
                 $kode = "05";
+            } else if ($store == "V002") {
+                $kode = "06";
+            } else if ($store == "V003") {
+                $kode = "07";
             }
         }
         if ($fromdate != "" && $todate != "") {
@@ -2387,6 +2401,8 @@ class Laporan extends My_Controller
             WHEN substring(th.trans_no,7,2) = '03' THEN 'V001'
             WHEN substring(th.trans_no,7,2) = '04' THEN 'S002'
             WHEN substring(th.trans_no,7,2) = '05' THEN 'S003'
+            WHEN substring(th.trans_no,7,2) = '06' THEN 'V002'
+            WHEN substring(th.trans_no,7,2) = '07' THEN 'V003'
             END)
             where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause 
             and substring(th.trans_no,7,2) = '$kode'
@@ -2428,6 +2444,8 @@ class Laporan extends My_Controller
             WHEN substring(th.trans_no,7,2) = '03' THEN 'V001'
             WHEN substring(th.trans_no,7,2) = '04' THEN 'S002'
             WHEN substring(th.trans_no,7,2) = '05' THEN 'S003'
+            WHEN substring(th.trans_no,7,2) = '06' THEN 'V002'
+            WHEN substring(th.trans_no,7,2) = '07' THEN 'V003'
             END)
             where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause    
             and substring(th.trans_no,7,2) = '$kode' 
