@@ -116,7 +116,7 @@
 		<div class="col-md-12">
 			<div class="row h-100">
 				<div class="col-md-6 p-0">
-					<div class="col-lg-8 p-0 mx-auto form-login" style="">
+					<div class="col-sm-8 p-0 mx-auto form-login" style="">
 						<div class="auth-form-light text-left py-3 px-4 px-sm-5">
 							<div class="brand-logo" style="margin-bottom: 10px;">
 								<img src="<?= base_url('assets/images/splash4.png'); ?>" alt="logo">
@@ -161,7 +161,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-6 p-0 d-none d-md-flex bg-images; display: flex !important">
+				<div class="col-sm-6 p-0 d-none d-md-flex bg-images; display: flex !important">
 					<img src="<?= base_url('assets/images'); ?>/login.png" alt="" style="width:100%; height:auto; background-attachment: fixed;background-size: cover; background-repeat: no-repeat;">
 					<!-- <img src="<?= base_url('assets/images'); ?>/bottomimageweb-01.jpg" alt="" style="width:100%; height:100%; background-attachment: fixed; background-repeat: no-repeat;"> -->
 				</div>
