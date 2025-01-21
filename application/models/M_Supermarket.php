@@ -53,7 +53,7 @@ class M_Supermarket extends CI_Model
             'th.no_ref AS no_ref',
             'td.promo_id as promo_id',
             'CASE COALESCE(tp.promo_desc, "") WHEN "" THEN "_NP" ELSE tp.promo_desc END as `promo_desc (_NP/nama Desc)`',
-            'CASE WHEN (SUBSTR(th.trans_no, 7, 2) = "01") THEN "R001" WHEN (SUBSTR(th.trans_no, 7, 2) = "02") THEN "R002" WHEN (SUBSTR(th.trans_no, 7, 2) = "03") THEN "V001" END AS branch_id',
+            'CASE WHEN (SUBSTR(th.trans_no, 7, 2) = "01") THEN "R001" WHEN (SUBSTR(th.trans_no, 7, 2) = "02") THEN "R002" WHEN (SUBSTR(th.trans_no, 7, 2) = "03") THEN "V001" WHEN (SUBSTR(th.trans_no, 7, 2) = "04") THEN "S002" WHEN (SUBSTR(th.trans_no, 7, 2) = "05") THEN "S003" WHEN (SUBSTR(th.trans_no, 7, 2) = "06") THEN "V002" WHEN (SUBSTR(th.trans_no, 7, 2) = "07") THEN "V003" END AS branch_id',
             'CASE WHEN (mim.tag_5 = "timbang") THEN SUM(td.berat) ELSE SUM(td.qty) END AS "Qty Gab"',
             'CASE WHEN (COALESCE(th.member_id, "") != "") THEN "Y" ELSE "N" END AS Member',
             'DATE_FORMAT(th.trans_date, "%m.%b") AS "Month"',
@@ -68,7 +68,7 @@ class M_Supermarket extends CI_Model
         $dbCentral->from('t_sales_trans_hdr th');
         $dbCentral->join('(SELECT *, CASE WHEN t_sales_trans_dtl.flag_tax = "1" THEN t_sales_trans_dtl.net_price / 1.11 ELSE t_sales_trans_dtl.net_price end AS net_prc, CASE t_sales_trans_dtl.flag_flexi WHEN 1 THEN ( CASE t_sales_trans_dtl.type_flex WHEN "0" THEN (t_sales_trans_dtl.net_price / 1.11) WHEN "1" THEN ( ( t_sales_trans_dtl.net_price + (t_sales_trans_dtl.fee * - (1)) ) / 1.11 ) WHEN "2" THEN ( ( t_sales_trans_dtl.net_price - t_sales_trans_dtl.fee ) / 1.11 ) end ) ELSE ( CASE WHEN t_sales_trans_dtl.flag_tax = "1" THEN (t_sales_trans_dtl.net_price / 1.11) ELSE t_sales_trans_dtl.net_price end ) end AS net_all FROM t_sales_trans_dtl) td', 'th.trans_no = td.trans_no');
         $dbCentral->join('m_codebar mc', 'td.barcode = mc.barcode', 'left');
-        $dbCentral->join('m_item_master mim', 'mc.article_number = mim.article_number AND mim.branch_id = CASE WHEN (SUBSTR(th.trans_no, 7, 2) = "01") THEN "R001" WHEN (SUBSTR(th.trans_no, 7, 2) = "02") THEN "R002" WHEN (SUBSTR(th.trans_no, 7, 2) = "03") THEN "V001" END', 'left');
+        $dbCentral->join('m_item_master mim', 'mc.article_number = mim.article_number AND mim.branch_id = CASE WHEN (SUBSTR(th.trans_no, 7, 2) = "01") THEN "R001" WHEN (SUBSTR(th.trans_no, 7, 2) = "02") THEN "R002" WHEN (SUBSTR(th.trans_no, 7, 2) = "03") THEN "V001" WHEN (SUBSTR(th.trans_no, 7, 2) = "04") THEN "S002" WHEN (SUBSTR(th.trans_no, 7, 2) = "05") THEN "S003" WHEN (SUBSTR(th.trans_no, 7, 2) = "06") THEN "V002" WHEN (SUBSTR(th.trans_no, 7, 2) = "07") THEN "V003" END', 'left');
         $dbCentral->join('m_brand mb', 'mim.brand = mb.brand_code', 'left');
         $dbCentral->join('m_kategori_list mkl', 'td.category_code = mkl.category_code', 'left');
         $dbCentral->join('m_vendor mv', 'mim.vendor_code = mv.vendor_code', 'left');
