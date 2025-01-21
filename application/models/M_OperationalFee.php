@@ -38,6 +38,10 @@ class M_OperationalFee extends CI_Model
                 $kode = "04";
             } else if ($store == "S003") {
                 $kode = "05";
+            } else if ($store == "V002") {
+                $kode = "06";
+            } else if ($store == "V003") {
+                $kode = "07";
             }
         }
 
@@ -95,6 +99,8 @@ class M_OperationalFee extends CI_Model
             WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' 
             WHEN substring(th.trans_no,7,2) = '04' THEN 'S002'
             WHEN substring(th.trans_no,7,2) = '05' THEN 'S003'
+            WHEN substring(th.trans_no,7,2) = '06' THEN 'V002'
+            WHEN substring(th.trans_no,7,2) = '07' THEN 'V003'
             END)
             where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause 
             and substring(th.trans_no,7,2) = '$kode'
@@ -136,6 +142,8 @@ class M_OperationalFee extends CI_Model
             WHEN substring(th.trans_no,7,2) = '03' THEN 'V001' 
             WHEN substring(th.trans_no,7,2) = '04' THEN 'S002'
             WHEN substring(th.trans_no,7,2) = '05' THEN 'S003'
+            WHEN substring(th.trans_no,7,2) = '06' THEN 'V002'
+            WHEN substring(th.trans_no,7,2) = '07' THEN 'V003'
             END)
             where trans_status in ('1') and td.category_code != 'RSOTMKVC01' $whereClause    
             and substring(th.trans_no,7,2) = '$kode' 

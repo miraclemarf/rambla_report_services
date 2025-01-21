@@ -28,7 +28,7 @@ class M_PaidOnline extends CI_Model
 
         $kode = "";
 
-        $query = "SELECT distinct a.trans_date, CASE WHEN ( substr( a.trans_no, 7, 2 ) = '01' ) THEN 'R001' WHEN ( substr( a.trans_no, 7, 2 ) = '02' ) THEN 'R002' WHEN ( substr( a.trans_no, 7, 2 ) = '03' ) THEN 'V001' WHEN ( substr( a.trans_no, 7, 2 ) = '04' ) THEN 'S002' WHEN ( substr( a.trans_no, 7, 2 ) = '05' ) THEN 'S003' END  AS branch_id, a.trans_no, a.no_ref, a.delivery_type, a.delivery_number, tp.seq, tp.mop_code, CASE left(tp.mop_code,2) when 'VA' THEN 'Virtual Account' WHEN 'VC' THEN 'Voucher' WHEN 'PP' THEN 'Point' WHEN 'CC' THEN 'Credit Card' WHEN 'CP' THEN 'Coupon' ELSE description end mop_name, card_name, tp.paid_amount FROM t_sales_trans_hdr a LEFT JOIN t_paid tp on tp.trans_no = a.trans_no LEFT JOIN m_mop mm on mm.mop_code = tp.mop_code where a.trans_status = '1' and substr( a.trans_no, 9, 1 )  = '5' ";
+        $query = "SELECT distinct a.trans_date, CASE WHEN ( substr( a.trans_no, 7, 2 ) = '01' ) THEN 'R001' WHEN ( substr( a.trans_no, 7, 2 ) = '02' ) THEN 'R002' WHEN ( substr( a.trans_no, 7, 2 ) = '03' ) THEN 'V001' WHEN ( substr( a.trans_no, 7, 2 ) = '04' ) THEN 'S002' WHEN ( substr( a.trans_no, 7, 2 ) = '05' ) THEN 'S003' WHEN ( substr( a.trans_no, 7, 2 ) = '06' ) THEN 'V002' WHEN ( substr( a.trans_no, 7, 2 ) = '07' ) THEN 'V003' END AS branch_id, a.trans_no, a.no_ref, a.delivery_type, a.delivery_number, tp.seq, tp.mop_code, CASE left(tp.mop_code,2) when 'VA' THEN 'Virtual Account' WHEN 'VC' THEN 'Voucher' WHEN 'PP' THEN 'Point' WHEN 'CC' THEN 'Credit Card' WHEN 'CP' THEN 'Coupon' ELSE description end mop_name, card_name, tp.paid_amount FROM t_sales_trans_hdr a LEFT JOIN t_paid tp on tp.trans_no = a.trans_no LEFT JOIN m_mop mm on mm.mop_code = tp.mop_code where a.trans_status = '1' and substr( a.trans_no, 9, 1 )  = '5' ";
         ## Search 
         $searchQuery = "";
         if ($searchValue != '') {
@@ -47,6 +47,10 @@ class M_PaidOnline extends CI_Model
                 $kode = "04";
             } else if ($store == "S003") {
                 $kode = "05";
+            } else if ($store == "V002") {
+                $kode = "06";
+            } else if ($store == "V003") {
+                $kode = "07";
             }
             $whereClause .= " and substr( a.trans_no, 7, 2 ) ='" . $kode . "' ";
         }
