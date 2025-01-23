@@ -1006,9 +1006,10 @@ class Laporan extends My_Controller
         $sheet->setCellValue('V1', 'Normal Price');
         $sheet->setCellValue('W1', 'Current Price');
         $sheet->setCellValue('X1', 'Tag 5');
-        $sheet->setCellValue('Y1', 'Add Date');
-        $sheet->setCellValue('Z1', 'Last Update');
-        $sheet->setCellValue('AA1', 'Article Status');
+        $sheet->setCellValue('Y1', 'Flag 2');
+        $sheet->setCellValue('Z1', 'Add Date');
+        $sheet->setCellValue('AA1', 'Last Update');
+        $sheet->setCellValue('AB1', 'Article Status');
 
         /* Excel Data */
         $row_number = 2;
@@ -1037,9 +1038,10 @@ class Laporan extends My_Controller
             $sheet->setCellValue('V' . $row_number, $row['normal_price']);
             $sheet->setCellValue('W' . $row_number, $row['current_price']);
             $sheet->setCellValue('X' . $row_number, $row['tag_5']);
-            $sheet->setCellValue('Y' . $row_number, substr($row['add_date'], 0, 10));
-            $sheet->setCellValue('Z' . $row_number, substr($row['last_update'], 0, 10));
-            $sheet->setCellValue('AA' . $row_number, $row['status_article']);
+            $sheet->setCellValue('Y' . $row_number, $row['flag_2']);
+            $sheet->setCellValue('Z' . $row_number, substr($row['add_date'], 0, 10));
+            $sheet->setCellValue('AA' . $row_number, substr($row['last_update'], 0, 10));
+            $sheet->setCellValue('AB' . $row_number, $row['status_article']);
             $row_number++;
         }
 
@@ -1632,16 +1634,17 @@ class Laporan extends My_Controller
         if ($article_status !== "null") {
             $where .= " AND status_article = '" . $article_status . "'";
         }
+        $delimiter = ';';
 
-        $data = $this->db->query("SELECT branch_id,article_number,article_code,barcode,supplier_pcode,category_code, article_name,supplier_pname, vendor_code, vendor_name, brand,brand_name, option1,varian_option1,option2,varian_option2, division, sub_division, dept, sub_dept, normal_price, current_price, tag_5,SUBSTRING(add_date, 1, 10) as add_date,SUBSTRING(last_update, 1, 10) as last_update, status_article FROM r_item_master where 1=1 $where")->result_array();
+        $data = $this->db->query("SELECT branch_id,article_number,article_code,barcode,supplier_pcode,category_code, article_name,supplier_pname, vendor_code, vendor_name, brand,brand_name, option1,varian_option1,option2,varian_option2, division, sub_division, dept, sub_dept, normal_price, current_price, tag_5, flag_2, SUBSTRING(add_date, 1, 10) as add_date,SUBSTRING(last_update, 1, 10) as last_update, status_article FROM r_item_master where 1=1 $where")->result_array();
         $file = fopen('php://output', 'w');
 
-        $header = array('branch id', 'article number', 'article code', 'barcode', 'supplier_pcode', 'category code', 'article name', 'supplier pname', 'vendor code', 'vendor name', 'brand code', 'brand name', 'option1', 'varian option1', 'option2', 'varian option2', 'division', 'sub division', 'dept', 'sub dept', 'normal_price', 'current_price', 'tag 5', 'add_date', 'last_update', 'article status');
+        $header = array('branch id', 'article number', 'article code', 'barcode', 'supplier_pcode', 'category code', 'article name', 'supplier pname', 'vendor code', 'vendor name', 'brand code', 'brand name', 'option1', 'varian option1', 'option2', 'varian option2', 'division', 'sub division', 'dept', 'sub dept', 'normal_price', 'current_price', 'tag 5', 'flag 2', 'add_date', 'last_update', 'article status');
 
-        fputcsv($file, $header);
+        fputcsv($file, $header, $delimiter);
 
         foreach ($data as $key => $value) {
-            fputcsv($file, $value);
+            fputcsv($file, $value, $delimiter);
         }
         fclose($file);
         exit;

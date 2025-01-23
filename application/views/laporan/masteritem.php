@@ -96,6 +96,9 @@
                                         <nobr>Tag 5</nobr>
                                     </th>
                                     <th>
+                                        <nobr>Flag 2</nobr>
+                                    </th>
+                                    <th>
                                         <nobr>Add Date</nobr>
                                     </th>
                                     <th>
@@ -398,6 +401,12 @@
                     },
                     {
                         "data": "tag_5",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "flag_2",
                         "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
                         },

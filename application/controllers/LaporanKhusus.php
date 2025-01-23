@@ -164,24 +164,40 @@ class LaporanKhusus extends My_Controller
         CONCAT(CASE WHEN LP.brand_code is null then TP.brand_code else LP.brand_code end,' - ',CASE WHEN LP.brand_name is null then TP.brand_name else LP.brand_name end) as BRAND, 
         -- FLOOR
         LP.net_floor as LP_Sales1, '' as TP_Target1, TP.net_floor as TP_Sales1, '' as Achieve1,
-        case when LP.net_floor IS NULL OR TP.net_floor IS NULL THEN 0 else ifnull(round(((TP.net_floor - LP.net_floor) / LP.net_floor) *100,0),0) end as Growth1, ifnull(round(margin_percent_floor,2),0) as Margin_Percent1,
-        ifnull(round(margin_value_floor,0),0) as Margin_Value1, 
+        case when LP.net_floor IS NULL OR TP.net_floor IS NULL THEN 0 else ifnull(round(((TP.net_floor - LP.net_floor) / LP.net_floor) *100,0),0) end as Growth1, 
+        ifnull(round(LP.margin_percent_floor,2),0) as LP_Margin_Percent1, ifnull(round(LP.margin_value_floor,0),0) as LP_Margin_Value1,  
+        ifnull(round(TP.margin_percent_floor,2),0) as TP_Margin_Percent1, ifnull(round(TP.margin_value_floor,0),0) as TP_Margin_Value1,  
         -- ATRIUM
         LP.net_bazaar as LP_Sales2, '' as TP_Target2, TP.net_bazaar as TP_Sales2, '' as Achieve2,
-        case when LP.net_bazaar IS NULL OR TP.net_bazaar IS NULL THEN 0 else ifnull(round(((TP.net_bazaar - LP.net_bazaar) / LP.net_bazaar) *100,0),0) end as Growth2, ifnull(round(margin_percent_bazaar,2),0) as Margin_Percent2, ifnull(round(margin_value_bazaar,0),0) as Margin_Value2,  
+        case when LP.net_bazaar IS NULL OR TP.net_bazaar IS NULL THEN 0 else ifnull(round(((TP.net_bazaar - LP.net_bazaar) / LP.net_bazaar) *100,0),0) end as Growth2, 
+        ifnull(round(LP.margin_percent_bazaar,2),0) as LP_Margin_Percent2, ifnull(round(LP.margin_value_bazaar,0),0) as LP_Margin_Value2,  
+        ifnull(round(TP.margin_percent_bazaar,2),0) as TP_Margin_Percent2, ifnull(round(TP.margin_value_bazaar,0),0) as TP_Margin_Value2,  
         -- ONLINE
         LP.net_online as LP_Sales3, '' as TP_Target3, TP.net_online as TP_Sales3, '' as Achieve3,
-        case when LP.net_online IS NULL OR TP.net_online IS NULL THEN 0 else ifnull(round(((TP.net_online - LP.net_online) /LP.net_online)*100,0),0) end as Growth3, ifnull(round(margin_percent_online,2),0) as Margin_Percent3, ifnull(round(margin_value_online,0),0) as Margin_Value3,  
+        case when LP.net_online IS NULL OR TP.net_online IS NULL THEN 0 else ifnull(round(((TP.net_online - LP.net_online) /LP.net_online)*100,0),0) end as Growth3, 
+        ifnull(round(LP.margin_percent_online,2),0) as LP_Margin_Percent3, ifnull(round(LP.margin_value_online,0),0) as LP_Margin_Value3,  
+        ifnull(round(TP.margin_percent_online,2),0) as TP_Margin_Percent3, ifnull(round(TP.margin_value_online,0),0) as TP_Margin_Value3,  
         -- TOTAL
         (LP.net_floor+LP.net_bazaar+LP.net_online) as LP_Sales4, '' as TP_Target4, (TP.net_floor+TP.net_bazaar+TP.net_online) as TP_Sales4, '' as Achieve4,
-        case when (LP.net_floor+LP.net_bazaar+LP.net_online) IS NULL OR (TP.net_floor+TP.net_bazaar+LP.net_online) IS NULL THEN 0 else ifnull(round((((TP.net_floor+TP.net_bazaar+TP.net_online) -  (LP.net_floor+LP.net_bazaar+LP.net_online))  / (LP.net_floor+LP.net_bazaar+LP.net_online))*100,0),0) end as Growth4,(ifnull(round(TP.margin_percent_floor,2),0)+ifnull(round(TP.margin_percent_online,2),0)+ifnull(round(TP.margin_percent_bazaar,2),0)) as Margin_Percent4,
-        (ifnull(round(TP.margin_value_floor,0),0)+ifnull(round(TP.margin_value_online,0),0)+ifnull(round(TP.margin_value_bazaar,0),0)) as Margin_Value4
+        case when (LP.net_floor+LP.net_bazaar+LP.net_online) IS NULL OR (TP.net_floor+TP.net_bazaar+LP.net_online) IS NULL THEN 0 else ifnull(round((((TP.net_floor+TP.net_bazaar+TP.net_online) -  (LP.net_floor+LP.net_bazaar+LP.net_online))  / (LP.net_floor+LP.net_bazaar+LP.net_online))*100,0),0) end as Growth4,
+        (ifnull(round(LP.margin_percent_floor,2),0)+ifnull(round(LP.margin_percent_online,2),0)+ifnull(round(LP.margin_percent_bazaar,2),0)) as LP_Margin_Percent4,
+        (ifnull(round(TP.margin_percent_floor,2),0)+ifnull(round(TP.margin_percent_online,2),0)+ifnull(round(TP.margin_percent_bazaar,2),0)) as TP_Margin_Percent4,
+        (ifnull(round(LP.margin_value_floor,0),0)+ifnull(round(LP.margin_value_online,0),0)+ifnull(round(LP.margin_value_bazaar,0),0)) as LP_Margin_Value4,
+        (ifnull(round(TP.margin_value_floor,0),0)+ifnull(round(TP.margin_value_online,0),0)+ifnull(round(TP.margin_value_bazaar,0),0)) as TP_Margin_Value4
         from (
-        SELECT branch_id, SUB_DIVISION, DEPT,  brand_code, brand_name,sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online FROM (
+        SELECT branch_id, SUB_DIVISION, DEPT,  brand_code, brand_name,sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
+        sum(margin_value_floor) as margin_value_floor, sum(margin_value_bazaar) as margin_value_bazaar, sum(margin_value_online) as margin_value_online,
+        sum(margin_percent_floor) as margin_percent_floor, sum(margin_percent_bazaar) as margin_percent_bazaar, sum(margin_percent_online) as margin_percent_online FROM (
         select branch_id, SUB_DIVISION, DEPT,  brand_code, brand_name, 
         sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_af else 0 end) net_floor,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_af else 0 end) net_bazaar,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_af else 0 end) net_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) margin_value_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) margin_value_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) margin_value_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf else 0 end) * 100 as margin_percent_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf else 0 end) * 100 as margin_percent_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf else 0 end) * 100 as margin_percent_online,
         CASE
             WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
             WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
@@ -239,24 +255,40 @@ class LaporanKhusus extends My_Controller
         CONCAT(CASE WHEN LP.brand_code is null then TP.brand_code else LP.brand_code end,' - ',CASE WHEN LP.brand_name is null then TP.brand_name else LP.brand_name end) as BRAND, 
         -- FLOOR
         LP.net_floor as LP_Sales1, '' as TP_Target1, TP.net_floor as TP_Sales1, '' as Achieve1,
-        case when LP.net_floor IS NULL OR TP.net_floor IS NULL THEN 0 else ifnull(round(((TP.net_floor - LP.net_floor) / LP.net_floor) *100,0),0) end as Growth1, ifnull(round(margin_percent_floor,2),0) as Margin_Percent1,
-        ifnull(round(margin_value_floor,0),0) as Margin_Value1, 
+        case when LP.net_floor IS NULL OR TP.net_floor IS NULL THEN 0 else ifnull(round(((TP.net_floor - LP.net_floor) / LP.net_floor) *100,0),0) end as Growth1, 
+        ifnull(round(LP.margin_percent_floor,2),0) as LP_Margin_Percent1, ifnull(round(LP.margin_value_floor,0),0) as LP_Margin_Value1,  
+        ifnull(round(TP.margin_percent_floor,2),0) as TP_Margin_Percent1, ifnull(round(TP.margin_value_floor,0),0) as TP_Margin_Value1,  
         -- ATRIUM
         LP.net_bazaar as LP_Sales2, '' as TP_Target2, TP.net_bazaar as TP_Sales2, '' as Achieve2,
-        case when LP.net_bazaar IS NULL OR TP.net_bazaar IS NULL THEN 0 else ifnull(round(((TP.net_bazaar - LP.net_bazaar) / LP.net_bazaar) *100,0),0) end as Growth2, ifnull(round(margin_percent_bazaar,2),0) as Margin_Percent2, ifnull(round(margin_value_bazaar,0),0) as Margin_Value2,  
+        case when LP.net_bazaar IS NULL OR TP.net_bazaar IS NULL THEN 0 else ifnull(round(((TP.net_bazaar - LP.net_bazaar) / LP.net_bazaar) *100,0),0) end as Growth2, 
+        ifnull(round(LP.margin_percent_bazaar,2),0) as LP_Margin_Percent2, ifnull(round(LP.margin_value_bazaar,0),0) as LP_Margin_Value2,  
+        ifnull(round(TP.margin_percent_bazaar,2),0) as TP_Margin_Percent2, ifnull(round(TP.margin_value_bazaar,0),0) as TP_Margin_Value2,  
         -- ONLINE
         LP.net_online as LP_Sales3, '' as TP_Target3, TP.net_online as TP_Sales3, '' as Achieve3,
-        case when LP.net_online IS NULL OR TP.net_online IS NULL THEN 0 else ifnull(round(((TP.net_online - LP.net_online) /LP.net_online)*100,0),0) end as Growth3, ifnull(round(margin_percent_online,2),0) as Margin_Percent3, ifnull(round(margin_value_online,0),0) as Margin_Value3,  
+        case when LP.net_online IS NULL OR TP.net_online IS NULL THEN 0 else ifnull(round(((TP.net_online - LP.net_online) /LP.net_online)*100,0),0) end as Growth3, 
+        ifnull(round(LP.margin_percent_online,2),0) as LP_Margin_Percent3, ifnull(round(LP.margin_value_online,0),0) as LP_Margin_Value3,  
+        ifnull(round(TP.margin_percent_online,2),0) as TP_Margin_Percent3, ifnull(round(TP.margin_value_online,0),0) as TP_Margin_Value3,  
         -- TOTAL
         (LP.net_floor+LP.net_bazaar+LP.net_online) as LP_Sales4, '' as TP_Target4, (TP.net_floor+TP.net_bazaar+TP.net_online) as TP_Sales4, '' as Achieve4,
-        case when (LP.net_floor+LP.net_bazaar+LP.net_online) IS NULL OR (TP.net_floor+TP.net_bazaar+LP.net_online) IS NULL THEN 0 else ifnull(round((((TP.net_floor+TP.net_bazaar+TP.net_online) -  (LP.net_floor+LP.net_bazaar+LP.net_online))  / (LP.net_floor+LP.net_bazaar+LP.net_online))*100,0),0) end as Growth4,(ifnull(round(TP.margin_percent_floor,2),0)+ifnull(round(TP.margin_percent_online,2),0)+ifnull(round(TP.margin_percent_bazaar,2),0)) as Margin_Percent4,
-        (ifnull(round(TP.margin_value_floor,0),0)+ifnull(round(TP.margin_value_online,0),0)+ifnull(round(TP.margin_value_bazaar,0),0)) as Margin_Value4
+        case when (LP.net_floor+LP.net_bazaar+LP.net_online) IS NULL OR (TP.net_floor+TP.net_bazaar+LP.net_online) IS NULL THEN 0 else ifnull(round((((TP.net_floor+TP.net_bazaar+TP.net_online) -  (LP.net_floor+LP.net_bazaar+LP.net_online))  / (LP.net_floor+LP.net_bazaar+LP.net_online))*100,0),0) end as Growth4,
+        (ifnull(round(LP.margin_percent_floor,2),0)+ifnull(round(LP.margin_percent_online,2),0)+ifnull(round(LP.margin_percent_bazaar,2),0)) as LP_Margin_Percent4,
+        (ifnull(round(TP.margin_percent_floor,2),0)+ifnull(round(TP.margin_percent_online,2),0)+ifnull(round(TP.margin_percent_bazaar,2),0)) as TP_Margin_Percent4,
+        (ifnull(round(LP.margin_value_floor,0),0)+ifnull(round(LP.margin_value_online,0),0)+ifnull(round(LP.margin_value_bazaar,0),0)) as LP_Margin_Value4,
+        (ifnull(round(TP.margin_value_floor,0),0)+ifnull(round(TP.margin_value_online,0),0)+ifnull(round(TP.margin_value_bazaar,0),0)) as TP_Margin_Value4
         from (
-        SELECT branch_id, SUB_DIVISION, DEPT,  brand_code, brand_name,sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online FROM (
+        SELECT branch_id, SUB_DIVISION, DEPT,  brand_code, brand_name,sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
+        sum(margin_value_floor) as margin_value_floor, sum(margin_value_bazaar) as margin_value_bazaar, sum(margin_value_online) as margin_value_online,
+        sum(margin_percent_floor) as margin_percent_floor, sum(margin_percent_bazaar) as margin_percent_bazaar, sum(margin_percent_online) as margin_percent_online FROM (
         select branch_id, SUB_DIVISION, DEPT,  brand_code, brand_name, 
         sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_af else 0 end) net_floor,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_af else 0 end) net_bazaar,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_af else 0 end) net_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) margin_value_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) margin_value_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) margin_value_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf else 0 end) * 100 as margin_percent_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf else 0 end) * 100 as margin_percent_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf else 0 end) * 100 as margin_percent_online,
         CASE
             WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
             WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
@@ -305,7 +337,7 @@ class LaporanKhusus extends My_Controller
             WHEN substring(trans_no, 9, 1) = '3' THEN 'BAZAAR'
         END
         ) A GROUP BY branch_id, SUB_DIVISION, DEPT, brand_code
-        ) TP on LP.brand_code = TP.brand_code and TP.DEPT = LP.DEPT  
+        ) TP on LP.brand_code = TP.brand_code and TP.DEPT = LP.DEPT   
         ORDER BY SBU, DEPT";
 
         $data = $this->db->query($query)->result_array();
@@ -325,44 +357,52 @@ class LaporanKhusus extends My_Controller
         $sheet->setCellValue('A4', 'SBU')->mergeCells('A4:A5');
         $sheet->setCellValue('B4', 'DEPT')->mergeCells('B4:B5');
         $sheet->setCellValue('C4', 'BRAND')->mergeCells('C4:C5');
-        $sheet->setCellValue('D4', 'FLOOR')->mergeCells('D4:J4');
+        $sheet->setCellValue('D4', 'FLOOR')->mergeCells('D4:L4');
         $sheet->setCellValue('D5', 'LP Sales');
         $sheet->setCellValue('E5', 'TP Target');
         $sheet->setCellValue('F5', 'TP Sales');
         $sheet->setCellValue('G5', '%Achieve');
         $sheet->setCellValue('H5', '%Growth	');
-        $sheet->setCellValue('I5', '%Margin');
-        $sheet->setCellValue('J5', 'Margin Value');
-        $sheet->setCellValue('K4', 'ATRIUM')->mergeCells('K4:Q4');
-        $sheet->setCellValue('K5', 'LP Sales');
-        $sheet->setCellValue('L5', 'TP Target');
-        $sheet->setCellValue('M5', 'TP Sales');
-        $sheet->setCellValue('N5', '%Achieve');
-        $sheet->setCellValue('O5', '%Growth	');
-        $sheet->setCellValue('P5', '%Margin');
-        $sheet->setCellValue('Q5', 'Margin Value');
-        $sheet->setCellValue('R4', 'ONLINE')->mergeCells('R4:X4');
-        $sheet->setCellValue('R5', 'LP Sales');
-        $sheet->setCellValue('S5', 'TP Target');
-        $sheet->setCellValue('T5', 'TP Sales');
-        $sheet->setCellValue('U5', '%Achieve');
-        $sheet->setCellValue('V5', '%Growth	');
-        $sheet->setCellValue('W5', '%Margin');
-        $sheet->setCellValue('X5', 'Margin Value');
-        $sheet->setCellValue('Y4', 'TOTAL')->mergeCells('Y4:AE4');
-        $sheet->setCellValue('Y5', 'LP Sales');
-        $sheet->setCellValue('Z5', 'TP Target');
-        $sheet->setCellValue('AA5', 'TP Sales');
-        $sheet->setCellValue('AB5', '%Achieve');
-        $sheet->setCellValue('AC5', '%Growth');
-        $sheet->setCellValue('AD5', '%Margin');
-        $sheet->setCellValue('AE5', 'Margin Value');
+        $sheet->setCellValue('I5', '%LP Margin');
+        $sheet->setCellValue('J5', '%TP Margin');
+        $sheet->setCellValue('K5', 'LP Margin Value');
+        $sheet->setCellValue('L5', 'TP Margin Value');
+        $sheet->setCellValue('M4', 'ATRIUM')->mergeCells('M4:U4');
+        $sheet->setCellValue('M5', 'LP Sales');
+        $sheet->setCellValue('N5', 'TP Target');
+        $sheet->setCellValue('O5', 'TP Sales');
+        $sheet->setCellValue('P5', '%Achieve');
+        $sheet->setCellValue('Q5', '%Growth	');
+        $sheet->setCellValue('R5', '%LP Margin');
+        $sheet->setCellValue('S5', '%TP Margin');
+        $sheet->setCellValue('T5', 'LP Margin Value');
+        $sheet->setCellValue('U5', 'TP Margin Value');
+        $sheet->setCellValue('V4', 'ONLINE')->mergeCells('V4:AD4');
+        $sheet->setCellValue('V5', 'LP Sales');
+        $sheet->setCellValue('W5', 'TP Target');
+        $sheet->setCellValue('X5', 'TP Sales');
+        $sheet->setCellValue('Y5', '%Achieve');
+        $sheet->setCellValue('Z5', '%Growth');
+        $sheet->setCellValue('AA5', '%LP Margin');
+        $sheet->setCellValue('AB5', '%TP Margin');
+        $sheet->setCellValue('AC5', 'LP Margin Value');
+        $sheet->setCellValue('AD5', 'TP Margin Value');
+        $sheet->setCellValue('AE4', 'TOTAL')->mergeCells('AE4:AM4');
+        $sheet->setCellValue('AE5', 'LP Sales');
+        $sheet->setCellValue('AF5', 'TP Target');
+        $sheet->setCellValue('AG5', 'TP Sales');
+        $sheet->setCellValue('AH5', '%Achieve');
+        $sheet->setCellValue('AI5', '%Growth');
+        $sheet->setCellValue('AJ5', '%LP Margin');
+        $sheet->setCellValue('AK5', '%TP Margin');
+        $sheet->setCellValue('AL5', 'LP Margin Value');
+        $sheet->setCellValue('AM5', 'TP Margin Value');
 
 
-        $sheet->getStyle('A4:AE4')
+        $sheet->getStyle('A4:AM4')
             ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
-        $sheet->getStyle('D5:AE5')
+        $sheet->getStyle('D5:AM5')
             ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
         /* Excel Data */
@@ -376,46 +416,54 @@ class LaporanKhusus extends My_Controller
             $sheet->setCellValue('F' . $row_number, $row['TP_Sales1']);
             $sheet->setCellValue('G' . $row_number, $row['Achieve1']);
             $sheet->setCellValue('H' . $row_number, $row['Growth1']);
-            $sheet->setCellValue('I' . $row_number, $row['Margin_Percent1']);
-            $sheet->setCellValue('J' . $row_number, $row['Margin_Value1']);
-            $sheet->setCellValue('K' . $row_number, $row['LP_Sales2']);
-            $sheet->setCellValue('L' . $row_number, $row['TP_Target2']);
-            $sheet->setCellValue('M' . $row_number, $row['TP_Sales2']);
-            $sheet->setCellValue('N' . $row_number, $row['Achieve2']);
-            $sheet->setCellValue('O' . $row_number, $row['Growth2']);
-            $sheet->setCellValue('P' . $row_number, $row['Margin_Percent2']);
-            $sheet->setCellValue('Q' . $row_number, $row['Margin_Value2']);
-            $sheet->setCellValue('R' . $row_number, $row['LP_Sales3']);
-            $sheet->setCellValue('S' . $row_number, $row['TP_Target3']);
-            $sheet->setCellValue('T' . $row_number, $row['TP_Sales3']);
-            $sheet->setCellValue('U' . $row_number, $row['Achieve3']);
-            $sheet->setCellValue('V' . $row_number, $row['Growth3']);
-            $sheet->setCellValue('W' . $row_number, $row['Margin_Percent3']);
-            $sheet->setCellValue('X' . $row_number, $row['Margin_Value3']);
-            $sheet->setCellValue('Y' . $row_number, $row['LP_Sales4']);
-            $sheet->setCellValue('Z' . $row_number, $row['TP_Target4']);
-            $sheet->setCellValue('AA' . $row_number, $row['TP_Sales4']);
-            $sheet->setCellValue('AB' . $row_number, $row['Achieve4']);
-            $sheet->setCellValue('AC' . $row_number, $row['Growth4']);
-            $sheet->setCellValue('AD' . $row_number, $row['Margin_Percent4']);
-            $sheet->setCellValue('AE' . $row_number, $row['Margin_Value4']);
+            $sheet->setCellValue('I' . $row_number, $row['LP_Margin_Percent1']);
+            $sheet->setCellValue('J' . $row_number, $row['TP_Margin_Percent1']);
+            $sheet->setCellValue('K' . $row_number, $row['LP_Margin_Value1']);
+            $sheet->setCellValue('L' . $row_number, $row['TP_Margin_Value1']);
+            $sheet->setCellValue('M' . $row_number, $row['LP_Sales2']);
+            $sheet->setCellValue('N' . $row_number, $row['TP_Target2']);
+            $sheet->setCellValue('O' . $row_number, $row['TP_Sales2']);
+            $sheet->setCellValue('P' . $row_number, $row['Achieve2']);
+            $sheet->setCellValue('Q' . $row_number, $row['Growth2']);
+            $sheet->setCellValue('R' . $row_number, $row['LP_Margin_Percent2']);
+            $sheet->setCellValue('S' . $row_number, $row['TP_Margin_Percent2']);
+            $sheet->setCellValue('T' . $row_number, $row['LP_Margin_Value2']);
+            $sheet->setCellValue('U' . $row_number, $row['TP_Margin_Value2']);
+            $sheet->setCellValue('V' . $row_number, $row['LP_Sales3']);
+            $sheet->setCellValue('W' . $row_number, $row['TP_Target3']);
+            $sheet->setCellValue('X' . $row_number, $row['TP_Sales3']);
+            $sheet->setCellValue('Y' . $row_number, $row['Achieve3']);
+            $sheet->setCellValue('Z' . $row_number, $row['Growth3']);
+            $sheet->setCellValue('AA' . $row_number, $row['LP_Margin_Percent3']);
+            $sheet->setCellValue('AB' . $row_number, $row['TP_Margin_Percent3']);
+            $sheet->setCellValue('AC' . $row_number, $row['LP_Margin_Value3']);
+            $sheet->setCellValue('AD' . $row_number, $row['TP_Margin_Value3']);
+            $sheet->setCellValue('AE' . $row_number, $row['LP_Sales4']);
+            $sheet->setCellValue('AF' . $row_number, $row['TP_Target4']);
+            $sheet->setCellValue('AG' . $row_number, $row['TP_Sales4']);
+            $sheet->setCellValue('AH' . $row_number, $row['Achieve4']);
+            $sheet->setCellValue('AI' . $row_number, $row['Growth4']);
+            $sheet->setCellValue('AJ' . $row_number, $row['LP_Margin_Percent4']);
+            $sheet->setCellValue('AK' . $row_number, $row['TP_Margin_Percent4']);
+            $sheet->setCellValue('AL' . $row_number, $row['LP_Margin_Value4']);
+            $sheet->setCellValue('AM' . $row_number, $row['TP_Margin_Value4']);
             $row_number++;
         }
 
         $sheet->getStyle('A4:C' . $row_number . '')->getFont()->setBold(true);
-        $sheet->getStyle('A4:AE' . $row_number . '')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->getStyle('A4:AM' . $row_number . '')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
         // $sheet->getStyle('D4:U' . $row_number . '')->getNumberFormat()->setFormatCode('#');
-        $sheet->getStyle('D4:AE4')->getFont()->setBold(true);
+        $sheet->getStyle('D4:AM4')->getFont()->setBold(true);
 
-        foreach (range('A', 'AE') as $columnID) {
+        foreach (range('A', 'AM') as $columnID) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
 
         $sheet->setCellValue('A' . $row_number . '', 'TOTAL')->mergeCells('A' . $row_number . ':C' . $row_number . '');
         $sheet->getStyle('A' . $row_number . ':C' . $row_number . '')
             ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
-        $sheet->getStyle('A' . $row_number . ':AE' . $row_number . '')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
-        $sheet->getStyle('A' . $row_number . ':AE' . $row_number . '')->getFill()->getStartColor()->setRGB('FFF000');
+        $sheet->getStyle('A' . $row_number . ':AM' . $row_number . '')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $sheet->getStyle('A' . $row_number . ':AM' . $row_number . '')->getFill()->getStartColor()->setRGB('FFF000');
 
 
         /* Excel File Format */
@@ -479,24 +527,40 @@ class LaporanKhusus extends My_Controller
         CASE WHEN LP.SUB_DIVISION is null then  TP.SUB_DIVISION else LP.SUB_DIVISION end as SBU, 
         -- FLOOR
         LP.net_floor as LP_Sales1, '' as TP_Target1, TP.net_floor as TP_Sales1, '' as Achieve1,
-        case when LP.net_floor IS NULL OR TP.net_floor IS NULL THEN 0 else ifnull(round(((TP.net_floor - LP.net_floor) / LP.net_floor) *100,0),0) end as Growth1, ifnull(round(margin_percent_floor,2),0) as Margin_Percent1,
-        ifnull(round(margin_value_floor,0),0) as Margin_Value1, 
+        case when LP.net_floor IS NULL OR TP.net_floor IS NULL THEN 0 else ifnull(round(((TP.net_floor - LP.net_floor) / LP.net_floor) *100,0),0) end as Growth1, 
+        ifnull(round(LP.margin_percent_floor,2),0) as LP_Margin_Percent1, ifnull(round(LP.margin_value_floor,0),0) as LP_Margin_Value1,  
+        ifnull(round(TP.margin_percent_floor,2),0) as TP_Margin_Percent1, ifnull(round(TP.margin_value_floor,0),0) as TP_Margin_Value1,  
         -- ATRIUM
         LP.net_bazaar as LP_Sales2, '' as TP_Target2, TP.net_bazaar as TP_Sales2, '' as Achieve2,
-        case when LP.net_bazaar IS NULL OR TP.net_bazaar IS NULL THEN 0 else ifnull(round(((TP.net_bazaar - LP.net_bazaar) / LP.net_bazaar) *100,0),0) end as Growth2, ifnull(round(margin_percent_bazaar,2),0) as Margin_Percent2, ifnull(round(margin_value_bazaar,0),0) as Margin_Value2,  
+        case when LP.net_bazaar IS NULL OR TP.net_bazaar IS NULL THEN 0 else ifnull(round(((TP.net_bazaar - LP.net_bazaar) / LP.net_bazaar) *100,0),0) end as Growth2, 
+        ifnull(round(LP.margin_percent_bazaar,2),0) as LP_Margin_Percent2, ifnull(round(LP.margin_value_bazaar,0),0) as LP_Margin_Value2,  
+        ifnull(round(TP.margin_percent_bazaar,2),0) as TP_Margin_Percent2, ifnull(round(TP.margin_value_bazaar,0),0) as TP_Margin_Value2,  
         -- ONLINE
         LP.net_online as LP_Sales3, '' as TP_Target3, TP.net_online as TP_Sales3, '' as Achieve3,
-        case when LP.net_online IS NULL OR TP.net_online IS NULL THEN 0 else ifnull(round(((TP.net_online - LP.net_online) /LP.net_online)*100,0),0) end as Growth3, ifnull(round(margin_percent_online,2),0) as Margin_Percent3, ifnull(round(margin_value_online,0),0) as Margin_Value3,  
+        case when LP.net_online IS NULL OR TP.net_online IS NULL THEN 0 else ifnull(round(((TP.net_online - LP.net_online) /LP.net_online)*100,0),0) end as Growth3, 
+        ifnull(round(LP.margin_percent_online,2),0) as LP_Margin_Percent3, ifnull(round(LP.margin_value_online,0),0) as LP_Margin_Value3,  
+        ifnull(round(TP.margin_percent_online,2),0) as TP_Margin_Percent3, ifnull(round(TP.margin_value_online,0),0) as TP_Margin_Value3,  
         -- TOTAL
         (LP.net_floor+LP.net_bazaar+LP.net_online) as LP_Sales4, '' as TP_Target4, (TP.net_floor+TP.net_bazaar+TP.net_online) as TP_Sales4, '' as Achieve4,
-        case when (LP.net_floor+LP.net_bazaar+LP.net_online) IS NULL OR (TP.net_floor+TP.net_bazaar+LP.net_online) IS NULL THEN 0 else ifnull(round((((TP.net_floor+TP.net_bazaar+TP.net_online) -  (LP.net_floor+LP.net_bazaar+LP.net_online))  / (LP.net_floor+LP.net_bazaar+LP.net_online))*100,0),0) end as Growth4,(ifnull(round(TP.margin_percent_floor,2),0)+ifnull(round(TP.margin_percent_online,2),0)+ifnull(round(TP.margin_percent_bazaar,2),0)) as Margin_Percent4,
-        (ifnull(round(TP.margin_value_floor,0),0)+ifnull(round(TP.margin_value_online,0),0)+ifnull(round(TP.margin_value_bazaar,0),0)) as Margin_Value4
+        case when (LP.net_floor+LP.net_bazaar+LP.net_online) IS NULL OR (TP.net_floor+TP.net_bazaar+LP.net_online) IS NULL THEN 0 else ifnull(round((((TP.net_floor+TP.net_bazaar+TP.net_online) -  (LP.net_floor+LP.net_bazaar+LP.net_online))  / (LP.net_floor+LP.net_bazaar+LP.net_online))*100,0),0) end as Growth4,
+        (ifnull(round(LP.margin_percent_floor,2),0)+ifnull(round(LP.margin_percent_online,2),0)+ifnull(round(LP.margin_percent_bazaar,2),0)) as LP_Margin_Percent4,
+        (ifnull(round(TP.margin_percent_floor,2),0)+ifnull(round(TP.margin_percent_online,2),0)+ifnull(round(TP.margin_percent_bazaar,2),0)) as TP_Margin_Percent4,
+        (ifnull(round(LP.margin_value_floor,0),0)+ifnull(round(LP.margin_value_online,0),0)+ifnull(round(LP.margin_value_bazaar,0),0)) as LP_Margin_Value4,
+        (ifnull(round(TP.margin_value_floor,0),0)+ifnull(round(TP.margin_value_online,0),0)+ifnull(round(TP.margin_value_bazaar,0),0)) as TP_Margin_Value4
         from (
-        SELECT branch_id, SUB_DIVISION, DEPT, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online FROM (
-        select branch_id, SUB_DIVISION, DEPT,
+        SELECT branch_id, SUB_DIVISION, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
+        sum(margin_value_floor) as margin_value_floor, sum(margin_value_bazaar) as margin_value_bazaar, sum(margin_value_online) as margin_value_online,
+        sum(margin_percent_floor) as margin_percent_floor, sum(margin_percent_bazaar) as margin_percent_bazaar, sum(margin_percent_online) as margin_percent_online FROM (
+        select branch_id, SUB_DIVISION, 
         sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_af else 0 end) net_floor,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_af else 0 end) net_bazaar,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_af else 0 end) net_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) margin_value_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) margin_value_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) margin_value_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf else 0 end) * 100 as margin_percent_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf else 0 end) * 100 as margin_percent_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf else 0 end) * 100 as margin_percent_online,
         CASE
             WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
             WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
@@ -538,38 +602,54 @@ class LaporanKhusus extends My_Controller
         $this_period
         and branch_id = '" . $store . "'
         $where
-        GROUP BY branch_id, SUB_DIVISION, 
+        GROUP BY branch_id, SUB_DIVISION,
         CASE
             WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
             WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
             WHEN substring(trans_no, 9, 1) = '3' THEN 'BAZAAR'
         END
         ) A GROUP BY branch_id, SUB_DIVISION
-        ) TP on LP.SUB_DIVISION = TP.SUB_DIVISION
+        ) TP on LP.SUB_DIVISION = TP.SUB_DIVISION  
         union
         SELECT 
         CASE WHEN LP.branch_id is null then TP.branch_id else LP.branch_id end as STORE, 
         CASE WHEN LP.SUB_DIVISION is null then  TP.SUB_DIVISION else LP.SUB_DIVISION end as SBU, 
         -- FLOOR
         LP.net_floor as LP_Sales1, '' as TP_Target1, TP.net_floor as TP_Sales1, '' as Achieve1,
-        case when LP.net_floor IS NULL OR TP.net_floor IS NULL THEN 0 else ifnull(round(((TP.net_floor - LP.net_floor) / LP.net_floor) *100,0),0) end as Growth1, ifnull(round(margin_percent_floor,2),0) as Margin_Percent1,
-        ifnull(round(margin_value_floor,0),0) as Margin_Value1, 
+        case when LP.net_floor IS NULL OR TP.net_floor IS NULL THEN 0 else ifnull(round(((TP.net_floor - LP.net_floor) / LP.net_floor) *100,0),0) end as Growth1, 
+        ifnull(round(LP.margin_percent_floor,2),0) as LP_Margin_Percent1, ifnull(round(LP.margin_value_floor,0),0) as LP_Margin_Value1,  
+        ifnull(round(TP.margin_percent_floor,2),0) as TP_Margin_Percent1, ifnull(round(TP.margin_value_floor,0),0) as TP_Margin_Value1,  
         -- ATRIUM
         LP.net_bazaar as LP_Sales2, '' as TP_Target2, TP.net_bazaar as TP_Sales2, '' as Achieve2,
-        case when LP.net_bazaar IS NULL OR TP.net_bazaar IS NULL THEN 0 else ifnull(round(((TP.net_bazaar - LP.net_bazaar) / LP.net_bazaar) *100,0),0) end as Growth2, ifnull(round(margin_percent_bazaar,2),0) as Margin_Percent2, ifnull(round(margin_value_bazaar,0),0) as Margin_Value2,  
+        case when LP.net_bazaar IS NULL OR TP.net_bazaar IS NULL THEN 0 else ifnull(round(((TP.net_bazaar - LP.net_bazaar) / LP.net_bazaar) *100,0),0) end as Growth2, 
+        ifnull(round(LP.margin_percent_bazaar,2),0) as LP_Margin_Percent2, ifnull(round(LP.margin_value_bazaar,0),0) as LP_Margin_Value2,  
+        ifnull(round(TP.margin_percent_bazaar,2),0) as TP_Margin_Percent2, ifnull(round(TP.margin_value_bazaar,0),0) as TP_Margin_Value2,  
         -- ONLINE
         LP.net_online as LP_Sales3, '' as TP_Target3, TP.net_online as TP_Sales3, '' as Achieve3,
-        case when LP.net_online IS NULL OR TP.net_online IS NULL THEN 0 else ifnull(round(((TP.net_online - LP.net_online) /LP.net_online)*100,0),0) end as Growth3, ifnull(round(margin_percent_online,2),0) as Margin_Percent3, ifnull(round(margin_value_online,0),0) as Margin_Value3,  
+        case when LP.net_online IS NULL OR TP.net_online IS NULL THEN 0 else ifnull(round(((TP.net_online - LP.net_online) /LP.net_online)*100,0),0) end as Growth3, 
+        ifnull(round(LP.margin_percent_online,2),0) as LP_Margin_Percent3, ifnull(round(LP.margin_value_online,0),0) as LP_Margin_Value3,  
+        ifnull(round(TP.margin_percent_online,2),0) as TP_Margin_Percent3, ifnull(round(TP.margin_value_online,0),0) as TP_Margin_Value3,  
         -- TOTAL
         (LP.net_floor+LP.net_bazaar+LP.net_online) as LP_Sales4, '' as TP_Target4, (TP.net_floor+TP.net_bazaar+TP.net_online) as TP_Sales4, '' as Achieve4,
-        case when (LP.net_floor+LP.net_bazaar+LP.net_online) IS NULL OR (TP.net_floor+TP.net_bazaar+LP.net_online) IS NULL THEN 0 else ifnull(round((((TP.net_floor+TP.net_bazaar+TP.net_online) -  (LP.net_floor+LP.net_bazaar+LP.net_online))  / (LP.net_floor+LP.net_bazaar+LP.net_online))*100,0),0) end as Growth4,(ifnull(round(TP.margin_percent_floor,2),0)+ifnull(round(TP.margin_percent_online,2),0)+ifnull(round(TP.margin_percent_bazaar,2),0)) as Margin_Percent4,
-        (ifnull(round(TP.margin_value_floor,0),0)+ifnull(round(TP.margin_value_online,0),0)+ifnull(round(TP.margin_value_bazaar,0),0)) as Margin_Value4
+        case when (LP.net_floor+LP.net_bazaar+LP.net_online) IS NULL OR (TP.net_floor+TP.net_bazaar+LP.net_online) IS NULL THEN 0 else ifnull(round((((TP.net_floor+TP.net_bazaar+TP.net_online) -  (LP.net_floor+LP.net_bazaar+LP.net_online))  / (LP.net_floor+LP.net_bazaar+LP.net_online))*100,0),0) end as Growth4,
+        (ifnull(round(LP.margin_percent_floor,2),0)+ifnull(round(LP.margin_percent_online,2),0)+ifnull(round(LP.margin_percent_bazaar,2),0)) as LP_Margin_Percent4,
+        (ifnull(round(TP.margin_percent_floor,2),0)+ifnull(round(TP.margin_percent_online,2),0)+ifnull(round(TP.margin_percent_bazaar,2),0)) as TP_Margin_Percent4,
+        (ifnull(round(LP.margin_value_floor,0),0)+ifnull(round(LP.margin_value_online,0),0)+ifnull(round(LP.margin_value_bazaar,0),0)) as LP_Margin_Value4,
+        (ifnull(round(TP.margin_value_floor,0),0)+ifnull(round(TP.margin_value_online,0),0)+ifnull(round(TP.margin_value_bazaar,0),0)) as TP_Margin_Value4
         from (
-        SELECT branch_id, SUB_DIVISION, DEPT, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online FROM (
-        select branch_id, SUB_DIVISION, DEPT,
+        SELECT branch_id, SUB_DIVISION, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
+        sum(margin_value_floor) as margin_value_floor, sum(margin_value_bazaar) as margin_value_bazaar, sum(margin_value_online) as margin_value_online,
+        sum(margin_percent_floor) as margin_percent_floor, sum(margin_percent_bazaar) as margin_percent_bazaar, sum(margin_percent_online) as margin_percent_online FROM (
+        select branch_id, SUB_DIVISION, 
         sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_af else 0 end) net_floor,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_af else 0 end) net_bazaar,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_af else 0 end) net_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) margin_value_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) margin_value_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) margin_value_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf else 0 end) * 100 as margin_percent_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf else 0 end) * 100 as margin_percent_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf else 0 end) * 100 as margin_percent_online,
         CASE
             WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
             WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
@@ -578,7 +658,7 @@ class LaporanKhusus extends My_Controller
         $last_period
         and branch_id = '" . $store . "'
         $where
-        GROUP BY branch_id, SUB_DIVISION, 
+        GROUP BY branch_id, SUB_DIVISION,
         CASE
             WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
             WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
@@ -618,7 +698,7 @@ class LaporanKhusus extends My_Controller
             WHEN substring(trans_no, 9, 1) = '3' THEN 'BAZAAR'
         END
         ) A GROUP BY branch_id, SUB_DIVISION
-        ) TP on LP.SUB_DIVISION = TP.SUB_DIVISION
+        ) TP on LP.SUB_DIVISION = TP.SUB_DIVISION  
         ORDER BY SBU";
 
         $data = $this->db->query($query)->result_array();
@@ -636,44 +716,51 @@ class LaporanKhusus extends My_Controller
         $sheet->setCellValue('A2', '(LP) ' . $lp . '')->mergeCells('A2:C2');
         $sheet->setCellValue('A3', '(TP) ' . $tp . '')->mergeCells('A3:C3');
         $sheet->setCellValue('A4', 'SBU')->mergeCells('A4:A5');
-        $sheet->setCellValue('B4', 'FLOOR')->mergeCells('B4:G4');
+        $sheet->setCellValue('B4', 'FLOOR')->mergeCells('B4:J4');
         $sheet->setCellValue('B5', 'LP Sales');
         $sheet->setCellValue('C5', 'TP Target');
         $sheet->setCellValue('D5', 'TP Sales');
         $sheet->setCellValue('E5', '%Achieve');
         $sheet->setCellValue('F5', '%Growth	');
-        $sheet->setCellValue('G5', '%Margin');
-        $sheet->setCellValue('H5', 'Margin Value');
-        $sheet->setCellValue('I4', 'ATRIUM')->mergeCells('I4:O4');
-        $sheet->setCellValue('I5', 'LP Sales');
-        $sheet->setCellValue('J5', 'TP Target');
-        $sheet->setCellValue('K5', 'TP Sales');
-        $sheet->setCellValue('L5', '%Achieve');
-        $sheet->setCellValue('M5', '%Growth	');
-        $sheet->setCellValue('N5', '%Margin');
-        $sheet->setCellValue('O5', 'Margin Value');
-        $sheet->setCellValue('P4', 'ONLINE')->mergeCells('P4:V4');
-        $sheet->setCellValue('P5', 'LP Sales');
-        $sheet->setCellValue('Q5', 'TP Target');
-        $sheet->setCellValue('R5', 'TP Sales');
-        $sheet->setCellValue('S5', '%Achieve');
-        $sheet->setCellValue('T5', '%Growth	');
-        $sheet->setCellValue('U5', '%Margin');
-        $sheet->setCellValue('V5', 'Margin Value');
-        $sheet->setCellValue('W4', 'TOTAL')->mergeCells('W4:AC4');
-        $sheet->setCellValue('W5', 'LP Sales');
-        $sheet->setCellValue('X5', 'TP Target');
-        $sheet->setCellValue('Y5', 'TP Sales');
-        $sheet->setCellValue('Z5', '%Achieve');
-        $sheet->setCellValue('AA5', '%Growth	');
-        $sheet->setCellValue('AB5', '%Margin');
-        $sheet->setCellValue('AC5', 'Margin Value');
+        $sheet->setCellValue('G5', '%LP Margin');
+        $sheet->setCellValue('H5', '%TP Margin');
+        $sheet->setCellValue('I5', 'LP Margin Value');
+        $sheet->setCellValue('J5', 'TP Margin Value');
+        $sheet->setCellValue('K4', 'ATRIUM')->mergeCells('K4:S4');
+        $sheet->setCellValue('K5', 'LP Sales');
+        $sheet->setCellValue('L5', 'TP Target');
+        $sheet->setCellValue('M5', 'TP Sales');
+        $sheet->setCellValue('N5', '%Achieve');
+        $sheet->setCellValue('O5', '%Growth');
+        $sheet->setCellValue('P5', '%LP Margin');
+        $sheet->setCellValue('Q5', '%TP Margin');
+        $sheet->setCellValue('R5', 'LP Margin Value');
+        $sheet->setCellValue('S5', 'TP Margin Value');
+        $sheet->setCellValue('T4', 'ONLINE')->mergeCells('T4:AB4');
+        $sheet->setCellValue('T5', 'LP Sales');
+        $sheet->setCellValue('U5', 'TP Target');
+        $sheet->setCellValue('V5', 'TP Sales');
+        $sheet->setCellValue('W5', '%Achieve');
+        $sheet->setCellValue('X5', '%Growth	');
+        $sheet->setCellValue('Y5', '%LP Margin');
+        $sheet->setCellValue('Z5', '%TP Margin');
+        $sheet->setCellValue('AA5', 'LP Margin Value');
+        $sheet->setCellValue('AB5', 'TP Margin Value');
+        $sheet->setCellValue('AC4', 'TOTAL')->mergeCells('AC4:AK4');
+        $sheet->setCellValue('AC5', 'LP Sales');
+        $sheet->setCellValue('AD5', 'TP Target');
+        $sheet->setCellValue('AE5', 'TP Sales');
+        $sheet->setCellValue('AF5', '%Achieve');
+        $sheet->setCellValue('AG5', '%Growth');
+        $sheet->setCellValue('AH5', '%LP Margin');
+        $sheet->setCellValue('AI5', '%TP Margin');
+        $sheet->setCellValue('AJ5', 'LP Margin Value');
+        $sheet->setCellValue('AK5', 'TP Margin Value');
 
-
-        $sheet->getStyle('A4:AC4')
+        $sheet->getStyle('A4:AK4')
             ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
-        $sheet->getStyle('B5:AC5')
+        $sheet->getStyle('B5:AK5')
             ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
         /* Excel Data */
@@ -685,46 +772,54 @@ class LaporanKhusus extends My_Controller
             $sheet->setCellValue('D' . $row_number, $row['TP_Sales1']);
             $sheet->setCellValue('E' . $row_number, $row['Achieve1']);
             $sheet->setCellValue('F' . $row_number, $row['Growth1']);
-            $sheet->setCellValue('G' . $row_number, $row['Margin_Percent1']);
-            $sheet->setCellValue('H' . $row_number, $row['Margin_Value1']);
-            $sheet->setCellValue('I' . $row_number, $row['LP_Sales2']);
-            $sheet->setCellValue('J' . $row_number, $row['TP_Target2']);
-            $sheet->setCellValue('K' . $row_number, $row['TP_Sales2']);
-            $sheet->setCellValue('L' . $row_number, $row['Achieve2']);
-            $sheet->setCellValue('M' . $row_number, $row['Growth2']);
-            $sheet->setCellValue('N' . $row_number, $row['Margin_Percent2']);
-            $sheet->setCellValue('O' . $row_number, $row['Margin_Value2']);
-            $sheet->setCellValue('P' . $row_number, $row['LP_Sales3']);
-            $sheet->setCellValue('Q' . $row_number, $row['TP_Target3']);
-            $sheet->setCellValue('R' . $row_number, $row['TP_Sales3']);
-            $sheet->setCellValue('S' . $row_number, $row['Achieve3']);
-            $sheet->setCellValue('T' . $row_number, $row['Growth3']);
-            $sheet->setCellValue('U' . $row_number, $row['Margin_Percent3']);
-            $sheet->setCellValue('V' . $row_number, $row['Margin_Value3']);
-            $sheet->setCellValue('W' . $row_number, $row['LP_Sales4']);
-            $sheet->setCellValue('X' . $row_number, $row['TP_Target4']);
-            $sheet->setCellValue('Y' . $row_number, $row['TP_Sales4']);
-            $sheet->setCellValue('Z' . $row_number, $row['Achieve4']);
-            $sheet->setCellValue('AA' . $row_number, $row['Growth4']);
-            $sheet->setCellValue('AB' . $row_number, $row['Margin_Percent4']);
-            $sheet->setCellValue('AC' . $row_number, $row['Margin_Value4']);
+            $sheet->setCellValue('G' . $row_number, $row['LP_Margin_Percent1']);
+            $sheet->setCellValue('H' . $row_number, $row['TP_Margin_Percent1']);
+            $sheet->setCellValue('I' . $row_number, $row['LP_Margin_Value1']);
+            $sheet->setCellValue('J' . $row_number, $row['TP_Margin_Value1']);
+            $sheet->setCellValue('K' . $row_number, $row['LP_Sales2']);
+            $sheet->setCellValue('L' . $row_number, $row['TP_Target2']);
+            $sheet->setCellValue('M' . $row_number, $row['TP_Sales2']);
+            $sheet->setCellValue('N' . $row_number, $row['Achieve2']);
+            $sheet->setCellValue('O' . $row_number, $row['Growth2']);
+            $sheet->setCellValue('P' . $row_number, $row['LP_Margin_Percent2']);
+            $sheet->setCellValue('Q' . $row_number, $row['TP_Margin_Percent2']);
+            $sheet->setCellValue('R' . $row_number, $row['LP_Margin_Value2']);
+            $sheet->setCellValue('S' . $row_number, $row['TP_Margin_Value2']);
+            $sheet->setCellValue('T' . $row_number, $row['LP_Sales3']);
+            $sheet->setCellValue('U' . $row_number, $row['TP_Target3']);
+            $sheet->setCellValue('V' . $row_number, $row['TP_Sales3']);
+            $sheet->setCellValue('W' . $row_number, $row['Achieve3']);
+            $sheet->setCellValue('X' . $row_number, $row['Growth3']);
+            $sheet->setCellValue('Y' . $row_number, $row['LP_Margin_Percent3']);
+            $sheet->setCellValue('Z' . $row_number, $row['TP_Margin_Percent3']);
+            $sheet->setCellValue('AA' . $row_number, $row['LP_Margin_Value3']);
+            $sheet->setCellValue('AB' . $row_number, $row['TP_Margin_Value3']);
+            $sheet->setCellValue('AC' . $row_number, $row['LP_Sales4']);
+            $sheet->setCellValue('AD' . $row_number, $row['TP_Target4']);
+            $sheet->setCellValue('AE' . $row_number, $row['TP_Sales4']);
+            $sheet->setCellValue('AF' . $row_number, $row['Achieve4']);
+            $sheet->setCellValue('AG' . $row_number, $row['Growth4']);
+            $sheet->setCellValue('AH' . $row_number, $row['LP_Margin_Percent4']);
+            $sheet->setCellValue('AI' . $row_number, $row['TP_Margin_Percent4']);
+            $sheet->setCellValue('AJ' . $row_number, $row['LP_Margin_Value4']);
+            $sheet->setCellValue('AK' . $row_number, $row['TP_Margin_Value4']);
             $row_number++;
         }
 
         $sheet->getStyle('A4:A' . $row_number . '')->getFont()->setBold(true);
         // $sheet->getStyle('B4:Y' . $row_number . '')->getNumberFormat()->setFormatCode('#');
-        $sheet->getStyle('A4:AC' . $row_number . '')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $sheet->getStyle('B4:AC4')->getFont()->setBold(true);
+        $sheet->getStyle('A4:AK' . $row_number . '')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->getStyle('B4:AK4')->getFont()->setBold(true);
 
-        foreach (range('A', 'AC') as $columnID) {
+        foreach (range('A', 'AK') as $columnID) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
 
         $sheet->setCellValue('A' . $row_number . '', 'TOTAL');
         $sheet->getStyle('A' . $row_number . '')
             ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
-        $sheet->getStyle('A' . $row_number . ':AC' . $row_number . '')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
-        $sheet->getStyle('A' . $row_number . ':AC' . $row_number . '')->getFill()->getStartColor()->setRGB('FFF000');
+        $sheet->getStyle('A' . $row_number . ':AK' . $row_number . '')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $sheet->getStyle('A' . $row_number . ':AK' . $row_number . '')->getFill()->getStartColor()->setRGB('FFF000');
 
 
         /* Excel File Format */
