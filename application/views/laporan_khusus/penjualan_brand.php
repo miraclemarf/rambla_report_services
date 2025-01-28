@@ -45,9 +45,10 @@
                                     <th rowspan="2" style="vertical-align: middle; text-align:center;">
                                         <nobr>BRAND</nobr>
                                     </th>
-                                    <th colspan="6" style="vertical-align: middle; text-align:center; background-color:#ff5252">FLOOR</td>
-                                    <th colspan="6" style="vertical-align: middle; text-align:center; background-color: #ff5252">ATRIUM</td>
-                                    <th colspan="6" style="vertical-align: middle; text-align:center; background-color: #ff5252">TOTAL</td>
+                                    <th colspan="9" style="vertical-align: middle; text-align:center; background-color:#ff5252">FLOOR</td>
+                                    <th colspan="9" style="vertical-align: middle; text-align:center; background-color: #ff5252">ATRIUM</td>
+                                    <th colspan="9" style="vertical-align: middle; text-align:center; background-color: #ff5252">ONLINE</td>
+                                    <th colspan="9" style="vertical-align: middle; text-align:center; background-color: #ff5252">TOTAL</td>
                                 </tr>
                                 <tr>
                                     <th>
@@ -66,7 +67,16 @@
                                         <nobr>%Growth</nobr>
                                     </th>
                                     <th>
-                                        <nobr>%Margin</nobr>
+                                        <nobr>%LP Margin</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>%TP Margin</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>LP Margin Value</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>TP Margin Value</nobr>
                                     </th>
                                     <th>
                                         <nobr>LP Sales</nobr>
@@ -84,7 +94,16 @@
                                         <nobr>%Growth</nobr>
                                     </th>
                                     <th>
-                                        <nobr>%Margin</nobr>
+                                        <nobr>%LP Margin</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>%TP Margin</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>LP Margin Value</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>TP Margin Value</nobr>
                                     </th>
                                     <th>
                                         <nobr>LP Sales</nobr>
@@ -102,7 +121,43 @@
                                         <nobr>%Growth</nobr>
                                     </th>
                                     <th>
-                                        <nobr>%Margin</nobr>
+                                        <nobr>%LP Margin</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>%TP Margin</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>LP Margin Value</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>TP Margin Value</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>LP Sales</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>TP Target</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>TP Sales</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>%Achieve</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>%Growth</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>%LP Margin</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>%TP Margin</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>LP Margin Value</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>TP Margin Value</nobr>
                                     </th>
                                 </tr>
                             </thead>
@@ -356,9 +411,27 @@
                         },
                     },
                     {
-                        "data": "Margin1",
+                        "data": "LP_Margin_Percent1",
                         "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Margin_Percent1",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "LP_Margin_Value1",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Margin_Value1",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
@@ -392,9 +465,27 @@
                         },
                     },
                     {
-                        "data": "Margin2",
+                        "data": "LP_Margin_Percent2",
                         "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Margin_Percent2",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "LP_Margin_Value2",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Margin_Value2",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
@@ -428,9 +519,81 @@
                         },
                     },
                     {
-                        "data": "Margin3",
+                        "data": "LP_Margin_Percent3",
                         "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Margin_Percent3",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "LP_Margin_Value3",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Margin_Value3",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "LP_Sales4",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Target4",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Sales4",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "Achieve4",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "Growth4",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '%</nobr>';
+                        },
+                    },
+                    {
+                        "data": "LP_Margin_Percent4",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Margin_Percent4",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "LP_Margin_Value4",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Margin_Value4",
+                        "render": function(data, type, row) {
+                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
                         },
                     },
                 ],
