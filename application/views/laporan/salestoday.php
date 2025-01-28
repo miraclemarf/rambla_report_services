@@ -14,15 +14,19 @@
                             id="choose-store" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <?php
                             if ($storeid == 'R001')
-                                $storename = 'Rambla Kelapa Gading';
+                                $storename = 'Rambla Kelapa Gading (R001)';
                             if ($storeid == 'R002')
-                                $storename = 'Rambla Bandung';
+                                $storename = 'Rambla Bandung (R002)';
                             if ($storeid == 'V001')
-                                $storename = 'Happy Harvest Bandung';
+                                $storename = 'Happy Harvest Bandung (V001)';
                             if ($storeid == 'S002')
-                                $storename = 'Star SMS';
+                                $storename = 'Star SMS (S002)';
                             if ($storeid == 'S003')
-                                $storename = 'Star SMB';
+                                $storename = 'Star SMB (S003)';
+                            if ($storeid == 'V002')
+                                $storename = 'Happy Harvest Bogor (V002)';
+                            if ($storeid == 'V003')
+                                $storename = 'Happy Harvest Bekasi (S003)';
                             ?>
                             <i class="typcn typcn-location mr-2"></i>
                             <?= $storename ?>
@@ -32,7 +36,7 @@
                             style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 35px, 0px);">
                             <h6 class="dropdown-header"></h6>
                             <?php foreach ($site as $row) : ?>
-                                <a class="dropdown-item" style="cursor:pointer" data="<?= $row->branch_id; ?>"><?= $row->branch_name; ?></a>
+                                <a class="dropdown-item" style="cursor:pointer" data="<?= $row->branch_id; ?>"><?= $row->branch_name; ?> (<?= $row->branch_id; ?>)</a>
                             <?php endforeach; ?>
                             <!-- <a class="dropdown-item" style="cursor:pointer" data="R001">Rambla Kelapa Gading</a>
                             <a class="dropdown-item" style="cursor:pointer" data="R002">Rambla Bandung</a>

@@ -204,6 +204,28 @@ $db['storeS003'] = array(
 	'save_queries' => TRUE
 );
 
+$db['storeV003'] = array(
+	// 'dsn'	=> '',
+	'hostname' => $_ENV['DB_HOST_V003'],
+	'username' => $_ENV['DB_USERNAME_STORE'],
+	'password' => $_ENV['DB_PASSWORD_STORE'],
+	'database' => $_ENV['DB_NAME_STORE'],
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
+
 
 $db['gold'] = array(
 	// 'dsn'	=> '',
