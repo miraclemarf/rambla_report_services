@@ -407,6 +407,16 @@ class LaporanKhusus extends My_Controller
 
         /* Excel Data */
         $row_number = 6;
+        $lastRow = count($data) + $row_number;
+        $arrAmtCol = ['D', 'F', 'K', 'L', 'M', 'O', 'T', 'U', 'V', 'X', 'AC', 'AD', 'AE', 'AG', 'AL', 'AM'];
+        foreach ($arrAmtCol as $val) {
+            $sheet->getStyle($val . $row_number . ':'. $val . $lastRow)->getNumberFormat()->setFormatCode('#,##0');
+        }
+
+        $arrPctCol = ['H', 'I', 'J', 'Q', 'R', 'S', 'Z', 'AA', 'AB', 'AI', 'AJ', 'AK'];
+        foreach ($arrPctCol as $val) {
+            $sheet->getStyle($val . $row_number . ':'. $val . $lastRow)->getNumberFormat()->setFormatCode('0.0"%"');
+        }
         foreach ($data as $key => $row) {
             $sheet->setCellValue('A' . $row_number, $row['SBU']);
             $sheet->setCellValue('B' . $row_number, $row['DEPT']);
@@ -449,6 +459,7 @@ class LaporanKhusus extends My_Controller
             $sheet->setCellValue('AM' . $row_number, $row['TP_Margin_Value4']);
             $row_number++;
         }
+        
 
         $sheet->getStyle('A4:C' . $row_number . '')->getFont()->setBold(true);
         $sheet->getStyle('A4:AM' . $row_number . '')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
@@ -764,7 +775,18 @@ class LaporanKhusus extends My_Controller
             ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
         /* Excel Data */
-        $row_number = 6;
+        $row_number = 6;        
+        $lastRow = count($data) + $row_number;
+        $arrAmtCol = ['B', 'D', 'I', 'J', 'K', 'M', 'R', 'S', 'T', 'V', 'AA', 'AB', 'AC', 'AE', 'AJ', 'AK'];
+        foreach ($arrAmtCol as $val) {
+            $sheet->getStyle($val . $row_number . ':'. $val . $lastRow)->getNumberFormat()->setFormatCode('#,##0');
+        }
+
+        $arrPctCol = ['F', 'G', 'H', 'O', 'P', 'Q', 'X', 'Y', 'Z', 'AG', 'AH', 'AI'];
+        foreach ($arrPctCol as $val) {
+            $sheet->getStyle($val . $row_number . ':'. $val . $lastRow)->getNumberFormat()->setFormatCode('0.0"%"');
+        }
+        
         foreach ($data as $key => $row) {
             $sheet->setCellValue('A' . $row_number, $row['SBU']);
             $sheet->setCellValue('B' . $row_number, $row['LP_Sales1']);
