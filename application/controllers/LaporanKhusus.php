@@ -6,6 +6,9 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
 
 class LaporanKhusus extends My_Controller
 {
@@ -51,6 +54,20 @@ class LaporanKhusus extends My_Controller
         $this->load->view('template_member/footer');
     }
 
+    public function penjualan_brand_meta()
+    {
+        extract(populateform());
+        $data['title'] = 'Rambla | Laporan Penjualan Metabase';
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+        $data['vendor'] = $this->input->cookie('cookie_invent_vendor');
+
+        $this->load->view('template_member/header', $data);
+        $this->load->view('template_member/navbar', $data);
+        $this->load->view('template_member/sidebar', $data);
+        $this->load->view('laporan_khusus/penjualan_brand_meta', $data);
+        $this->load->view('template_member/footer');
+    }
+
     public function penjualan_kategori()
     {
         extract(populateform());
@@ -70,6 +87,79 @@ class LaporanKhusus extends My_Controller
         $postData = $this->input->post();
         $data = $this->M_Sales->getPenjualanBrand($postData);
         echo json_encode($data);
+    }
+
+    function ubahFormatTanggal($tanggal_awal_akhir)
+    {
+        // Pisahkan tanggal awal dan akhir
+        $pecah = explode('-', $tanggal_awal_akhir);
+        $tanggal_awal = $pecah[0];
+        $tanggal_akhir = $pecah[1];
+
+        // Ubah format masing-masing tanggal
+        $tanggal_awal = date("Y-m-d", strtotime($tanggal_awal));
+        $tanggal_akhir = date("Y-m-d", strtotime($tanggal_akhir));
+
+        // Gabungkan kembali dengan pemisah ~
+        $tanggal_format_baru = $tanggal_awal . '~' . $tanggal_akhir;
+        return $tanggal_format_baru;
+    }
+
+    public function penjualan_brand_meta_where()
+    {
+        $postData = $this->input->post();
+        
+        $store = $postData["params8"];
+        $last_period =  $this->ubahFormatTanggal($postData["params3"]);
+        $this_period =  $this->ubahFormatTanggal($postData["params9"]);
+        $pecah = explode('~', $this_period);
+        $target_date =  $pecah[0];
+        
+        if ($postData["params1"] == "") {
+            $brand_code = null;
+        } else {
+            $brand_code = $postData["params1"];
+        }
+
+        if ($postData["params5"] == "") {
+            $sbu = null;
+        } else {
+            $sbu = $postData["params5"];
+        }
+
+        if ($postData["params6"] == "") {
+            $departement = null;
+        } else {
+            $departement = strtoupper($postData["params6"]);
+        }
+       
+        
+        $metabaseSiteUrl = 'http://192.168.8.99:3000';
+        $metabaseSecretKey = '91465c305d756abd48b936a0a9ae99ce4e868bb3cfa36ca6dbc824158a60c489';
+
+        $now = new DateTimeImmutable();
+        $config = Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($metabaseSecretKey));
+        $builder = $config->builder();
+        $signer = new Sha256();
+
+        $token = $builder
+            ->withClaim('resource', ['dashboard' => 173])
+            ->withClaim('params', [
+                'target_periode' => $target_date,
+                'brand' => [$brand_code],
+                'store' => [$store],
+                'sbu' => [$sbu],
+                'departement' => [$departement],
+                'last_periode' => $last_period,
+                'this_periode' => $this_period
+            ])
+            ->getToken($config->signer(), $config->signingKey());
+
+
+
+        $tokenString = $token->toString();
+        $iframeUrl = "$metabaseSiteUrl/embed/dashboard/$tokenString#theme=transparent&bordered=false&titled=false/";
+        echo $iframeUrl;
     }
 
     public function penjualan_kategori_where()
