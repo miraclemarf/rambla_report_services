@@ -13,16 +13,16 @@ class LaporanKhusus extends My_Controller
     public function __construct()
     {
         parent::__construct();
-        $data['username'] = $this->input->cookie('cookie_invent_user');
-        $cek_operation = $this->db->query("SELECT * from m_login where username ='" . $data['username'] . "'")->row();
-        $cek_operation = $cek_operation->login_type_id;
+        // $data['username'] = $this->input->cookie('cookie_invent_user');
+        // $cek_operation = $this->db->query("SELECT * from m_login where username ='" . $data['username'] . "'")->row();
+        // $cek_operation = $cek_operation->login_type_id;
 
-        if ($cek_operation == "1") {
-            echo "<script>
-            alert('Anda tidak punya hak akses!');
-            window.location.href='" . base_url('Dashboard') . "';
-            </script>";
-        }
+        // if ($cek_operation == "1") {
+        //     echo "<script>
+        //     alert('Anda tidak punya hak akses!');
+        //     window.location.href='" . base_url('Dashboard') . "';
+        //     </script>";
+        // }
 
         set_time_limit(0);
         ini_set('memory_limit', '20000M');
@@ -102,6 +102,8 @@ class LaporanKhusus extends My_Controller
     function export_excel_penjualanbrand($fromdate1, $todate1, $fromdate2, $todate2, $brand_code, $division, $sub_division, $dept, $sub_dept, $store)
     {
         $data['username'] = $this->input->cookie('cookie_invent_user');
+        $cek_operation = $this->db->query("SELECT * from m_login where username ='" . $data['username'] . "'")->row();
+        $cek_operation = $cek_operation->login_type_id;
 
         $division = str_replace("%20", " ", $division);
         $sub_division = str_replace("%20", " ", $sub_division);
@@ -410,12 +412,12 @@ class LaporanKhusus extends My_Controller
         $lastRow = count($data) + $row_number;
         $arrAmtCol = ['D', 'F', 'K', 'L', 'M', 'O', 'T', 'U', 'V', 'X', 'AC', 'AD', 'AE', 'AG', 'AL', 'AM'];
         foreach ($arrAmtCol as $val) {
-            $sheet->getStyle($val . $row_number . ':'. $val . $lastRow)->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle($val . $row_number . ':' . $val . $lastRow)->getNumberFormat()->setFormatCode('#,##0');
         }
 
         $arrPctCol = ['H', 'I', 'J', 'Q', 'R', 'S', 'Z', 'AA', 'AB', 'AI', 'AJ', 'AK'];
         foreach ($arrPctCol as $val) {
-            $sheet->getStyle($val . $row_number . ':'. $val . $lastRow)->getNumberFormat()->setFormatCode('0.0"%"');
+            $sheet->getStyle($val . $row_number . ':' . $val . $lastRow)->getNumberFormat()->setFormatCode('0.0"%"');
         }
         foreach ($data as $key => $row) {
             $sheet->setCellValue('A' . $row_number, $row['SBU']);
@@ -426,40 +428,40 @@ class LaporanKhusus extends My_Controller
             $sheet->setCellValue('F' . $row_number, $row['TP_Sales1']);
             $sheet->setCellValue('G' . $row_number, $row['Achieve1']);
             $sheet->setCellValue('H' . $row_number, $row['Growth1']);
-            $sheet->setCellValue('I' . $row_number, $row['LP_Margin_Percent1']);
-            $sheet->setCellValue('J' . $row_number, $row['TP_Margin_Percent1']);
-            $sheet->setCellValue('K' . $row_number, $row['LP_Margin_Value1']);
-            $sheet->setCellValue('L' . $row_number, $row['TP_Margin_Value1']);
+            $sheet->setCellValue('I' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Percent1']);
+            $sheet->setCellValue('J' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Percent1']);
+            $sheet->setCellValue('K' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Value1']);
+            $sheet->setCellValue('L' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Value1']);
             $sheet->setCellValue('M' . $row_number, $row['LP_Sales2']);
             $sheet->setCellValue('N' . $row_number, $row['TP_Target2']);
             $sheet->setCellValue('O' . $row_number, $row['TP_Sales2']);
             $sheet->setCellValue('P' . $row_number, $row['Achieve2']);
             $sheet->setCellValue('Q' . $row_number, $row['Growth2']);
-            $sheet->setCellValue('R' . $row_number, $row['LP_Margin_Percent2']);
-            $sheet->setCellValue('S' . $row_number, $row['TP_Margin_Percent2']);
-            $sheet->setCellValue('T' . $row_number, $row['LP_Margin_Value2']);
-            $sheet->setCellValue('U' . $row_number, $row['TP_Margin_Value2']);
+            $sheet->setCellValue('R' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Percent2']);
+            $sheet->setCellValue('S' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Percent2']);
+            $sheet->setCellValue('T' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Value2']);
+            $sheet->setCellValue('U' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Value2']);
             $sheet->setCellValue('V' . $row_number, $row['LP_Sales3']);
             $sheet->setCellValue('W' . $row_number, $row['TP_Target3']);
             $sheet->setCellValue('X' . $row_number, $row['TP_Sales3']);
             $sheet->setCellValue('Y' . $row_number, $row['Achieve3']);
             $sheet->setCellValue('Z' . $row_number, $row['Growth3']);
-            $sheet->setCellValue('AA' . $row_number, $row['LP_Margin_Percent3']);
-            $sheet->setCellValue('AB' . $row_number, $row['TP_Margin_Percent3']);
-            $sheet->setCellValue('AC' . $row_number, $row['LP_Margin_Value3']);
-            $sheet->setCellValue('AD' . $row_number, $row['TP_Margin_Value3']);
+            $sheet->setCellValue('AA' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Percent3']);
+            $sheet->setCellValue('AB' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Percent3']);
+            $sheet->setCellValue('AC' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Value3']);
+            $sheet->setCellValue('AD' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Value3']);
             $sheet->setCellValue('AE' . $row_number, $row['LP_Sales4']);
             $sheet->setCellValue('AF' . $row_number, $row['TP_Target4']);
             $sheet->setCellValue('AG' . $row_number, $row['TP_Sales4']);
             $sheet->setCellValue('AH' . $row_number, $row['Achieve4']);
             $sheet->setCellValue('AI' . $row_number, $row['Growth4']);
-            $sheet->setCellValue('AJ' . $row_number, $row['LP_Margin_Percent4']);
-            $sheet->setCellValue('AK' . $row_number, $row['TP_Margin_Percent4']);
-            $sheet->setCellValue('AL' . $row_number, $row['LP_Margin_Value4']);
-            $sheet->setCellValue('AM' . $row_number, $row['TP_Margin_Value4']);
+            $sheet->setCellValue('AJ' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Percent4']);
+            $sheet->setCellValue('AK' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Percent4']);
+            $sheet->setCellValue('AL' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Value4']);
+            $sheet->setCellValue('AM' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Value4']);
             $row_number++;
         }
-        
+
 
         $sheet->getStyle('A4:C' . $row_number . '')->getFont()->setBold(true);
         $sheet->getStyle('A4:AM' . $row_number . '')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
@@ -492,6 +494,8 @@ class LaporanKhusus extends My_Controller
     function export_excel_penjualankategori($fromdate1, $todate1, $fromdate2, $todate2, $division, $sub_division, $store)
     {
         $data['username'] = $this->input->cookie('cookie_invent_user');
+        $cek_operation = $this->db->query("SELECT * from m_login where username ='" . $data['username'] . "'")->row();
+        $cek_operation = $cek_operation->login_type_id;
 
         $division = str_replace("%20", " ", $division);
         $sub_division = str_replace("%20", " ", $sub_division);
@@ -775,18 +779,18 @@ class LaporanKhusus extends My_Controller
             ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
         /* Excel Data */
-        $row_number = 6;        
+        $row_number = 6;
         $lastRow = count($data) + $row_number;
         $arrAmtCol = ['B', 'D', 'I', 'J', 'K', 'M', 'R', 'S', 'T', 'V', 'AA', 'AB', 'AC', 'AE', 'AJ', 'AK'];
         foreach ($arrAmtCol as $val) {
-            $sheet->getStyle($val . $row_number . ':'. $val . $lastRow)->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle($val . $row_number . ':' . $val . $lastRow)->getNumberFormat()->setFormatCode('#,##0');
         }
 
         $arrPctCol = ['F', 'G', 'H', 'O', 'P', 'Q', 'X', 'Y', 'Z', 'AG', 'AH', 'AI'];
         foreach ($arrPctCol as $val) {
-            $sheet->getStyle($val . $row_number . ':'. $val . $lastRow)->getNumberFormat()->setFormatCode('0.0"%"');
+            $sheet->getStyle($val . $row_number . ':' . $val . $lastRow)->getNumberFormat()->setFormatCode('0.0"%"');
         }
-        
+
         foreach ($data as $key => $row) {
             $sheet->setCellValue('A' . $row_number, $row['SBU']);
             $sheet->setCellValue('B' . $row_number, $row['LP_Sales1']);
@@ -794,37 +798,37 @@ class LaporanKhusus extends My_Controller
             $sheet->setCellValue('D' . $row_number, $row['TP_Sales1']);
             $sheet->setCellValue('E' . $row_number, $row['Achieve1']);
             $sheet->setCellValue('F' . $row_number, $row['Growth1']);
-            $sheet->setCellValue('G' . $row_number, $row['LP_Margin_Percent1']);
-            $sheet->setCellValue('H' . $row_number, $row['TP_Margin_Percent1']);
-            $sheet->setCellValue('I' . $row_number, $row['LP_Margin_Value1']);
-            $sheet->setCellValue('J' . $row_number, $row['TP_Margin_Value1']);
+            $sheet->setCellValue('G' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Percent1']);
+            $sheet->setCellValue('H' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Percent1']);
+            $sheet->setCellValue('I' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Value1']);
+            $sheet->setCellValue('J' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Value1']);
             $sheet->setCellValue('K' . $row_number, $row['LP_Sales2']);
             $sheet->setCellValue('L' . $row_number, $row['TP_Target2']);
             $sheet->setCellValue('M' . $row_number, $row['TP_Sales2']);
             $sheet->setCellValue('N' . $row_number, $row['Achieve2']);
             $sheet->setCellValue('O' . $row_number, $row['Growth2']);
-            $sheet->setCellValue('P' . $row_number, $row['LP_Margin_Percent2']);
-            $sheet->setCellValue('Q' . $row_number, $row['TP_Margin_Percent2']);
-            $sheet->setCellValue('R' . $row_number, $row['LP_Margin_Value2']);
-            $sheet->setCellValue('S' . $row_number, $row['TP_Margin_Value2']);
+            $sheet->setCellValue('P' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Percent2']);
+            $sheet->setCellValue('Q' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Percent2']);
+            $sheet->setCellValue('R' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Value2']);
+            $sheet->setCellValue('S' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Value2']);
             $sheet->setCellValue('T' . $row_number, $row['LP_Sales3']);
             $sheet->setCellValue('U' . $row_number, $row['TP_Target3']);
             $sheet->setCellValue('V' . $row_number, $row['TP_Sales3']);
             $sheet->setCellValue('W' . $row_number, $row['Achieve3']);
             $sheet->setCellValue('X' . $row_number, $row['Growth3']);
-            $sheet->setCellValue('Y' . $row_number, $row['LP_Margin_Percent3']);
-            $sheet->setCellValue('Z' . $row_number, $row['TP_Margin_Percent3']);
-            $sheet->setCellValue('AA' . $row_number, $row['LP_Margin_Value3']);
-            $sheet->setCellValue('AB' . $row_number, $row['TP_Margin_Value3']);
+            $sheet->setCellValue('Y' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Percent3']);
+            $sheet->setCellValue('Z' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Percent3']);
+            $sheet->setCellValue('AA' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Value3']);
+            $sheet->setCellValue('AB' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Value3']);
             $sheet->setCellValue('AC' . $row_number, $row['LP_Sales4']);
             $sheet->setCellValue('AD' . $row_number, $row['TP_Target4']);
             $sheet->setCellValue('AE' . $row_number, $row['TP_Sales4']);
             $sheet->setCellValue('AF' . $row_number, $row['Achieve4']);
             $sheet->setCellValue('AG' . $row_number, $row['Growth4']);
-            $sheet->setCellValue('AH' . $row_number, $row['LP_Margin_Percent4']);
-            $sheet->setCellValue('AI' . $row_number, $row['TP_Margin_Percent4']);
-            $sheet->setCellValue('AJ' . $row_number, $row['LP_Margin_Value4']);
-            $sheet->setCellValue('AK' . $row_number, $row['TP_Margin_Value4']);
+            $sheet->setCellValue('AH' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Percent4']);
+            $sheet->setCellValue('AI' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Percent4']);
+            $sheet->setCellValue('AJ' . $row_number, ($cek_operation == "1") ? "" : $row['LP_Margin_Value4']);
+            $sheet->setCellValue('AK' . $row_number, ($cek_operation == "1") ? "" : $row['TP_Margin_Value4']);
             $row_number++;
         }
 

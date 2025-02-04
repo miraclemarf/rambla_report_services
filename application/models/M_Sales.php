@@ -10,6 +10,10 @@ class M_Sales extends CI_Model
 
     public function getPenjualanBrand($postData = null)
     {
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+        $cek_operation = $this->db->query("SELECT * from m_login where username ='" . $data['username'] . "'")->row();
+        $cek_operation = $cek_operation->login_type_id;
+
         $response = array();
 
         $draw = $postData['draw'] ? $postData['draw'] : 0;
@@ -85,7 +89,7 @@ class M_Sales extends CI_Model
             $whereClause .= " AND brand_code ='" . $brand . "'";
         }
 
-        $cache_key = "getPenjualanBrand_{$start}_length_{$rowperpage}_draw_{$draw}_store_{$store}_tp_{$this_period}_lp_{$last_period}_search_" . md5($whereClause);
+        $cache_key = "getPenjualanBrand_{$start}_length_{$rowperpage}_draw_{$draw}_store_{$store}_tp_{$this_period}_lp_{$last_period}_search_" . md5($whereClause) . "_is_operation_" . $cek_operation;
         $cached_data = $this->redislib->get($cache_key); // Try to fetch cached data
 
         if ($cached_data) {
@@ -304,42 +308,42 @@ class M_Sales extends CI_Model
                 "SBU"                   => $record->SBU,
                 "DEPT"                  => $record->DEPT,
                 "BRAND"                 => $record->BRAND,
-                "LP_Sales1"             => $record->LP_Sales1,
-                "LP_Target1"            => $record->TP_Target1,
-                "TP_Sales1"             => $record->TP_Sales1,
+                "LP_Sales1"             => ($record->LP_Sales1) ? "Rp " . $record->LP_Sales1 : "",
+                "TP_Target1"            => ($record->TP_Target1) ? "Rp " . $record->TP_Target1 : "",
+                "TP_Sales1"             => ($record->TP_Sales1) ? "Rp " . $record->TP_Sales1 : "",
                 "Achieve1"              => $record->Achieve1,
                 "Growth1"               => $record->Growth1,
-                "LP_Margin_Percent1"    => $record->LP_Margin_Percent1,
-                "LP_Margin_Value1"      => $record->LP_Margin_Value1,
-                "TP_Margin_Percent1"    => $record->TP_Margin_Percent1,
-                "TP_Margin_Value1"      => $record->TP_Margin_Value1,
-                "LP_Sales2"             => $record->LP_Sales2,
-                "LP_Target2"            => $record->TP_Target2,
-                "TP_Sales2"             => $record->TP_Sales2,
+                "LP_Margin_Percent1"    => ($cek_operation == "1") ? "" : $record->LP_Margin_Percent1 . "%",
+                "LP_Margin_Value1"      => ($cek_operation == "1") ? "" : "Rp " . $record->LP_Margin_Value1,
+                "TP_Margin_Percent1"    => ($cek_operation == "1") ? "" : $record->TP_Margin_Percent1 . "%",
+                "TP_Margin_Value1"      => ($cek_operation == "1") ? "" : "Rp " . $record->TP_Margin_Value1,
+                "LP_Sales2"             => ($record->LP_Sales2) ? "Rp " . $record->LP_Sales2 : "",
+                "TP_Target2"            => ($record->TP_Target2) ? "Rp " . $record->TP_Target2 : "",
+                "TP_Sales2"             => ($record->TP_Sales2) ? "Rp " . $record->TP_Sales2 : "",
                 "Achieve2"              => $record->Achieve2,
                 "Growth2"               => $record->Growth2,
-                "LP_Margin_Percent2"    => $record->LP_Margin_Percent2,
-                "LP_Margin_Value2"      => $record->LP_Margin_Value2,
-                "TP_Margin_Percent2"    => $record->TP_Margin_Percent2,
-                "TP_Margin_Value2"      => $record->TP_Margin_Value2,
-                "LP_Sales3"             => $record->LP_Sales3,
-                "LP_Target3"            => $record->TP_Target3,
-                "TP_Sales3"             => $record->TP_Sales3,
+                "LP_Margin_Percent2"    => ($cek_operation == "1") ? "" : $record->LP_Margin_Percent2 . "%",
+                "LP_Margin_Value2"      => ($cek_operation == "1") ? "" : "Rp " . $record->LP_Margin_Value2,
+                "TP_Margin_Percent2"    => ($cek_operation == "1") ? "" : $record->TP_Margin_Percent2 . "%",
+                "TP_Margin_Value2"      => ($cek_operation == "1") ? "" : "Rp " . $record->TP_Margin_Value2,
+                "LP_Sales3"             => ($record->LP_Sales3) ? "Rp " . $record->LP_Sales3 : "",
+                "TP_Target3"            => ($record->TP_Target3) ? "Rp " . $record->TP_Target3 : "",
+                "TP_Sales3"             => ($record->TP_Sales3) ? "Rp " . $record->TP_Sales3 : "",
                 "Achieve3"              => $record->Achieve3,
                 "Growth3"               => $record->Growth3,
-                "LP_Margin_Percent3"    => $record->LP_Margin_Percent3,
-                "LP_Margin_Value3"      => $record->LP_Margin_Value3,
-                "TP_Margin_Percent3"    => $record->TP_Margin_Percent3,
-                "TP_Margin_Value3"      => $record->TP_Margin_Value3,
-                "LP_Sales4"             => $record->LP_Sales4,
-                "LP_Target4"            => $record->TP_Target4,
-                "TP_Sales4"             => $record->TP_Sales4,
+                "LP_Margin_Percent3"    => ($cek_operation == "1") ? "" : $record->LP_Margin_Percent3 . "%",
+                "LP_Margin_Value3"      => ($cek_operation == "1") ? "" : "Rp " . $record->LP_Margin_Value3,
+                "TP_Margin_Percent3"    => ($cek_operation == "1") ? "" : $record->TP_Margin_Percent3 . "%",
+                "TP_Margin_Value3"      => ($cek_operation == "1") ? "" : "Rp " . $record->TP_Margin_Value3,
+                "LP_Sales4"             => ($record->LP_Sales4) ? "Rp " . $record->LP_Sales4 : "",
+                "TP_Target4"            => ($record->TP_Target4) ? "Rp " . $record->TP_Target4 : "",
+                "TP_Sales4"             => ($record->TP_Sales4) ? "Rp " . $record->TP_Sales4 : "",
                 "Achieve4"              => $record->Achieve4,
                 "Growth4"               => $record->Growth4,
-                "LP_Margin_Percent4"    => $record->LP_Margin_Percent4,
-                "LP_Margin_Value4"      => $record->LP_Margin_Value4,
-                "TP_Margin_Percent4"    => $record->TP_Margin_Percent4,
-                "TP_Margin_Value4"      => $record->TP_Margin_Value4,
+                "LP_Margin_Percent4"    => ($cek_operation == "1") ? "" : $record->LP_Margin_Percent4 . "%",
+                "LP_Margin_Value4"      => ($cek_operation == "1") ? "" : "Rp " . $record->LP_Margin_Value4,
+                "TP_Margin_Percent4"    => ($cek_operation == "1") ? "" : $record->TP_Margin_Percent4 . "%",
+                "TP_Margin_Value4"      => ($cek_operation == "1") ? "" : "Rp " . $record->TP_Margin_Value4,
             );
         }
 
@@ -359,6 +363,10 @@ class M_Sales extends CI_Model
 
     public function getPenjualanKategori($postData = null)
     {
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+        $cek_operation = $this->db->query("SELECT * from m_login where username ='" . $data['username'] . "'")->row();
+        $cek_operation = $cek_operation->login_type_id;
+
         $response = array();
 
         $draw = $postData['draw'];
@@ -424,7 +432,7 @@ class M_Sales extends CI_Model
             $whereClause .= " AND SUB_DIVISION ='" . $sub_division . "'";
         }
 
-        $cache_key = "getPenjualanKategori_{$start}_length_{$rowperpage}_draw_{$draw}_store_{$store}_tp_{$this_period}_lp_{$last_period}_search_" . md5($whereClause);
+        $cache_key = "getPenjualanKategori_{$start}_length_{$rowperpage}_draw_{$draw}_store_{$store}_tp_{$this_period}_lp_{$last_period}_search_" . md5($whereClause) . "_is_operation_" . $cek_operation;
         $cached_data = $this->redislib->get($cache_key); // Try to fetch cached data
 
         if ($cached_data) {
@@ -636,42 +644,42 @@ class M_Sales extends CI_Model
             $data[] = array(
                 "STORE"                 => $record->STORE,
                 "SBU"                   => $record->SBU,
-                "LP_Sales1"             => $record->LP_Sales1,
-                "LP_Target1"            => $record->TP_Target1,
-                "TP_Sales1"             => $record->TP_Sales1,
+                "LP_Sales1"             => ($record->LP_Sales1) ? "Rp " . $record->LP_Sales1 : "",
+                "TP_Target1"            => ($record->TP_Target1) ? "Rp " . $record->TP_Target1 : "",
+                "TP_Sales1"             => ($record->TP_Sales1) ? "Rp " . $record->TP_Sales1 : "",
                 "Achieve1"              => $record->Achieve1,
                 "Growth1"               => $record->Growth1,
-                "LP_Margin_Percent1"    => $record->LP_Margin_Percent1,
-                "LP_Margin_Value1"      => $record->LP_Margin_Value1,
-                "TP_Margin_Percent1"    => $record->TP_Margin_Percent1,
-                "TP_Margin_Value1"      => $record->TP_Margin_Value1,
-                "LP_Sales2"             => $record->LP_Sales2,
-                "LP_Target2"            => $record->TP_Target2,
-                "TP_Sales2"             => $record->TP_Sales2,
+                "LP_Margin_Percent1"    => ($cek_operation == "1") ? "" : $record->LP_Margin_Percent1 . "%",
+                "LP_Margin_Value1"      => ($cek_operation == "1") ? "" : "Rp " . $record->LP_Margin_Value1,
+                "TP_Margin_Percent1"    => ($cek_operation == "1") ? "" : $record->TP_Margin_Percent1 . "%",
+                "TP_Margin_Value1"      => ($cek_operation == "1") ? "" : "Rp " . $record->TP_Margin_Value1,
+                "LP_Sales2"             => ($record->LP_Sales2) ? "Rp " . $record->LP_Sales2 : "",
+                "TP_Target2"            => ($record->TP_Target2) ? "Rp " . $record->TP_Target2 : "",
+                "TP_Sales2"             => ($record->TP_Sales2) ? "Rp " . $record->TP_Sales2 : "",
                 "Achieve2"              => $record->Achieve2,
                 "Growth2"               => $record->Growth2,
-                "LP_Margin_Percent2"    => $record->LP_Margin_Percent2,
-                "LP_Margin_Value2"      => $record->LP_Margin_Value2,
-                "TP_Margin_Percent2"    => $record->TP_Margin_Percent2,
-                "TP_Margin_Value2"      => $record->TP_Margin_Value2,
-                "LP_Sales3"             => $record->LP_Sales3,
-                "LP_Target3"            => $record->TP_Target3,
-                "TP_Sales3"             => $record->TP_Sales3,
+                "LP_Margin_Percent2"    => ($cek_operation == "1") ? "" : $record->LP_Margin_Percent2 . "%",
+                "LP_Margin_Value2"      => ($cek_operation == "1") ? "" : "Rp " . $record->LP_Margin_Value2,
+                "TP_Margin_Percent2"    => ($cek_operation == "1") ? "" : $record->TP_Margin_Percent2 . "%",
+                "TP_Margin_Value2"      => ($cek_operation == "1") ? "" : "Rp " . $record->TP_Margin_Value2,
+                "LP_Sales3"             => ($record->LP_Sales3) ? "Rp " . $record->LP_Sales3 : "",
+                "TP_Target3"            => ($record->TP_Target3) ? "Rp " . $record->TP_Target3 : "",
+                "TP_Sales3"             => ($record->TP_Sales3) ? "Rp " . $record->TP_Sales3 : "",
                 "Achieve3"              => $record->Achieve3,
                 "Growth3"               => $record->Growth3,
-                "LP_Margin_Percent3"    => $record->LP_Margin_Percent3,
-                "LP_Margin_Value3"      => $record->LP_Margin_Value3,
-                "TP_Margin_Percent3"    => $record->TP_Margin_Percent3,
-                "TP_Margin_Value3"      => $record->TP_Margin_Value3,
-                "LP_Sales4"             => $record->LP_Sales4,
-                "LP_Target4"            => $record->TP_Target4,
-                "TP_Sales4"             => $record->TP_Sales4,
+                "LP_Margin_Percent3"    => ($cek_operation == "1") ? "" : $record->LP_Margin_Percent3 . "%",
+                "LP_Margin_Value3"      => ($cek_operation == "1") ? "" : "Rp " . $record->LP_Margin_Value3,
+                "TP_Margin_Percent3"    => ($cek_operation == "1") ? "" : $record->TP_Margin_Percent3 . "%",
+                "TP_Margin_Value3"      => ($cek_operation == "1") ? "" : "Rp " . $record->TP_Margin_Value3,
+                "LP_Sales4"             => ($record->LP_Sales4) ? "Rp " . $record->LP_Sales4 : "",
+                "TP_Target4"            => ($record->TP_Target4) ? "Rp " . $record->TP_Target4 : "",
+                "TP_Sales4"             => ($record->TP_Sales4) ? "Rp " . $record->TP_Sales4 : "",
                 "Achieve4"              => $record->Achieve4,
                 "Growth4"               => $record->Growth4,
-                "LP_Margin_Percent4"    => $record->LP_Margin_Percent4,
-                "LP_Margin_Value4"      => $record->LP_Margin_Value4,
-                "TP_Margin_Percent4"    => $record->TP_Margin_Percent4,
-                "TP_Margin_Value4"      => $record->TP_Margin_Value4,
+                "LP_Margin_Percent4"    => ($cek_operation == "1") ? "" : $record->LP_Margin_Percent4 . "%",
+                "LP_Margin_Value4"      => ($cek_operation == "1") ? "" : "Rp " . $record->LP_Margin_Value4,
+                "TP_Margin_Percent4"    => ($cek_operation == "1") ? "" : $record->TP_Margin_Percent4 . "%",
+                "TP_Margin_Value4"      => ($cek_operation == "1") ? "" : "Rp " . $record->TP_Margin_Value4,
             );
         }
 

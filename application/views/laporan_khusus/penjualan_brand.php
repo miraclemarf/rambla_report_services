@@ -383,19 +383,19 @@
                     {
                         "data": "LP_Sales1",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
                         "data": "TP_Target1",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
                         "data": "TP_Sales1",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
@@ -425,31 +425,31 @@
                     {
                         "data": "LP_Margin_Value1",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
                         "data": "TP_Margin_Value1",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
                         "data": "LP_Sales2",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
                         "data": "TP_Target2",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
                         "data": "TP_Sales2",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
@@ -479,31 +479,31 @@
                     {
                         "data": "LP_Margin_Value2",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
                         "data": "TP_Margin_Value2",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
                         "data": "LP_Sales3",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
                         "data": "TP_Target3",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
                         "data": "TP_Sales3",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
@@ -533,31 +533,31 @@
                     {
                         "data": "LP_Margin_Value3",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
                         "data": "TP_Margin_Value3",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
                         "data": "LP_Sales4",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
                         "data": "TP_Target4",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
                         "data": "TP_Sales4",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
@@ -587,13 +587,13 @@
                     {
                         "data": "LP_Margin_Value4",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                     {
                         "data": "TP_Margin_Value4",
                         "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
+                            return '<nobr>' + rupiahjs(data) + '</nobr>';
                         },
                     },
                 ],
