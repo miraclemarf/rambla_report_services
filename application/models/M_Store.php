@@ -61,7 +61,7 @@ class M_Store extends CI_Model
                 case when flag_tax = 1 then net_price / 1.11
                     else net_price
                 end
-            end as net_all from t_sales_trans_dtl) tstd ON tsth.trans_no = tstd.trans_no WHERE trans_status = '1' AND date_format( trans_date, '%Y.%m.%d' ) BETWEEN ? AND ? AND tstd.category_code NOT IN ( 'RSOTMKVC01' ) AND tstd.barcode NOT IN ( '9000110400005', '9000125600001','9000119000008' ) $where AND substring( tsth.trans_no, 9, 1 ) NOT IN ('4','5')";
+            end as net_all from t_sales_trans_dtl) tstd ON tsth.trans_no = tstd.trans_no WHERE trans_status = '1' AND date_format( trans_date, '%Y.%m.%d' ) BETWEEN ? AND ? AND tstd.category_code NOT IN ( 'RSOTMKVC01' ) $where AND substring( tsth.trans_no, 9, 1 ) NOT IN ('4','5')";
 
         $sqlData = $dbStore->query($query, array(date("Y.m.d"), date("Y.m.d")));
         return $sqlData->result();
