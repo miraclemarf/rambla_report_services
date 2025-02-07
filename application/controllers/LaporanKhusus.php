@@ -137,6 +137,7 @@ class LaporanKhusus extends My_Controller
         $metabaseSiteUrl = 'http://192.168.8.99:3000';
         $metabaseSecretKey = '91465c305d756abd48b936a0a9ae99ce4e868bb3cfa36ca6dbc824158a60c489';
 
+        //metabase
         $now = new DateTimeImmutable();
         $config = Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($metabaseSecretKey));
         $builder = $config->builder();
