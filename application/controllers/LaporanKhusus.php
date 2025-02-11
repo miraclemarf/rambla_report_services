@@ -108,13 +108,13 @@ class LaporanKhusus extends My_Controller
     public function penjualan_brand_meta_where()
     {
         $postData = $this->input->post();
-        
+
         $store = $postData["params8"];
         $last_period =  $this->ubahFormatTanggal($postData["params3"]);
         $this_period =  $this->ubahFormatTanggal($postData["params9"]);
         $pecah = explode('~', $this_period);
         $target_date =  $pecah[0];
-        
+
         if ($postData["params1"] == "") {
             $brand_code = null;
         } else {
@@ -132,8 +132,8 @@ class LaporanKhusus extends My_Controller
         } else {
             $departement = strtoupper($postData["params6"]);
         }
-       
-        
+
+
         $metabaseSiteUrl = 'https://metabase.stardeptstore.com/';
         $metabaseSecretKey = '91465c305d756abd48b936a0a9ae99ce4e868bb3cfa36ca6dbc824158a60c489';
 
@@ -159,7 +159,7 @@ class LaporanKhusus extends My_Controller
 
 
         $tokenString = $token->toString();
-        $iframeUrl = "$metabaseSiteUrl/embed/dashboard/$tokenString#theme=transparent&bordered=false&titled=false/";
+        $iframeUrl = "$metabaseSiteUrl/embed/dashboard/$tokenString#theme=transparent&bordered=false&titled=false&hide_header=true/";
         echo $iframeUrl;
     }
 
@@ -949,6 +949,63 @@ class LaporanKhusus extends My_Controller
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save('php://output');
+    }
+
+    function export_excel_test()
+    {
+        $data = $this->db->query("select periode, barcode, net_af from report_service.r_sales where branch_id = 'R001' and DATE_FORMAT(periode,'%Y-%m-%d') = '2025-01-01' limit 2000")->result_array();
+
+        $chunkSize = 100; // Adjust chunk size as needed
+        $outputDir = 'sales_by_brand_kategori'; // Directory to store the chunks
+
+        // Create output directory if not exists
+        if (!is_dir($outputDir)) {
+            mkdir($outputDir);
+        }
+
+        $this->chunkDataIntoSpreadsheets($data, $chunkSize, $outputDir);
+    }
+
+    private function chunkDataIntoSpreadsheets($data, $chunkSize, $outputDir)
+    {
+        // Calculate how many files we will need to generate
+        $totalChunks = ceil(count($data) / $chunkSize);
+
+        for ($i = 0; $i < $totalChunks; $i++) {
+            // Create a new spreadsheet
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            $sheet->setCellValue('A1', 'No');
+            $sheet->setCellValue('B1', 'Vendor Code');
+            $sheet->setCellValue('C1', 'Vendor Name');
+
+
+            // Slice the data to get the chunk
+            $chunk = array_slice($data, $i * $chunkSize, $chunkSize);
+
+            // Add data to the spreadsheet
+            foreach ($chunk as $row) {
+                $row_number = 2;
+                foreach ($data as $key => $row) {
+                    $sheet->setCellValue('A' . $row_number, $row['periode']);
+                    $sheet->setCellValue('B' . $row_number, $row['barcode']);
+                    $sheet->setCellValue('C' . $row_number, $row['net_af']);
+                    $row_number++;
+                }
+            }
+
+            // Write the spreadsheet to a file
+            $fileName = $outputDir . '/chunk_' . ($i + 1);
+            $writer = new Xlsx($spreadsheet);
+
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="' . $fileName . '.xlsx"');
+            header('Cache-Control: max-age=0');
+
+            $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+            $writer->save('php://output');
+        }
     }
 
     // function export_excel_test()

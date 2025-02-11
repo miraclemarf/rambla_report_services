@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="embed-responsive embed-responsive-4by3">
-                        <iframe id="iFrameSalesMetaByBrand" class="embed-responsive-item" src=""  allowfullscreen></iframe>
+                        <iframe id="iFrameSalesMetaByBrand" class="embed-responsive-item" src="" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
