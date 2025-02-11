@@ -134,7 +134,7 @@ class LaporanKhusus extends My_Controller
         }
 
 
-        $metabaseSiteUrl = 'https://metabase.stardeptstore.com/';
+        $metabaseSiteUrl = 'https://metabase.stardeptstore.com';
         $metabaseSecretKey = '91465c305d756abd48b936a0a9ae99ce4e868bb3cfa36ca6dbc824158a60c489';
 
         //metabase
