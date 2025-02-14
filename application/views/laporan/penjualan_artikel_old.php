@@ -174,8 +174,7 @@
                     params6: params6,
                     params7: params7,
                     params8: params8,
-                    params9: params9,
-                    is_operation: 1,
+                    params9: params9
                 },
                 success: function(data) {
                     var iframe = document.getElementById('iFrameSalesMetaByArticle');

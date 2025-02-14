@@ -6,9 +6,6 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
 
 class Laporan extends My_Controller
 {
@@ -191,84 +188,98 @@ class Laporan extends My_Controller
         $this->load->view('template_member/footer', $data);
     }
 
-    // public function test()
-    // {
-
-    //     $data = $this->M_Division->get_division_meta('henry', 'R001');
-
-    //     $b = ['Department Store', 'Supermarket'];
-    //     var_dump($data);
-    //     echo "<br/>";
-    //     var_dump($b);
-    // }
-
     public function penjualan_artikel_where()
     {
-        $postData = $this->input->post();
+
+        extract(populateform());
+
+        $params4 = str_replace("%20", " ", $params4);
+        $params5 = str_replace("%20", " ", $params5);
+        $params6 = str_replace("%20", " ", $params6);
+        $params7 = str_replace("%20", " ", $params7);
+
+        $tables = "r_sales";
+
+        $search = array('branch_id', 'periode', 'barcode', 'brand_code', 'brand_name', 'article_name', 'varian_option1', 'varian_option2', 'price', 'tot_qty', 'disc_pct', 'total_disc_amt', 'total_moredisc_amt', 'moredisc_pct', 'margin', 'gross_after_margin', 'gross', 'source_data', 'trans_no', 'no_ref');
 
         $data['username'] = $this->input->cookie('cookie_invent_user');
-        $kode_brand = array(null);
-        $category = array(null);
+        // $vendor_code    = $this->input->post('vendor_code');
+        $where = array('');
+        $fromdate = '';
+        $todate = '';
 
-        // START CEK ADA DEPT NGGA
-        $cek_user_dept = $this->db->query("SELECT * from m_user_sub_division where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
 
         // CEK ADA USER SITENYA NGGA
         $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
-
-        if ($cek_user_dept) {
-            // HANYA USER DENGAN DEPT TERTENTU
-            $list_sub_div = $this->db->query("SELECT distinct kode_sub_division from m_user_sub_division where username = '" . $data['username'] . "' and flagactv = '1'")->result();
-            foreach ($list_sub_div as $row) {
-                array_push($category, $row->kode_sub_division);
-            }
+        if ($cek_user_category) {
+            $filter = $this->M_Categories->get_category($data['username']);
         } else if ($cek_user_site) {
-            // HANYA USER DENGAN SITE TERTENTU
-            $division = $this->M_Division->get_division_meta($data['username'], $postData["params8"]);
+            $filter = $this->M_Division->get_division($data['username'], $params8);
         } else {
             // UNTUK MD
-            $list_brand = $this->db->query("SELECT distinct brand from m_user_brand where username = '" . $data['username'] . "'")->result();
-            foreach ($list_brand as $row) {
-                array_push($kode_brand, $row->brand);
-            }
+            $filter = "AND brand_code in (
+                select distinct brand from m_user_brand 
+                where username = '" . $data['username'] . "'
+            )";
         }
-        // END CEK ADA DEPTNYA NGGA
-        $store = $postData["params8"];
-        $periode =  ubahFormatTanggal($postData["params3"]);
-        $division = $postData['params4'] ? $postData['params4'] : null;
-        $sub_division = $postData['params5'] ? $postData['params5'] : null;
-        $dept = $postData['params6'] ? $postData['params6'] : null;
-        $sub_dept = $postData['params7'] ? $postData['params7'] : null;
-        $areatrx = $postData['params9'] ? $postData['params9'] : null;
-        $kode_brand = $postData['params1'] ? $postData['params1'] : array(null);
-        $category = $category ? $category : array(null);
+        // END CEK ADA KATEGORINYA NGGA
 
-        // $metabaseSiteUrl = 'http://192.168.8.99:3000';
-        $metabaseSiteUrl = 'https://metabase.stardeptstore.com';
-        $metabaseSecretKey = '91465c305d756abd48b936a0a9ae99ce4e868bb3cfa36ca6dbc824158a60c489';
+        if ($params1 || $params2 || $params3 || $params4 || $params5 || $params6 || $params7 || $params8) {
+            if ($params1) {
+                $filter1 = " AND brand_code = '" . $params1 . "'";
+                $filter .= $filter1;
+            }
+            if ($params2) {
+                $filter2 = " AND source_data = '" . $params2 . "'";
+                $filter .= $filter2;
+            }
+            if ($params3) {
+                if (strpos($params3, '-') !== false) {
+                    $tgl = explode("-", $params3);
+                    $fromdate = date("Y-m-d", strtotime($tgl[0]));
+                    $todate = date("Y-m-d", strtotime($tgl[1]));
+                }
+                $filter3 = " AND DATE_FORMAT(periode,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
+                $filter .= $filter3;
+            }
+            if ($params4) {
+                $filter4 = " AND DIVISION = '" . $params4 . "'";
+                $filter .= $filter4;
+            }
+            if ($params5) {
+                $filter5 = " AND SUB_DIVISION = '" . $params5 . "'";
+                $filter .= $filter5;
+            }
+            if ($params6) {
+                $filter6 = " AND DEPT = '" . $params6 . "'";
+                $filter .= $filter6;
+            }
+            if ($params7) {
+                $filter7 = " AND SUB_DEPT = '" . $params7 . "'";
+                $filter .= $filter7;
+            }
+            if ($params8) {
+                $filter8 = " AND branch_id = '" . $params8 . "'";
+                $filter .= $filter8;
+            }
+            if ($params9) {
+                $arrParams9 = explode(',', $params9);
+                if (count($arrParams9) > 1) {
+                    $filter9 = " AND substring(trans_no,9,1) in ('" . $arrParams9[0] . "', '" . $arrParams9[1] . "')";
+                } else {
+                    $filter9 = " AND substring(trans_no,9,1) in ('" . $params9 . "')";
+                }
+                $filter .= $filter9;
+            }
+            $isWhere = $filter;
+        } else {
+            $isWhere = $filter;
+        }
 
-        //metabase
-        $config = Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($metabaseSecretKey));
-        $builder = $config->builder();
-
-        $token = $builder
-            ->withClaim('resource', ['dashboard' => ($postData['is_operation'] == '1') ? 239 : 238])
-            ->withClaim('params', [
-                'store'         => $store,
-                'periode'       => $periode,
-                'division'      => $division,
-                'sub_division'  => $sub_division,
-                'dept'          => $dept,
-                'sub_dept'      => $sub_dept,
-                'areatrx'       => $areatrx,
-                'brand'         => $kode_brand,
-                'kode_sub_div'  => $category,
-            ])
-            ->getToken($config->signer(), $config->signingKey());
-
-        $tokenString = $token->toString();
-        $iframeUrl = "$metabaseSiteUrl/embed/dashboard/$tokenString#bordered=false&titled=false&hide_header=true/";
-        echo $iframeUrl;
+        header('Content-Type: application/json');
+        echo $this->M_Datatables->get_tables_where($tables, $search, $where, $isWhere);
     }
 
     public function stock_where()

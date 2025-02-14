@@ -89,29 +89,13 @@ class LaporanKhusus extends My_Controller
         echo json_encode($data);
     }
 
-    function ubahFormatTanggal($tanggal_awal_akhir)
-    {
-        // Pisahkan tanggal awal dan akhir
-        $pecah = explode('-', $tanggal_awal_akhir);
-        $tanggal_awal = $pecah[0];
-        $tanggal_akhir = $pecah[1];
-
-        // Ubah format masing-masing tanggal
-        $tanggal_awal = date("Y-m-d", strtotime($tanggal_awal));
-        $tanggal_akhir = date("Y-m-d", strtotime($tanggal_akhir));
-
-        // Gabungkan kembali dengan pemisah ~
-        $tanggal_format_baru = $tanggal_awal . '~' . $tanggal_akhir;
-        return $tanggal_format_baru;
-    }
-
     public function penjualan_brand_meta_where()
     {
         $postData = $this->input->post();
 
         $store = $postData["params8"];
-        $last_period =  $this->ubahFormatTanggal($postData["params3"]);
-        $this_period =  $this->ubahFormatTanggal($postData["params9"]);
+        $last_period =  ubahFormatTanggal($postData["params3"]);
+        $this_period =  ubahFormatTanggal($postData["params9"]);
         $pecah = explode('~', $this_period);
         $target_date =  $pecah[0];
 

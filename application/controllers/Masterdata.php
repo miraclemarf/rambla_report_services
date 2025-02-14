@@ -119,8 +119,11 @@ class Masterdata extends My_Controller
         )";
 
         $cek_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+
+        $store = $store ? $store : $cek_site->branch_id;
+
         if ($cek_site) {
-            $data['hasil']          = $this->M_Division->get_division_filter($data['username'], $cek_site->branch_id);
+            $data['hasil']          = $this->M_Division->get_division_filter($data['username'], $store);
         } else {
             $data['hasil']          = $this->Models->showdata("SELECT DISTINCT DIVISION, KODE_DIVISION from m_kategori_list WHERE category_code in (
                 select category_code from m_vendor_category

@@ -1,5 +1,15 @@
+<style>
+    /* Gaya CSS untuk iframe */
+    /* iframe {
+        border: none;
+    }
+
+    iframe::content .fullscreen-normal-text thead {
+        background-color: #FF5733;
+        color: white;
+    } */
+</style>
 <div class="content-wrapper">
-    <?php $this->load->view('modal/export-penjualanartikel', true); ?>
     <?php $this->load->view('modal/filter-penjualanartikel', true); ?>
     <div class="row">
         <div class="col-lg-12 d-flex grid-margin stretch-card">
@@ -11,120 +21,14 @@
                             <p class="text-muted mb-2">Terapkan filter untuk menampilkan data.</p>
                         </div>
                         <div class="align-self-end">
-                            <button type="button" class="btn btn-success btn-sm btn-icon-text btn-export-penjualanartikel ml-2" style="float:right">
-                                <i class="typcn typcn-download btn-icon-prepend"></i>
-                                Export File
-                            </button>
                             <button type="button" class="btn btn-info btn-sm btn-icon-text btn-filter-pejualanartikel" style="float:right">
                                 <i class="typcn typcn-filter"></i>
                                 Filter
                             </button>
                         </div>
                     </div>
-                    <div class="">
-                        <table class="table table-striped table-custom d-none" id="tb_penjualanartikel_list">
-                            <thead class="table-rambla">
-                                <tr>
-                                    <th>#</th>
-                                    <th>
-                                        <nobr>Store</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Periode</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Bulan</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>DIVISION</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>SUB DIVISION</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>DEPT</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>SUB DEPT</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Article Code</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Barcode</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Kode Brand</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Nama Brand</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Nama Produk</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Varian Option1</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Varian Option2</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Harga</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Kode Vendor</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Nama Vendor</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Total Qty(Pcs)</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Total Berat(Kg)</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Disc(%)</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Total Disc</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Disc. Tambahan(Rp)</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Disc. Tambahan(%)</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Margin</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Gross After Margin</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Gross(Rp)</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Net Before(Rp)</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Net After(Rp)</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Area Transaksi</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Source Data</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>Trans No</nobr>
-                                    </th>
-                                    <th>
-                                        <nobr>No Ref</nobr>
-                                    </th>
-                                </tr>
-                            </thead>
-                        </table>
+                    <div class="embed-responsive embed-responsive-4by3">
+                        <iframe id="iFrameSalesMetaByArticle" class="embed-responsive-item" src="" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -182,11 +86,6 @@
         //     source = this.value;
         // });
 
-        $('.format-file-export').on('change', function(e) {
-            format = this.value;
-        });
-
-
         $('.btn-submit-filter').on("click", function() {
             params1 = brand_code;
             params2 = source;
@@ -230,294 +129,58 @@
             load_data_penjualanartikel(params1, params2, params3, params4, params5, params6, params7, params8, params9);
         });
 
-        $('.btn-export').on("click", function() {
-            export_penjualanartikel(params1, params2, params3, params4, params5, params6, params7, params8, params9);
-        });
-
-        function export_penjualanartikel(params1, params2, params3, params4, params5, params6, params7, params8, params9) {
-            //console.log(params9)
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url('Laporan/generate_date'); ?>",
-                dataType: "JSON",
-                data: {
-                    "periode": params3
-                },
-                success: function(data) {
-                    if (format == "csv") {
-                        window.location.href = "<?= base_url('Laporan/export_csv_penjualanartikel/'); ?>" + data.fromdate + '/' + data.todate + '/' + params2 + '/' + params1 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7 + '/' + params8 + '/' + params9;
-                    } else if (format == "xls") {
-                        window.location.href = "<?= base_url('Laporan/export_excel_penjualanartikel/'); ?>" + data.fromdate + '/' + data.todate + '/' + params2 + '/' + params1 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7 + '/' + params8 + '/' + params9;
-                    }
-
-                }
-            });
+        function resizeIframe() {
+            var iframe = document.getElementById('iFrameSalesMetaByBrand');
+            iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
         }
 
-        function load_data_penjualanartikeltest(params1, params2, params3, params4, params5, params6, params7, params8, params9) {
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url('Laporan/penjualan_artikel_where'); ?>",
-                dataType: "JSON",
-                data: {
-                    "params1": params1,
-                    "params2": params2,
-                    "params3": params3,
-                    "params4": params4,
-                    "params5": params5,
-                    "params6": params6,
-                    "params7": params7,
-                    "params8": params8,
-                    "params9": params9
-                },
-                success: function(data) {
-                    console.log(data);
-                }
-            });
-        }
+        // Panggil fungsi resizeIframe setelah iframe selesai dimuat
+        window.onload = function() {
+            resizeIframe();
+        };
+
+        // function load_data_penjualanartikeltest(params1, params2, params3, params4, params5, params6, params7, params8, params9) {
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "<?= base_url('Laporan/penjualan_artikel_where'); ?>",
+        //         dataType: "JSON",
+        //         data: {
+        //             "params1": params1,
+        //             "params2": params2,
+        //             "params3": params3,
+        //             "params4": params4,
+        //             "params5": params5,
+        //             "params6": params6,
+        //             "params7": params7,
+        //             "params8": params8,
+        //             "params9": params9
+        //         },
+        //         success: function(data) {
+        //             console.log(data);
+        //         }
+        //     });
+        // }
 
         function load_data_penjualanartikel(params1, params2, params3, params4, params5, params6, params7, params8, params9) {
-            $('#tb_penjualanartikel_list').removeClass('d-none');
-            tabel = $('#tb_penjualanartikel_list').DataTable({
-                "processing": true,
-                "responsive": true,
-                "serverSide": true,
-                "bDestroy": true,
-                "ordering": true, // Set true agar bisa di sorting
-                "order": [
-                    [0, 'asc']
-                ], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
-                "ajax": {
-                    "url": "<?= base_url('Laporan/penjualan_artikel_where'); ?>", // URL file untuk proses select datanya
-                    "type": "POST",
-                    "data": {
-                        "params1": params1,
-                        "params2": params2,
-                        "params3": params3,
-                        "params4": params4,
-                        "params5": params5,
-                        "params6": params6,
-                        "params7": params7,
-                        "params8": params8,
-                        "params9": params9
-                    },
+            $.ajax({
+                url: "<?= base_url('Laporan/penjualan_artikel_where'); ?>",
+                method: "POST",
+                data: {
+                    params1: params1,
+                    params2: params2,
+                    params3: params3,
+                    params4: params4,
+                    params5: params5,
+                    params6: params6,
+                    params7: params7,
+                    params8: params8,
+                    params9: params9,
+                    is_operation: 0,
                 },
-                "scrollX": true,
-                "stateSave": true,
-                "deferRender": true,
-                "aLengthMenu": [
-                    [10, 25, 50],
-                    [10, 25, 50]
-                ], // Combobox Limit
-                "columns": [{
-                        "data": 'periode',
-                        "sortable": false,
-                        // "render": function ( data, type, row, meta ) {
-                        //     var i = meta.row + meta.settings._iDisplayStart + 1;
-                        //     return '<div class="form-check"><label class="form-check-label text-muted"><input type="checkbox" class="form-check-input" name="checkbox_'+i+'"><i class="input-helper"></i></label></div>';
-                        // },
-                        "render": function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        },
-                    },
-                    {
-                        "data": "branch_id",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "periode",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data.substring(0, 10) + '</nobr>';
-                        },
-                    }, // Tampilkan judul
-                    {
-                        "data": "periode",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data.substring(5, 7) + '</nobr>';
-                        },
-                    }, // Tampilkan judul
-                    {
-                        "data": "DIVISION",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    }, // Tampilkan judul
-                    {
-                        "data": "SUB_DIVISION",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    }, // Tampilkan judul
-                    {
-                        "data": "DEPT",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    }, // Tampilkan judul
-                    {
-                        "data": "SUB_DEPT",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    }, // Tampilkan judul
-                    {
-                        "data": "article_code",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "barcode",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "brand_code",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "brand_name",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "article_name",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "varian_option1",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "varian_option2",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "price",
-                        "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "vendor_code",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "vendor_name",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "tot_qty",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "tot_berat",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "disc_pct",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "total_disc_amt",
-                        "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "total_moredisc_amt",
-                        "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "moredisc_pct",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "margin",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "gross_after_margin",
-                        "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "gross",
-                        "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "net_bf",
-                        "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "net_af",
-                        "render": function(data, type, row) {
-                            return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "trans_no",
-                        "render": function(data, type, row) {
-                            var data_areatrx = '';
-                            if (data.substring(8, 9) != '5') {
-                                data_areatrx = data.substring(8, 9) == '3' ? 'BAZZAR' : 'FLOOR'
-                            }
-                            else{data_areatrx = 'ONLINE';}
-                            return '<nobr>' + data_areatrx + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "source_data",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "trans_no",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "no_ref",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                ],
+                success: function(data) {
+                    var iframe = document.getElementById('iFrameSalesMetaByArticle');
+                    iframe.src = data;
+                }
             });
         }
 
@@ -563,25 +226,11 @@
 
         $('.list_store').on('change', function(e) {
             store = this.value;
-            if (store == 'R001') {
-                $opt = '<option value="">-- Pilih Data --</option><option value="1,2">FLOOR</option><option value="3">BAZZAR</option><option value="5">ONLINE</option>';
+            $opt = '<option value="">-- Pilih Data --</option><option value="FLOOR">FLOOR</option><option value="BAZAAR">BAZAAR</option><option value="ONLINE">ONLINE</option>';
+            if (store) {
+                $opt = '<option value="">-- Pilih Data --</option><option value="FLOOR">FLOOR</option><option value="BAZAAR">BAZAAR</option><option value="ONLINE">ONLINE</option>';
                 $('.list_areatrx').html($opt);
-            } else if (store == 'R002') {
-                $opt = '<option value="">-- Pilih Data --</option><option value="0,1">FLOOR</option><option value="3">BAZZAR</option><option value="5">ONLINE</option>';
-                $('.list_areatrx').html($opt);
-            } else if (store == 'V001') {
-                $opt = '<option value="">-- Pilih Data --</option><option value="0">FLOOR</option><option value="3">BAZZAR</option><option value="5">ONLINE</option>';
-                $('.list_areatrx').html($opt);
-            }                          
-            else if (store == 'S002'){
-                $opt = '<option value="">-- Pilih Data --</option><option value="1,2">FLOOR</option><option value="3">BAZZAR</option>';
-                $('.list_areatrx').html($opt);
-            }            
-            else if (store == 'S003'){
-                $opt = '<option value="">-- Pilih Data --</option><option value="0,1,2">FLOOR</option><option value="3">BAZZAR</option>';
-                $('.list_areatrx').html($opt);
-            }
-            else {
+            } else {
                 $opt = '<option value="">-- Pilih Data --</option>';
                 $('.list_areatrx').html($opt);
             }
@@ -593,7 +242,7 @@
                 type: 'POST',
                 dataType: 'html',
                 success: function(data) {
-                    //console.log(data);
+                    // console.log(data);
                     $(".loading").hide();
                     $('.list_division').html(data);
                 },
