@@ -8,21 +8,6 @@
         background-color: #FF5733;
         color: white;
     } */
-    @media (min-width: 768px) {}
-
-    @media (min-width: 576px) and (max-width: 767.98px) {}
-
-
-    /* Responsive columns */
-    @media (max-width: 575.98px) {
-        .card {
-            height: 500px;
-        }
-
-        .embed-responsive {
-            height: 100%;
-        }
-    }
 </style>
 <div class="content-wrapper">
     <?php $this->load->view('modal/filter-penjualanartikel', true); ?>

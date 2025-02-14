@@ -15,7 +15,7 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="<?= base_url('assets/template/celestialui'); ?>/css/vertical-layout-light/style.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="<?= base_url('assets/ico/faviconrambla.png'); ?>" />    
+    <link rel="shortcut icon" href="<?= base_url('assets/ico/faviconrambla.png'); ?>" />
     <!-- Awal Sweet Alert -->
     <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/sweetalert/sweetalert.css">
     <script src="<?php echo base_url() ?>assets/sweetalert/sweetalert.min.js"></script>
@@ -31,7 +31,7 @@
     <script src="<?= base_url('assets/template/celestialui'); ?>/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
 
-    <link rel="stylesheet" href="<?php echo base_url() ?>assets/font-awesome/4.5.0/css/font-awesome.min.css" />    
+    <link rel="stylesheet" href="<?php echo base_url() ?>assets/font-awesome/4.5.0/css/font-awesome.min.css" />
     <!-- Awal Datatable -->
     <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
     <!-- Buttons Extension CSS -->
@@ -39,28 +39,28 @@
     <!-- Awal Custom CSS -->
     <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/css/style.css">
     <!-- Akhir Custom CSS -->
-    
+
 </head>
 
-<body>       
+<body>
     <script>
-           function rupiahjs(bilangan) {
-                if(bilangan == null){
-                    bilangan = 0;
-                }else{
-                    bilangan = bilangan;
-                }
-                var rupiah = bilangan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                return rupiah;
-           }
-           const rupiah = (number)=>{
-                return new Intl.NumberFormat("id-ID", {
+        function rupiahjs(bilangan) {
+            if (bilangan == null) {
+                bilangan = 0;
+            } else {
+                bilangan = bilangan;
+            }
+            var rupiah = bilangan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            return rupiah;
+        }
+        const rupiah = (number) => {
+            return new Intl.NumberFormat("id-ID", {
                 style: "currency",
                 currency: "IDR",
-                maximumFractionDigits: 0, 
-                minimumFractionDigits: 0, 
-                }).format(number);
-            }
+                maximumFractionDigits: 0,
+                minimumFractionDigits: 0,
+            }).format(number);
+        }
     </script>
     <div class="row d-none" id="proBanner">
         <div class="col-12">
