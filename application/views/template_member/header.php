@@ -61,6 +61,32 @@
                 minimumFractionDigits: 0,
             }).format(number);
         }
+
+        function hitungSelihHari(daterange) {
+            const myArray = daterange.split(" - ");
+            let start_date = myArray[0];
+            let end_date = myArray[1];
+
+            // Hitung selisih waktu dalam milidetik
+            const selisihWaktu = new Date(end_date) - new Date(start_date);
+
+            // Ubah selisih milidetik ke hari
+            const selisihHari = selisihWaktu / (1000 * 3600 * 24);
+
+            return Math.abs(selisihHari)
+        }
+
+        function hitungSelihBulan(daterange) {
+            const myArray = daterange.split(" - ");
+
+            // Mengonversi tanggal ke objek Date
+            const startDate = new Date(myArray[0]);
+            const endDate = new Date(myArray[1]);
+
+            let selisihBulan = endDate.getMonth() - startDate.getMonth() + (12 * (endDate.getFullYear() - startDate.getFullYear()));
+
+            return Math.abs(selisihBulan);
+        }
     </script>
     <div class="row d-none" id="proBanner">
         <div class="col-12">

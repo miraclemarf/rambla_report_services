@@ -140,6 +140,11 @@
             if (params9 === "") {
                 params9 = null;
             }
+
+            if (hitungSelihBulan(params3) > 4) {
+                alert('Range Tanggal Maksimal 4 Bulan')
+                return false;
+            }
             //console.log(params9)
             load_data_penjualanartikel(params1, params2, params3, params4, params5, params6, params7, params8, params9);
         });
