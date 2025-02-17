@@ -73,6 +73,7 @@ class Dashboard extends My_Controller
         $data['username'] = $this->input->cookie('cookie_invent_user');
 
         $branch_id = null;
+        $filter = null;
         // START CEK ADA DEPT NGGA
         $cek_user_dept = $this->db->query("SELECT * from m_user_sub_division where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
 
@@ -91,6 +92,7 @@ class Dashboard extends My_Controller
         } else if ($cek_user_site) {
             $branch_id = $cek_user_site->branch_id;
             // HANYA USER DENGAN SITE TERTENTU
+            $filter = $this->M_Division->get_division($data['username'], $branch_id);
             $query = "SELECT DISTINCT brand_code as brand from m_brand";
         } else {
             // UNTUK MD
@@ -106,6 +108,7 @@ class Dashboard extends My_Controller
         where DATE_FORMAT(periode,'%Y-%m') = DATE_FORMAT(CURRENT_DATE(),'%Y-%m')
         and brand_code in (" . $query . ")
         and branch_id = '" . $branch_id . "'
+        $filter
         group by date_format(periode , '%Y.%m'), brand_code
         order by tnet1 desc
         limit 3) brand";
@@ -127,6 +130,8 @@ class Dashboard extends My_Controller
 
         $data['username'] = $this->input->cookie('cookie_invent_user');
         $kode_brand = array(null);
+        $category = array(null);
+        $division = array(null);
         $branch_id = null;
 
         // START CEK ADA DEPT NGGA
@@ -146,6 +151,7 @@ class Dashboard extends My_Controller
             }
         } else if ($cek_user_site) {
             $branch_id = $cek_user_site->branch_id;
+            $division = $this->M_Division->get_division_meta($data['username'], $branch_id);
         } else {
             // UNTUK MD
             $list_brand = $this->db->query("SELECT distinct brand from m_user_brand where username = '" . $data['username'] . "'")->result();
@@ -156,8 +162,10 @@ class Dashboard extends My_Controller
         // END CEK ADA DEPTNYA NGGA
         $branch_id =  $branch_id ?  $branch_id : 'R001';
         $store = $postData["params1"] ? $postData["params1"] : $branch_id;
+        $division = $division ? $division : array(null);
         $periode =  ubahFormatTanggal($postData["params3"]);
         $kode_brand = $postData['params2'] ? $postData['params2'] : $this->default_load();
+        $category = $category ? $category : array(null);
 
         // $metabaseSiteUrl = 'http://192.168.8.99:3000';
         $metabaseSiteUrl = 'https://metabase.stardeptstore.com';
@@ -172,93 +180,15 @@ class Dashboard extends My_Controller
             ->withClaim('params', [
                 'store'         => $store,
                 'periode'       => $periode,
+                'division'      => $division,
                 'brand'         => $kode_brand,
+                'kode_sub_div'  => $category,
             ])
             ->getToken($config->signer(), $config->signingKey());
 
         $tokenString = $token->toString();
         $iframeUrl = "$metabaseSiteUrl/embed/dashboard/$tokenString#bordered=false&titled=false&hide_header=true/";
         echo $iframeUrl;
-    }
-
-    public function get_salesbyday()
-    {
-        extract(populateform());
-        $data['username']       = $this->input->cookie('cookie_invent_user');
-
-        $where = "";
-        // if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02) or ($this->input->cookie('cookie_invent_tipe') == 13)){
-        //     $where.= "AND brand_code in (
-        //         select distinct brand from m_user_brand 
-        //         where username = '".$data['username']."'
-        //     )";
-        // }else if($this->input->cookie('cookie_invent_tipe') == 15){
-        //     $where.= $this->M_Categories->get_category($data['username']);
-        // }else{
-        //     $where.= "error";
-        // }
-        // START CEK ADA KATEGORINYA NGGA
-        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
-        if ($cek_user_category) {
-            $where .= $this->M_Categories->get_category($data['username']);
-        } else {
-            $where .= "AND brand_code in (
-                select distinct brand from m_user_brand 
-                where username = '" . $data['username'] . "'
-            )";
-        }
-        // END CEK ADA KATEGORINYA NGGA
-        $data['hasil']          = $this->Models->showdata("SELECT
-        date_format(periode, '%Y.%m.%d') AS periode,
-        SUM(tot_qty) AS tot_qty,
-        SUM(net_af) AS net
-        FROM r_sales
-        WHERE (date_format(periode, '%Y.%m') = date_format(current_date(),'%Y.%m')) 
-        $where
-        GROUP BY date_format(periode, '%Y.%m.%d')
-        ORDER BY date_format(periode, '%Y.%m.%d')");
-        echo json_encode($data);
-    }
-
-    public function get_salesbymonth()
-    {
-        extract(populateform());
-        $data['username']       = $this->input->cookie('cookie_invent_user');
-
-        $where = "";
-        // if(($this->input->cookie('cookie_invent_tipe') == 10) or ($this->input->cookie('cookie_invent_tipe') == 03) or ($this->input->cookie('cookie_invent_tipe') == 07) or ($this->input->cookie('cookie_invent_tipe') == 02) or ($this->input->cookie('cookie_invent_tipe') == 13)){
-        //     $where.= "AND brand_code in (
-        //         select distinct brand from m_user_brand 
-        //         where username = '".$data['username']."'
-        //     )";
-        // }else if($this->input->cookie('cookie_invent_tipe') == 15){
-        //     $where.= $this->M_Categories->get_category($data['username']);
-        // }else{
-        //     $where.= "error";
-        // }
-        // START CEK ADA KATEGORINYA NGGA
-        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
-        if ($cek_user_category) {
-            $where .= $this->M_Categories->get_category($data['username']);
-        } else {
-            $where .= "AND brand_code in (
-                select distinct brand from m_user_brand 
-                where username = '" . $data['username'] . "'
-            )";
-        }
-        // END CEK ADA KATEGORINYA NGGA
-
-        $data['hasil']          = $this->Models->showdata("SELECT
-        date_format(periode, '%Y.%m') AS periode,
-        SUM(tot_qty) AS tot_qty,
-        SUM(net_af) AS net
-        FROM r_sales
-        WHERE date_format(periode, '%Y.%m.%d') between '2023.03.01' and date_format(current_date(),'%Y.%m.%d')
-        $where
-        GROUP BY date_format(periode, '%Y.%m')
-        ORDER BY date_format(periode, '%Y.%m')
-        ");
-        echo json_encode($data);
     }
 
     public function get_top10_rank($store)
@@ -313,61 +243,4 @@ class Dashboard extends My_Controller
         ) c on a.ranking1 = c.ranking3");
         echo json_encode($data);
     }
-
-
-    // function fetch_data_omset()
-    // {
-    //     extract(populateform());
-    //     $data['username']       = $this->input->cookie('cookie_invent_user');
-    //     $where = "";
-    //     $from = date('Y-m-01');
-    //     $to = date('Y-m-d');
-
-    //     if (strlen($bulan) == '1') {
-    //         $bulan = '0' . $bulan;
-    //     } else {
-    //         $bulan;
-    //     }
-    //     if ($bulan || $tahun || $brand) {
-    //         $from   = $tahun . '-' . $bulan . '-' . '01';
-    //         if ($bulan == date('m')) {
-    //             $to     = $tahun . '-' . $bulan . '-' . date('d');
-    //         } else {
-    //             $to     = $this->db->query("SELECT LAST_DAY('" . $from . "') as last_day")->row();
-    //             $to     = $to->last_day;
-    //         }
-
-    //         if ($brand == "all") {
-    //             $where = "and brand_code in 
-    //             (
-    //             select DISTINCT brand from m_user_brand
-    //             where username ='" . $data['username'] . "'
-    //             )";
-    //         } else {
-    //             $where = "and brand_code ='" . $brand . "'";
-    //         }
-    //         if ($fa == 0) {
-    //             $where .= " and substring(trans_no, 9, 1) != '5'";
-    //         } else if ($fa == 1) {
-    //             $where .= " and substring(trans_no, 9, 1) = '5'";
-    //         }
-    //         $data = $this->db->query("SELECT IFNULL(net, 0) as net,aa.periode from (
-    //             SELECT DATE_ADD(DATE_ADD(DATE_ADD(LAST_DAY('" . $from . "'), INTERVAL 1 DAY), INTERVAL -1 MONTH), INTERVAL help_topic_id DAY) as periode
-    //             FROM mysql.help_topic order by help_topic_id asc limit 31
-    //         ) aa left join (
-    //             SELECT SUM(net_af) as net, date_format(periode,'%Y-%m-%d') as periode
-    //             from r_sales
-    //             WHERE MONTH(periode) ='" . $bulan . "' 
-    //             and YEAR(periode) ='" . $tahun . "' 
-    //             $where
-    //             GROUP BY periode
-    //             order by periode
-    //         ) bb on aa.periode = bb.periode    
-    //         where aa.periode between '" . $from . "' and '" . $to . "'")->result();
-    //     } else {
-    //         $data = array('Data Kosong');
-    //     }
-
-    //     echo json_encode($data);
-    // }
 }

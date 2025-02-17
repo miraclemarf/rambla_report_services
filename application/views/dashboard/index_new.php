@@ -105,7 +105,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="loader-wrapper">
+                    <div class="loader-wrapper2">
                         <div class="h-100 d-flex align-items-center justify-content-center">
                             <div class="loader"></div>
                         </div>
@@ -285,12 +285,12 @@
                 beforeSend: function( xhr ) {
                     // console.log(xhr);
                     $('.top10sales').hide();
-                    $('.loader-wrapper').show();
+                    $('.loader-wrapper2').show();
                 },
                 success: function(data) { 
                     // console.log(data["hasil"]);
                     $('.top10sales').show();
-                    $('.loader-wrapper').hide();
+                    $('.loader-wrapper2').hide();
                     var html = '';
                     var special_price = '';
                     for (var i = 0; data["hasil"]["length"] > i; i++) {
