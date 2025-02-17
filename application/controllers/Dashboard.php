@@ -1,6 +1,12 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+
+
 class Dashboard extends My_Controller
 {
 
@@ -55,39 +61,124 @@ class Dashboard extends My_Controller
         }
         $data['storeid']        =  $store ? $store : 'R001';
 
-        // $data['year']           = $this->Models->showdata("SELECT DISTINCT YEAR(periode) as tahun from r_sales");
-
-        // $data['list_brand']     = $this->Models->showdata("SELECT DISTINCT brand, brand_name from m_user_brand a
-        // inner join m_brand b
-        // on a.brand = b.brand_code
-        // where username ='" . $data['username'] . "'");
-
-        // $data['omset_date']      = $this->Models->showdata("SELECT * from r_sales
-        // WHERE MONTH(periode) ='" . date('m') . "' and YEAR(periode) ='" . date('Y') . "' $where  GROUP BY periode order by periode");
-
-        // $data['omset_pos']      = $this->Models->showdata("SELECT SUM(net_af) as net, date_format(periode,'%Y-%m-%d') as periode
-        // from r_sales
-        // WHERE MONTH(periode) ='" . date('m') . "' 
-        // and YEAR(periode) ='" . date('Y') . "' 
-        // $where
-        // and substring(trans_no, 9, 1) != '5'
-        // GROUP BY periode
-        // order by periode");
-
-        // $data['omset_apps']      = $this->Models->showdata("SELECT SUM(net_af) as net, date_format(periode,'%Y-%m-%d') as periode
-        // from r_sales
-        // WHERE MONTH(periode) ='" . date('m') . "' 
-        // and YEAR(periode) ='" . date('Y') . "' 
-        // $where
-        // and substring(trans_no, 9, 1) = '5'
-        // GROUP BY periode
-        // order by periode");
-
         $this->load->view('template_member/header', $data);
         $this->load->view('template_member/navbar', $data);
         $this->load->view('template_member/sidebar', $data);
         $this->load->view('dashboard/index_new', $data);
         $this->load->view('template_member/footer', $data);
+    }
+
+    public function default_load()
+    {
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+
+        $branch_id = null;
+        // START CEK ADA DEPT NGGA
+        $cek_user_dept = $this->db->query("SELECT * from m_user_sub_division where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT a.branch_id, branch_name from m_user_site a
+        inner join m_branches b
+        on a.branch_id = b.branch_id
+        where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+
+        if ($cek_user_dept) {
+            // HANYA USER DENGAN DEPT TERTENTU
+            $query = "SELECT DISTINCT brand_code as brand FROM m_vendor_category
+            where left(category_code,4) in (
+            SELECT distinct kode_sub_division from m_user_sub_division where username = '" . $data['username'] . "' and flagactv = '1'
+            ) and isactive = '1'";
+        } else if ($cek_user_site) {
+            $branch_id = $cek_user_site->branch_id;
+            // HANYA USER DENGAN SITE TERTENTU
+            $query = "SELECT DISTINCT brand_code as brand from m_brand";
+        } else {
+            // UNTUK MD
+            $query = "SELECT distinct brand from m_user_brand where username = '" . $data['username'] . "'";
+        }
+        // END CEK ADA DEPTNYA NGGA
+
+        $branch_id = $branch_id ? $branch_id : 'R001';
+
+        $query = "SELECT brand_code from (
+        SELECT ROW_NUMBER() OVER (order by sum(net_af) desc) ranking1, date_format(periode , '%Y.%m') periode1, brand_code as brand_code ,  sum(net_af) tnet1
+        from r_sales 
+        where DATE_FORMAT(periode,'%Y-%m') = DATE_FORMAT(CURRENT_DATE(),'%Y-%m')
+        and brand_code in (" . $query . ")
+        and branch_id = '" . $branch_id . "'
+        group by date_format(periode , '%Y.%m'), brand_code
+        order by tnet1 desc
+        limit 3) brand";
+
+        $brand = $this->db->query($query)->result();
+
+        $data = array();
+
+        foreach ($brand as $row) {
+            array_push($data, $row->brand_code);
+        }
+
+        return $data;
+    }
+
+    public function penjualan_brand_where()
+    {
+        $postData = $this->input->post();
+
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+        $kode_brand = array(null);
+        $branch_id = null;
+
+        // START CEK ADA DEPT NGGA
+        $cek_user_dept = $this->db->query("SELECT * from m_user_sub_division where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT a.branch_id, branch_name from m_user_site a
+        inner join m_branches b
+        on a.branch_id = b.branch_id
+        where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+
+        if ($cek_user_dept) {
+            // HANYA USER DENGAN DEPT TERTENTU
+            $list_sub_div = $this->db->query("SELECT distinct kode_sub_division from m_user_sub_division where username = '" . $data['username'] . "' and flagactv = '1'")->result();
+            foreach ($list_sub_div as $row) {
+                array_push($category, $row->kode_sub_division);
+            }
+        } else if ($cek_user_site) {
+            $branch_id = $cek_user_site->branch_id;
+        } else {
+            // UNTUK MD
+            $list_brand = $this->db->query("SELECT distinct brand from m_user_brand where username = '" . $data['username'] . "'")->result();
+            foreach ($list_brand as $row) {
+                array_push($kode_brand, $row->brand);
+            }
+        }
+        // END CEK ADA DEPTNYA NGGA
+        $branch_id =  $branch_id ?  $branch_id : 'R001';
+        $store = $postData["params1"] ? $postData["params1"] : $branch_id;
+        $periode =  ubahFormatTanggal($postData["params3"]);
+        $kode_brand = $postData['params2'] ? $postData['params2'] : $this->default_load();
+
+        // $metabaseSiteUrl = 'http://192.168.8.99:3000';
+        $metabaseSiteUrl = 'https://metabase.stardeptstore.com';
+        $metabaseSecretKey = '91465c305d756abd48b936a0a9ae99ce4e868bb3cfa36ca6dbc824158a60c489';
+
+        //metabase
+        $config = Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($metabaseSecretKey));
+        $builder = $config->builder();
+
+        $token = $builder
+            ->withClaim('resource', ['dashboard' => 241])
+            ->withClaim('params', [
+                'store'         => $store,
+                'periode'       => $periode,
+                'brand'         => $kode_brand,
+            ])
+            ->getToken($config->signer(), $config->signingKey());
+
+        $tokenString = $token->toString();
+        $iframeUrl = "$metabaseSiteUrl/embed/dashboard/$tokenString#bordered=false&titled=false&hide_header=true/";
+        echo $iframeUrl;
     }
 
     public function get_salesbyday()

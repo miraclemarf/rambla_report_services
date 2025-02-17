@@ -141,7 +141,7 @@
                 params9 = null;
             }
 
-            if (hitungSelihBulan(params3) > 4) {
+            if (hitungSelihBulan(params3) > 3) {
                 alert('Range Tanggal Maksimal 4 Bulan')
                 return false;
             }
@@ -150,7 +150,7 @@
         });
 
         function resizeIframe() {
-            var iframe = document.getElementById('iFrameSalesMetaByBrand');
+            var iframe = document.getElementById('iFrameSalesMetaByArticle');
             iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
         }
 
