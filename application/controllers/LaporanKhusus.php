@@ -82,6 +82,20 @@ class LaporanKhusus extends My_Controller
         $this->load->view('template_member/footer');
     }
 
+    public function penjualan_periode()
+    {
+        extract(populateform());
+        $data['title'] = 'Rambla | Laporan Penjualan';
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+        $data['vendor'] = $this->input->cookie('cookie_invent_vendor');
+
+        $this->load->view('template_member/header', $data);
+        $this->load->view('template_member/navbar', $data);
+        $this->load->view('template_member/sidebar', $data);
+        $this->load->view('laporan_khusus/penjualan_periode', $data);
+        $this->load->view('template_member/footer');
+    }
+
     public function penjualan_brand_where()
     {
         $postData = $this->input->post();

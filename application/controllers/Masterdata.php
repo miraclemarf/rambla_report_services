@@ -75,6 +75,18 @@ class Masterdata extends My_Controller
         }
     }
 
+    public function get_list_paymenttype()
+    {
+        $dbCentral = $this->load->database('dbcentral', TRUE);
+        extract(populateform());
+        $data['username']       = $this->input->cookie('cookie_invent_user');
+        $data['hasil']          = $dbCentral->query("SELECT * FROM m_mop where isactive = '1' order by seq ")->result();
+        echo "<option value=''>-- Pilih Data --</option>";
+        foreach ($data['hasil'] as $row) {
+            echo "<option value='" . $row->mop_code . "'>" . $row->description . " (" . $row->mop_code . ")</option>";
+        }
+    }
+
     public function get_store()
     {
         extract(populateform());
@@ -224,7 +236,7 @@ class Masterdata extends My_Controller
 
         $cek_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
         if ($cek_site) {
-            $data['hasil']          = $this->Models->showdata("SELECT DISTINCT KODE_SUB_DEPT, SUB_DEPT from m_kategori_list where SUB_DIVISION ='" . $sub_division . "'");
+            $data['hasil']          = $this->Models->showdata("SELECT DISTINCT KODE_SUB_DEPT, SUB_DEPT from m_kategori_list where DEPT ='" . $dept . "'");
         } else {
             $data['hasil']          = $this->Models->showdata("SELECT DISTINCT KODE_SUB_DEPT, SUB_DEPT from m_kategori_list where DEPT in (
             SELECT DISTINCT DEPT from m_kategori_list where DIVISION in 

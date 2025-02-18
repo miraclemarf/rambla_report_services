@@ -87,6 +87,11 @@
 
             return Math.abs(selisihBulan);
         }
+
+        function validateNumber(input) {
+            // Menghapus semua karakter non-numerik
+            input.value = input.value.replace(/[^0-9]/g, '');
+        }
     </script>
     <div class="row d-none" id="proBanner">
         <div class="col-12">
