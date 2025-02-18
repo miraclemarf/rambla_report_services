@@ -32,10 +32,10 @@
                                         <div class="col-md-8">
                                             <div class="row">
                                                 <div class="col-md-6 pr-1">
-                                                    <input type="time" class="form-control form-control-sm" placeholder="ex.10:00" maxlength="5">
+                                                    <input type="time" id="start_time" class="form-control form-control-sm" maxlength="5">
                                                 </div>
                                                 <div class="col-md-6 pl-1">
-                                                    <input type="time" class="form-control form-control-sm" placeholder="ex.18:00" maxlength="5">
+                                                    <input type="time" id="end_time" class="form-control form-control-sm" maxlength="5">
                                                 </div>
                                             </div>
                                         </div>
@@ -119,7 +119,7 @@
                                         <div class="col-md-3">
                                             <div class="form-check form-check-flat form-check-primary">
                                                 <label class=" form-check-label" style="padding-top: 6px;">
-                                                    <input type="radio" class="form-check-input" name="member_area" id="member_area1" value="">
+                                                    <input type="radio" class="form-check-input" name="member_area" id="member_area" value="1" checked>
                                                     All
                                                     <i class="input-helper"></i></label>
                                             </div>
@@ -127,7 +127,7 @@
                                         <div class="col-md-4 p-0">
                                             <div class="form-check form-check-flat form-check-primary">
                                                 <label class=" form-check-label" style="padding-top: 6px;">
-                                                    <input type="radio" class="form-check-input" name="member_area" id="member_area2" value="">
+                                                    <input type="radio" class="form-check-input" name="member_area" id="member_area" value="2">
                                                     Member Only
                                                     <i class="input-helper"></i></label>
                                             </div>
@@ -136,7 +136,7 @@
                                         <div class="col-md-5">
                                             <div class="form-check form-check-flat form-check-primary">
                                                 <label class=" form-check-label" style="padding-top: 6px;">
-                                                    <input type="radio" class="form-check-input" name="member_area" id="member_area3" value="">
+                                                    <input type="radio" class="form-check-input" name="member_area" id="member_area" value="3">
                                                     Non Member
                                                     <i class="input-helper"></i></label>
                                             </div>
@@ -147,7 +147,7 @@
                                             <label class="mt-1">Min Purchase</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="text" class="form-control form-control-sm" placeholder="ex.100000" oninput="validateNumber(this)">
+                                            <input type="text" name="min_purchase" class="form-control form-control-sm" placeholder="ex.100000" oninput="validateNumber(this)">
                                         </div>
                                     </div>
                                     <div class="row mt-2">
@@ -155,7 +155,7 @@
                                             <label class="mt-1">Max Purchase</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="text" class="form-control form-control-sm" placeholder="ex.200000" oninput="validateNumber(this)">
+                                            <input type="text" name="max_purchase" class="form-control form-control-sm" placeholder="ex.200000" oninput="validateNumber(this)">
                                         </div>
                                     </div>
                                     <hr>
@@ -166,7 +166,7 @@
                                         <div class="col" style="padding-left: 10px;">
                                             <div class="form-check form-check-flat form-check-primary" id="exc_vch">
                                                 <label class="form-check-label" style="padding-top: 6px;">
-                                                    <input type="checkbox" class="form-check-input">
+                                                    <input type="checkbox" class="form-check-input" name="excludevch" value="1">
                                                     Exclude Voucher dan Starry
                                                     <i class="input-helper"></i>
                                                 </label>
