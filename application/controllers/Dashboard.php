@@ -199,10 +199,14 @@ class Dashboard extends My_Controller
 
 
         // START CEK ADA KATEGORINYA NGGA
-        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
+        $cek_user_dept = $this->db->query("SELECT * from m_user_sub_division where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+
         $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
-        if ($cek_user_category) {
-            $where .= $this->M_Categories->get_category($data['username']);
+        if ($cek_user_dept) {
+            $where .= "AND left(category_code,4) in (
+                select distinct kode_sub_division from m_user_sub_division 
+                where username = '" . $data['username'] . "' and flagactv ='1'
+            )";
         } else if ($cek_user_site) {
             $where .= $this->M_Division->get_division($data['username'], $store);
         } else {

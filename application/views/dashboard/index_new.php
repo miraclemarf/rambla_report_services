@@ -39,7 +39,7 @@
                 <div class="card-body">
                     <div class="d-flex flex-wrap justify-content-between mb-3">
                         <div>
-                            <h4 class="card-title mb-0">Chart Penjualan By Brand</h4>
+                            <h4 class="card-title mb-0">Chart Compare Sales By Brand</h4>
                             <p class="text-muted mb-2">Terapkan filter untuk menampilkan data.</p>
                         </div>
                         <div class="align-self-end">
