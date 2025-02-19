@@ -103,6 +103,107 @@ class LaporanKhusus extends My_Controller
         echo json_encode($data);
     }
 
+    public function penjualan_periode_where()
+    {
+        $postData = $this->input->post();
+
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+        $kode_brand = array(null);
+        $category = array(null);
+
+        // START CEK ADA DEPT NGGA
+        $cek_user_dept = $this->db->query("SELECT * from m_user_sub_division where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+
+        if ($cek_user_dept) {
+            // HANYA USER DENGAN DEPT TERTENTU
+            $list_sub_div = $this->db->query("SELECT distinct kode_sub_division from m_user_sub_division where username = '" . $data['username'] . "' and flagactv = '1'")->result();
+            foreach ($list_sub_div as $row) {
+                array_push($category, $row->kode_sub_division);
+            }
+        } else if ($cek_user_site) {
+            // HANYA USER DENGAN SITE TERTENTU
+            $division = $this->M_Division->get_division_meta($data['username'], $postData["params8"]);
+        } else {
+            // UNTUK MD
+            $list_brand = $this->db->query("SELECT distinct brand from m_user_brand where username = '" . $data['username'] . "'")->result();
+            foreach ($list_brand as $row) {
+                array_push($kode_brand, $row->brand);
+            }
+        }
+        // END CEK ADA DEPTNYA NGGA
+        $store = $postData["params8"];
+        $periode =  ubahFormatTanggal($postData["params3"]);
+        $division = $postData['params4'] ? $postData['params4'] : null;
+        $sub_division = $postData['params5'] ? $postData['params5'] : null;
+        $areatrx = $postData['params9'] ? $postData['params9'] : null;
+        $category = $category ? $category : array(null);
+        $payment_type = $postData['params2']  ? $postData['params2']  : null;
+        $is_member = ($postData['params2'] == 3) ? null :  $postData['params2'];
+        $start_time = $postData['params6'] ? $postData['params6'] : null;
+        $end_time = $postData['params7'] ? $postData['params7'] : null;
+        $min_purchase = $postData['params10'] ? $postData['params10'] : null;
+        $max_purchase = $postData['params11'] ? $postData['params11'] : null;
+
+        // $metabaseSiteUrl = 'http://192.168.8.99:3000';
+        $metabaseSiteUrl = 'https://metabase.stardeptstore.com';
+        $metabaseSecretKey = '91465c305d756abd48b936a0a9ae99ce4e868bb3cfa36ca6dbc824158a60c489';
+
+        //metabase
+        $config = Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($metabaseSecretKey));
+        $builder = $config->builder();
+
+        if ($postData['params12'] == "1") {
+            $token = $builder
+                ->withClaim('resource', ['dashboard' => 242])
+                ->withClaim('params', [
+                    'store'             => $store,
+                    'periode'           => $periode,
+                    'area_transaksi'    => $areatrx,
+                    'division'          => $division,
+                    'sub_division'      => $sub_division,
+                    'payment_type'      => $payment_type,
+                    'is_member'         => $is_member,
+                    'start_time'        => $start_time,
+                    'end_time'          => $end_time,
+                    'min_purchase'      => $min_purchase,
+                    'max_purchase'      => $max_purchase,
+                    'evoucher'          => 'E-VOUCHER',
+                    'ramblavoucher'     => 'RAMBLA VOUCHER',
+                    'othervoucher'      => 'OTHER VOUCHER',
+                    'pointreward'       => 'POINT REWARD',
+                ])
+                ->getToken($config->signer(), $config->signingKey());
+        } else {
+            $token = $builder
+                ->withClaim('resource', ['dashboard' => 242])
+                ->withClaim('params', [
+                    'store'             => $store,
+                    'periode'           => $periode,
+                    'area_transaksi'    => $areatrx,
+                    'division'          => $division,
+                    'sub_division'      => $sub_division,
+                    'payment_type'      => $payment_type,
+                    'is_member'         => $is_member,
+                    'start_time'        => $start_time,
+                    'end_time'          => $end_time,
+                    'min_purchase'      => $min_purchase,
+                    'max_purchase'      => $max_purchase,
+                    'evoucher'          => null,
+                    'ramblavoucher'     => null,
+                    'othervoucher'      => null,
+                    'pointreward'       => null,
+                ])
+                ->getToken($config->signer(), $config->signingKey());
+        }
+
+        $tokenString = $token->toString();
+        $iframeUrl = "$metabaseSiteUrl/embed/dashboard/$tokenString#bordered=false&titled=false&hide_header=true/";
+        echo $iframeUrl;
+    }
+
     public function penjualan_brand_meta_where()
     {
         $postData = $this->input->post();

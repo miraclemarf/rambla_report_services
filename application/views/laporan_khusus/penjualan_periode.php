@@ -143,32 +143,45 @@
                 params12 = null;
             }
 
-            console.log(params1, params2, params3, params4, params5, params6, params7, params8, params9, params10, params11, params12);
-            // load_data_penjualanperiode(params1, params2, params3, params4, params5, params6, params7, params8, params9);
+            load_data_penjualanperiod(params1, params2, params3, params4, params5, params6, params7, params8, params9, params10, params11, params12);
         });
 
+        function resizeIframe() {
+            var iframe = document.getElementById('iFrameSalesMetaByPeriode');
+            iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+        }
 
-        // function load_data_penjualanperiodetest(params1, params2, params3, params4, params5, params6, params7, params8, params9) {
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "<?= base_url('LaporanKhusus/penjualan_brand_where'); ?>",
-        //         dataType: "JSON",
-        //         data: {
-        //             "params1": params1,
-        //             "params2": params2,
-        //             "params3": params3,
-        //             "params4": params4,
-        //             "params5": params5,
-        //             "params6": params6,
-        //             "params7": params7,
-        //             "params8": params8,
-        //             "params9": params9
-        //         },
-        //         success: function(data) {
-        //             console.log(data);
-        //         }
-        //     });
-        // }
+        // Panggil fungsi resizeIframe setelah iframe selesai dimuat
+        window.onload = function() {
+            resizeIframe();
+        };
+
+        function load_data_penjualanperiod(params1, params2, params3, params4, params5, params6, params7, params8, params9, params10, params11, params12) {
+            $.ajax({
+                url: "<?= base_url('LaporanKhusus/penjualan_periode_where'); ?>",
+                method: "POST",
+                data: {
+                    params1: params1,
+                    params2: params2,
+                    params3: params3,
+                    params4: params4,
+                    params5: params5,
+                    params6: params6,
+                    params7: params7,
+                    params8: params8,
+                    params9: params9,
+                    params10: params10,
+                    params11: params11,
+                    params12: params12,
+                },
+                success: function(data) {
+                    var iframe = document.getElementById('iFrameSalesMetaByPeriode');
+                    iframe.src = data;
+                }
+            });
+            // document.getElementById('iFrameSalesMetaByPeriode').src = baseUrl;
+        }
+
 
 
         function get_user_brand() {
