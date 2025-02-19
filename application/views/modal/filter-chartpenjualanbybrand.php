@@ -15,7 +15,7 @@
                             <div id="filter-penjualanartikel">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label class="mt-1">Pilih Periode</label>
+                                        <label class="mt-1">Pilih Periode <span class="text-danger">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         <?php $this->load->view('elements/daterange_picker'); ?>
@@ -23,7 +23,7 @@
                                 </div>
                                 <div class="row mt-2">
                                     <div class="col-md-4">
-                                        <label class="mt-1">Store</label>
+                                        <label class="mt-1">Store <span class="text-danger">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         <select class="js-example-basic-single list_store">
@@ -35,7 +35,7 @@
 
                                 <div class="row mt-2">
                                     <div class="col-md-4">
-                                        <label class="mt-1">Pilih Brand</label>
+                                        <label class="mt-1">Pilih Brand <span class="text-danger">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         <select class="js-example-basic-single list_user_brand" multiple="multiple">
