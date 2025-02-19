@@ -83,7 +83,7 @@ class Masterdata extends My_Controller
         $data['hasil']          = $dbCentral->query("SELECT * FROM m_mop where isactive = '1' order by seq ")->result();
         echo "<option value=''>-- Pilih Data --</option>";
         foreach ($data['hasil'] as $row) {
-            echo "<option value='" . $row->description . "'>" . $row->description . " (" . $row->mop_code . ")</option>";
+            echo "<option value='" . $row->description . "'>" . $row->description . "</option>";
         }
     }
 

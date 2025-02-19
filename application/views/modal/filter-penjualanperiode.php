@@ -19,7 +19,7 @@
                                     </legend>
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <label class="mt-1">Periode</label>
+                                            <label class="mt-1">Periode <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-md-8">
                                             <?php $this->load->view('elements/daterange_picker'); ?>
@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="row mt-2">
                                         <div class="col-md-4">
-                                            <label class="mt-1">Store</label>
+                                            <label class="mt-1">Store <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-md-8">
                                             <select class="js-example-basic-single list_store">
@@ -175,7 +175,7 @@
                                     </div>
                                     <div class="row mt-2">
                                         <div class="col-md-4">
-                                            <label class="mt-1">Payment Type</label>
+                                            <label class="mt-1">Payment Type <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-md-8">
                                             <select class="js-example-basic-single list_payment">

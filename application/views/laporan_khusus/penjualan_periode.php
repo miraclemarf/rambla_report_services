@@ -107,8 +107,10 @@
             if (params1 === "") {
                 params1 = null;
             }
-            if (params2 === "") {
+            if (params2 === "" || params2 === null) {
                 params2 = null;
+                alert('Payment Type Harus Dipilih')
+                return false;
             }
             if (params3 === "") {
                 params3 = null;
