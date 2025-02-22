@@ -175,7 +175,7 @@
                                     </div>
                                     <div class="row mt-2">
                                         <div class="col-md-4">
-                                            <label class="mt-1">Payment Type <span class="text-danger">*</span></label>
+                                            <label class="mt-1">Payment Type</label>
                                         </div>
                                         <div class="col-md-8">
                                             <select class="js-example-basic-single list_payment">
