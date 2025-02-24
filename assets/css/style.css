@@ -270,9 +270,17 @@ td {
     pointer-events:all;
 }
 
-@media (min-width: 768px) {}
+@media (min-width: 768px) {
+    .member-only {
+        padding: 0px;
+    }
+}
 
-@media (min-width: 576px) and (max-width: 767.98px) {}
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .member-only {
+        padding: 0px;
+    }
+}
 
 
 /* Responsive columns */
@@ -283,5 +291,8 @@ td {
 
     .embed-responsive {
         height: 100%;
+    }
+    .member-only {
+        padding: 15px;
     }
 }

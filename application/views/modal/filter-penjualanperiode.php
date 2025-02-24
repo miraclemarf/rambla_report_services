@@ -137,7 +137,7 @@
                                                     <i class="input-helper"></i></label>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 p-0">
+                                        <div class="col-md-4 member-only">
                                             <div class="form-check form-check-flat form-check-primary">
                                                 <label class=" form-check-label" style="padding-top: 6px;">
                                                     <input type="radio" class="form-check-input" name="member_area" id="member_area" value="2">
