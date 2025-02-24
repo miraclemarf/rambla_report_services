@@ -134,7 +134,8 @@ class LaporanKhusus extends My_Controller
             }
         }
         // END CEK ADA DEPTNYA NGGA
-        $store = $postData["params8"];
+        $store = $postData["params8"] ? $postData["params8"]: null;
+        $units = $postData["params13"] ? $postData["params13"]: null;
         $periode =  ubahFormatTanggal($postData["params3"]);
         $division = $postData['params4'] ? $postData['params4'] : null;
         $sub_division = $postData['params5'] ? $postData['params5'] : null;
@@ -159,6 +160,7 @@ class LaporanKhusus extends My_Controller
             $token = $builder
                 ->withClaim('resource', ['dashboard' => 242])
                 ->withClaim('params', [
+                    'units'             => $units,
                     'store'             => $store,
                     'periode'           => $periode,
                     'area_transaksi'    => $areatrx,
@@ -180,6 +182,7 @@ class LaporanKhusus extends My_Controller
             $token = $builder
                 ->withClaim('resource', ['dashboard' => 242])
                 ->withClaim('params', [
+                    'units'             => $units,
                     'store'             => $store,
                     'periode'           => $periode,
                     'area_transaksi'    => $areatrx,

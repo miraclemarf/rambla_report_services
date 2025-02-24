@@ -25,15 +25,20 @@ class M_Division extends CI_Model
     function get_division_meta($username, $store)
     {
         $filter = "";
-        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='" . $username . "' and branch_id ='" . $store . "'")->row();
+        if($store){
+            $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='" . $username . "' and branch_id ='" . $store . "'")->row();
 
-        if ($cek_user_site->RD == "1" and $cek_user_site->RS == "0") {
-            $filter = ['Department Store'];
-        } else if ($cek_user_site->RD == "0" and $cek_user_site->RS == "1") {
-            $filter = ['Supermarket'];
-        } else if ($cek_user_site->RD == "1" and $cek_user_site->RS == "1") {
+            if ($cek_user_site->RD == "1" and $cek_user_site->RS == "0") {
+                $filter = ['Department Store'];
+            } else if ($cek_user_site->RD == "0" and $cek_user_site->RS == "1") {
+                $filter = ['Supermarket'];
+            } else if ($cek_user_site->RD == "1" and $cek_user_site->RS == "1") {
+                $filter = ['Department Store', 'Supermarket'];
+            }
+        }else{
             $filter = ['Department Store', 'Supermarket'];
         }
+        
         return $filter;
     }
 

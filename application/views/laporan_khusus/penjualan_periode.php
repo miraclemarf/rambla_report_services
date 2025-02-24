@@ -35,6 +35,7 @@
 <script>
     var tabel = null;
     $(document).ready(function() {
+        get_unit();
         get_store();
         get_user_brand();
         get_division();
@@ -50,6 +51,7 @@
         var start_time = null;
         var end_time = null;
         var store = null;
+        var units = null;
         var params1 = null;
         var params2 = null;
         var params3 = periode;
@@ -103,6 +105,7 @@
             params10 = $('input[name="min_purchase"]').val();
             params11 = $('input[name="max_purchase"]').val();
             params12 = $('input[name="excludevch"]:checked').val();
+            params13 = units;
 
             if (params1 === "") {
                 params1 = null;
@@ -127,10 +130,8 @@
             if (params7 === "") {
                 params7 = null;
             }
-            if (params8 === "" || params8 == null) {
+            if (params8 === "") {
                 params8 = null;
-                alert('Store Harus Dipilih')
-                return false;
             }
             if (params9 === "") {
                 params9 = null;
@@ -144,8 +145,11 @@
             if (params12 === "" || params12 == null) {
                 params12 = null;
             }
+            if (params13 === "") {
+                params13 = null;
+            }
 
-            load_data_penjualanperiod(params1, params2, params3, params4, params5, params6, params7, params8, params9, params10, params11, params12);
+            load_data_penjualanperiod(params1, params2, params3, params4, params5, params6, params7, params8, params9, params10, params11, params12, params13);
         });
 
         function resizeIframe() {
@@ -158,7 +162,7 @@
             resizeIframe();
         };
 
-        function load_data_penjualanperiod(params1, params2, params3, params4, params5, params6, params7, params8, params9, params10, params11, params12) {
+        function load_data_penjualanperiod(params1, params2, params3, params4, params5, params6, params7, params8, params9, params10, params11, params12, params13) {
             $.ajax({
                 url: "<?= base_url('LaporanKhusus/penjualan_periode_where'); ?>",
                 method: "POST",
@@ -175,6 +179,7 @@
                     params10: params10,
                     params11: params11,
                     params12: params12,
+                    params13: params13,
                 },
                 success: function(data) {
                     var iframe = document.getElementById('iFrameSalesMetaByPeriode');
@@ -203,6 +208,45 @@
                 }
             });
         }
+
+        // START STORE
+        function get_unit() {
+            $.ajax({
+                type: "GET",
+                url: "<?= base_url('Masterdata'); ?>/get_unit",
+                dataType: "html",
+                success: function(data) {
+                    $(".loading").hide();
+                    $("#filter-penjualankategori").show();
+                    $('.list_unit').html(data);
+                },
+                beforeSend: function(xhr) {
+                    $(".loading").show();
+                    $("#filter-penjualankategori").hide();
+                }
+            });
+        }
+
+        $('.list_unit').on('change', function(e) {
+            units = this.value;
+            $.ajax({
+                url: "<?= base_url('Masterdata'); ?>/get_store",
+                data: {
+                    units: units
+                },
+                type: 'POST',
+                dataType: 'html',
+                success: function(data) {
+                    //console.log(data);
+                    $(".loading").hide();
+                    $('.list_store').html(data);
+                },
+                beforeSend: function(xhr) {
+                    // console.log(xhr);
+                    $(".loading").show();
+                }
+            });
+        })
 
         // START STORE
         function get_store() {
@@ -246,12 +290,7 @@
         $('.list_areatrx').on('change', function(e) {
             areatrx = this.value;
         })
-        $('.list_areatrx').parent().on('click', function(e) {
-            if (store === '' || store == null) {
-                alert('Harap Pilih Store Dahulu')
-                return false;
-            }
-        })
+
         // END STORE
 
         // START DIVISION
@@ -430,14 +469,6 @@
 
         $('.list_store').on('change', function(e) {
             store = this.value;
-            $opt = '<option value="">-- Pilih Data --</option><option value="FLOOR">FLOOR</option><option value="BAZAAR">BAZAAR</option><option value="ONLINE">ONLINE</option>';
-            if (store) {
-                $opt = '<option value="">-- Pilih Data --</option><option value="FLOOR">FLOOR</option><option value="BAZAAR">BAZAAR</option><option value="ONLINE">ONLINE</option>';
-                $('.list_areatrx').html($opt);
-            } else {
-                $opt = '<option value="">-- Pilih Data --</option>';
-                $('.list_areatrx').html($opt);
-            }
             $.ajax({
                 url: "<?= base_url('Masterdata'); ?>/get_list_division",
                 data: {

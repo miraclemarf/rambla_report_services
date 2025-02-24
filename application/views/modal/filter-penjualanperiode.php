@@ -42,7 +42,17 @@
                                     </div>
                                     <div class="row mt-2">
                                         <div class="col-md-4">
-                                            <label class="mt-1">Store <span class="text-danger">*</span></label>
+                                            <label class="mt-1">Unit <span class="text-danger">*</span></label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <select class="js-example-basic-single list_unit">
+                                                <option value=''>Please Wait...</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-4">
+                                            <label class="mt-1">Store</label>
                                         </div>
                                         <div class="col-md-8">
                                             <select class="js-example-basic-single list_store">
@@ -106,7 +116,10 @@
                                         </div>
                                         <div class="col-md-8">
                                             <select class="js-example-basic-single list_areatrx">
-                                                <option value=''>-- Pilih Data --</option>
+                                                <option value="">-- Pilih Data --</option>
+                                                <option value="FLOOR">FLOOR</option>
+                                                <option value="BAZAAR">BAZAAR</option>
+                                                <option value="ONLINE">ONLINE</option>
                                             </select>
                                         </div>
                                     </div>
