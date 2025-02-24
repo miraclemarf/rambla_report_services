@@ -51,7 +51,7 @@ class M_Horeca extends CI_Model
         ]);
         $dbCentral->from('v_laporan_penjualan_perartikel_all vs');
         $dbCentral->join('t_sales_trans_hdr th', 'vs.trans_no = th.trans_no');
-        $dbCentral->join('l_member_master_goodie mg', 'mg.member_id = th.member_id', 'left');
+        $dbCentral->join('l_member_master_starry mg', 'mg.member_id = th.member_id', 'left');
         $dbCentral->join('l_member_master_special ms', 'ms.member_id = th.member_id', 'left');
 
         $dbCentral->where('vs.branch_id', 'V001');
