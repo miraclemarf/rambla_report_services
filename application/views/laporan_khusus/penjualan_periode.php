@@ -148,6 +148,12 @@
             if (params13 === "") {
                 params13 = null;
             }
+            // console.log('units:'+params13, 'store:'+params8);
+
+            if(params8 == null && params13 == null){
+                alert('Unit atau Store tidak boleh kosong!')
+                return false;
+            }
 
             load_data_penjualanperiod(params1, params2, params3, params4, params5, params6, params7, params8, params9, params10, params11, params12, params13);
         });
