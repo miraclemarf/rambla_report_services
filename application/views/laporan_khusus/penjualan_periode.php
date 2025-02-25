@@ -23,7 +23,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="embed-responsive embed-responsive-4by3" style="height:550px">
+                    <div class="embed-responsive embed-responsive-4by3 frame-meta">
                         <iframe id="iFrameSalesMetaByPeriode" class="embed-responsive-item" src="" allowfullscreen></iframe>
                     </div>
                 </div>

@@ -27,7 +27,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="embed-responsive embed-responsive-4by3">
+                    <div class="embed-responsive embed-responsive-4by3 frame-meta">
                         <iframe id="iFrameSalesMetaByArticle" class="embed-responsive-item" src="" allowfullscreen></iframe>
                     </div>
                 </div>
