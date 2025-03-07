@@ -80,4 +80,44 @@ class LaporanExt extends My_Controller
         $this->redislib->set('test_key', 'Hello, Redis!');
         echo $this->redislib->get('test_key');
     }
+
+    public function sa_lebaran_2025()
+    {
+        $this->ceklogin();
+        extract(populateform());
+        $data['title'] = 'SMJ Tools | Laporan SA Lebaran 2025';
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+        $data['vendor'] = $this->input->cookie('cookie_invent_vendor');
+
+
+        $cek_operation = $this->db->query("SELECT * from m_login where username ='" . $data['username'] . "'")->row();
+        $cek_operation = $cek_operation->login_type_id;
+
+        $cek_usersite = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "'")->result_array();
+        
+        $data['iframe'] = 'https://meta.rambla.id/public/dashboard/479b229d-6978-4292-bec7-99e3aebaf929';
+        if(count($cek_usersite) == 1){
+            if($cek_usersite[0]['branch_id'] == 'R001'){
+                $data['iframe'] = 'https://meta.rambla.id/public/question/fddd894d-23ca-4084-99f7-5f597edab2be';
+            }
+            if($cek_usersite[0]['branch_id'] == 'R002'){
+                $data['iframe'] = 'https://meta.rambla.id/public/question/5b6a2961-e0c2-467e-8e58-0359daad4bae';
+            }
+            if($cek_usersite[0]['branch_id'] == 'S002'){
+                $data['iframe'] = 'https://meta.rambla.id/public/question/5963a6ab-fb20-428c-aa2d-5a5c6719b86d';
+            }
+            if($cek_usersite[0]['branch_id'] == 'S003'){
+                $data['iframe'] = 'https://meta.rambla.id/public/question/24d92e5b-6743-4fd5-85d1-f2770c0416cc';
+            }
+        }
+        
+
+        //$data['happyFreshSales'] = $this->M_Horeca->getHappyFreshSales();
+
+        $this->load->view('template_member/header', $data);
+        $this->load->view('template_member/navbar', $data);
+        $this->load->view('template_member/sidebar', $data);
+        $this->load->view('laporan/sa-lebaran-2025', $data);
+        $this->load->view('template_member/footer');
+    }
 }
