@@ -142,7 +142,8 @@ class LaporanKhusus extends My_Controller
         $areatrx = $postData['params9'] ? $postData['params9'] : null;
         $category = $category ? $category : array(null);
         $payment_type = $postData['params2']  ? $postData['params2']  : null;
-        $is_member = ($postData['params2'] == 3) ? null :  $postData['params2'];
+        // $is_member = ($postData['params2'] == 3) ? null :  $postData['params2'];
+        $is_member = ($postData['params1'] == 1) ? null : ($postData['params1'] == 2 ? 1 : ($postData['params1'] == 3 ? 0 : $postData['params1']));
         $start_time = $postData['params6'] ? $postData['params6'] : null;
         $end_time = $postData['params7'] ? $postData['params7'] : null;
         $min_purchase = $postData['params10'] ? $postData['params10'] : null;
@@ -204,6 +205,7 @@ class LaporanKhusus extends My_Controller
 
         $tokenString = $token->toString();
         $iframeUrl = "$metabaseSiteUrl/embed/dashboard/$tokenString#bordered=false&titled=false&hide_header=true/";
+
         echo $iframeUrl;
     }
 
