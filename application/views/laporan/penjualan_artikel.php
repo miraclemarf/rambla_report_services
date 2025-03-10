@@ -127,9 +127,13 @@
             }
 
             // console.log(hitungSelihBulan(params3));
-
-            if (hitungSelihBulan(params3) > 3) {
+            var userLoggedin = $('.nav-profile .nav-profile-name').text();
+            if (hitungSelihBulan(params3) > 3 && userLoggedin != 'MD09') {
                 alert('Range Tanggal Maksimal 4 Bulan')
+                return false;
+            }
+            if(hitungSelihBulan(params3) > 12 && userLoggedin == 'MD09'){
+                alert('Range Tanggal Maksimal 12 Bulan')
                 return false;
             }
 
