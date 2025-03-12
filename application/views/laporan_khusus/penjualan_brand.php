@@ -45,17 +45,23 @@
                                     <th rowspan="2" style="vertical-align: middle; text-align:center;">
                                         <nobr>BRAND</nobr>
                                     </th>
-                                    <th colspan="9" style="vertical-align: middle; text-align:center; background-color:#ff5252">FLOOR</td>
-                                    <th colspan="9" style="vertical-align: middle; text-align:center; background-color: #ff5252">ATRIUM</td>
-                                    <th colspan="9" style="vertical-align: middle; text-align:center; background-color: #ff5252">ONLINE</td>
-                                    <th colspan="9" style="vertical-align: middle; text-align:center; background-color: #ff5252">TOTAL</td>
+                                    <th colspan="11" style="vertical-align: middle; text-align:center; background-color:#ff5252">FLOOR</td>
+                                    <th colspan="11" style="vertical-align: middle; text-align:center; background-color: #ff5252">ATRIUM</td>
+                                    <th colspan="11" style="vertical-align: middle; text-align:center; background-color: #ff5252">ONLINE</td>
+                                    <th colspan="11" style="vertical-align: middle; text-align:center; background-color: #ff5252">TOTAL</td>
                                 </tr>
                                 <tr>
                                     <th>
+                                        <nobr>LP Qty</nobr>
+                                    </th>
+                                    <th>
                                         <nobr>LP Sales</nobr>
                                     </th>
                                     <th>
                                         <nobr>TP Target</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>TP Qty</nobr>
                                     </th>
                                     <th>
                                         <nobr>TP Sales</nobr>
@@ -79,10 +85,16 @@
                                         <nobr>TP Margin Value</nobr>
                                     </th>
                                     <th>
+                                        <nobr>LP Qty</nobr>
+                                    </th>
+                                    <th>
                                         <nobr>LP Sales</nobr>
                                     </th>
                                     <th>
                                         <nobr>TP Target</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>TP Qty</nobr>
                                     </th>
                                     <th>
                                         <nobr>TP Sales</nobr>
@@ -106,10 +118,16 @@
                                         <nobr>TP Margin Value</nobr>
                                     </th>
                                     <th>
+                                        <nobr>LP Qty</nobr>
+                                    </th>
+                                    <th>
                                         <nobr>LP Sales</nobr>
                                     </th>
                                     <th>
                                         <nobr>TP Target</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>TP Qty</nobr>
                                     </th>
                                     <th>
                                         <nobr>TP Sales</nobr>
@@ -133,10 +151,16 @@
                                         <nobr>TP Margin Value</nobr>
                                     </th>
                                     <th>
+                                        <nobr>LP Qty</nobr>
+                                    </th>
+                                    <th>
                                         <nobr>LP Sales</nobr>
                                     </th>
                                     <th>
                                         <nobr>TP Target</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>TP Qty</nobr>
                                     </th>
                                     <th>
                                         <nobr>TP Sales</nobr>
@@ -381,6 +405,12 @@
                         },
                     },
                     {
+                        "data": "LP_Qty1",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
                         "data": "LP_Sales1",
                         "render": function(data, type, row) {
                             return '<nobr>' + rupiahjs(data) + '</nobr>';
@@ -390,6 +420,12 @@
                         "data": "TP_Target1",
                         "render": function(data, type, row) {
                             return '<nobr>' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Qty1",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
                     },
                     {
@@ -435,6 +471,12 @@
                         },
                     },
                     {
+                        "data": "LP_Qty2",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
                         "data": "LP_Sales2",
                         "render": function(data, type, row) {
                             return '<nobr>' + rupiahjs(data) + '</nobr>';
@@ -444,6 +486,12 @@
                         "data": "TP_Target2",
                         "render": function(data, type, row) {
                             return '<nobr>' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Qty2",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
                     },
                     {
@@ -489,6 +537,12 @@
                         },
                     },
                     {
+                        "data": "LP_Qty3",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
                         "data": "LP_Sales3",
                         "render": function(data, type, row) {
                             return '<nobr>' + rupiahjs(data) + '</nobr>';
@@ -498,6 +552,12 @@
                         "data": "TP_Target3",
                         "render": function(data, type, row) {
                             return '<nobr>' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Qty3",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
                     },
                     {
@@ -543,6 +603,12 @@
                         },
                     },
                     {
+                        "data": "LP_Qty4",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
                         "data": "LP_Sales4",
                         "render": function(data, type, row) {
                             return '<nobr>' + rupiahjs(data) + '</nobr>';
@@ -552,6 +618,12 @@
                         "data": "TP_Target4",
                         "render": function(data, type, row) {
                             return '<nobr>' + rupiahjs(data) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "TP_Qty4",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
                         },
                     },
                     {
