@@ -27,6 +27,9 @@ class M_Store extends CI_Model
         } else if ($store == 'S003') {
             $dbStore = $this->load->database('storeS003', TRUE);
             $allfloor = " AND substring( tsth.trans_no, 9, 1 ) in ('0','1','2')";
+        } else if ($store == 'V002') {
+            $dbStore = $this->load->database('storeV002', TRUE);
+            $allfloor = " AND substring( tsth.trans_no, 9, 1 ) in ('0','1','2')";
         } else if ($store == 'V003') {
             $dbStore = $this->load->database('storeV003', TRUE);
             $allfloor = " AND substring( tsth.trans_no, 9, 1 ) in ('0','1','2')";

@@ -26,7 +26,7 @@
                             if ($storeid == 'V002')
                                 $storename = 'Happy Harvest Bogor (V002)';
                             if ($storeid == 'V003')
-                                $storename = 'Happy Harvest Bekasi (S003)';
+                                $storename = 'Happy Harvest Bekasi (V003)';
                             ?>
                             <i class="typcn typcn-location mr-2"></i>
                             <?= $storename ?>
