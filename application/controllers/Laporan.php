@@ -98,6 +98,8 @@ class Laporan extends My_Controller
 
         $username = $this->input->cookie('cookie_invent_user');
 
+        $data_item = $dbCentral->query("SELECT DISTINCT branch_id, isactive from m_item_master where article_number = '".$article_number."' and branch_id ='".$branch_id."'")->row();
+
         $sql = "UPDATE report_service.r_item_master set status_article = '" . $status . "', last_update = CURRENT_TIMESTAMP() where article_number ='" . $article_number . "' and branch_id = '" . $branch_id . "'";
 
         $active = "";
@@ -109,12 +111,14 @@ class Laporan extends My_Controller
         } else if ($status == "DISCONTINUE") {
             $active = "3";
         }
-        $sql_central = "UPDATE m_item_master set isactive = '" . $active . "', last_update = CURRENT_TIMESTAMP(), update_by ='" . $username . "' where article_number ='" . $article_number . "' and branch_id = '" . $branch_id . "'";
+        $sql_central = 'UPDATE m_item_master set isactive ="' . $active . '", last_update = CURRENT_TIMESTAMP(), update_by ="' . $username . '" where article_number ="' . $article_number . '" and branch_id ="' . $branch_id . '"';
         $this->db->query($sql);
         $dbCentral->query($sql_central);
-        // if ($this->db->affected_rows()) {
-        //     $data['status'] = true;
-        // } else {
+        
+        if ($this->db->affected_rows()) {
+            $dbCentral->query("call insert_log_data('m_item_master','isactive','".$data_item->isactive."','".$active."','".$username."','".$sql_central."')");
+        } 
+        // else {
         //     $data['status'] = false;
         // }
 

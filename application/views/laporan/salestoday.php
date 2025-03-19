@@ -1,3 +1,18 @@
+<style>
+    @media (max-width: 575.98px) {
+    .card {
+        height: 100%;
+        /* background: gold; */
+    }
+
+    .embed-responsive {
+        height: 100%;
+    }
+    .member-only {
+        padding: 15px;
+    }
+}
+</style>
 <div class="content-wrapper">
     <div class="row">
         <div class="col-sm-6">
@@ -166,19 +181,19 @@
                                                     </b></h4>
                                             </label></td>
                                         <td>
-                                            <h4 class="m-0"><?= $sales_allfl[0]->tot_trx ?> trx</h4>
+                                            <h4 class="m-0"><?= $sales_allfl[0]->tot_trx ? $sales_allfl[0]->tot_trx : 0 ?> trx</h4>
                                         </td>
                                         <td>
-                                            <h4 class="m-0"><?= $sales_allfl[0]->tot_qty ?> pcs</h4>
+                                            <h4 class="m-0"><?= $sales_allfl[0]->tot_qty ? $sales_allfl[0]->tot_qty : 0 ?> pcs</h4>
                                         </td>
                                         <td>
                                             <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_allfl[0]->gross ?></h4>
+                                                <h4 class="m-0">Rp <?= $sales_allfl[0]->gross ? $sales_allfl[0]->gross : 0 ?></h4>
                                             </nobr>
                                         </td>
                                         <td>
                                             <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_allfl[0]->net ?></h4>
+                                                <h4 class="m-0">Rp <?= $sales_allfl[0]->net ? $sales_allfl[0]->net : 0 ?></h4>
                                             </nobr>
                                         </td>
                                     </tr>
@@ -191,19 +206,19 @@
                                                     </b></h4>
                                             </label></td>
                                         <td>
-                                            <h4 class="m-0"><?= $sales_gf[0]->tot_trx ?> trx</h4>
+                                            <h4 class="m-0"><?= $sales_gf[0]->tot_trx ? $sales_gf[0]->tot_trx : 0 ?> trx</h4>
                                         </td>
                                         <td>
-                                            <h4 class="m-0"><?= $sales_gf[0]->tot_qty ?> pcs</h4>
+                                            <h4 class="m-0"><?= $sales_gf[0]->tot_qty ? $sales_gf[0]->tot_qty : 0 ?> pcs</h4>
                                         </td>
                                         <td>
                                             <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_gf[0]->gross ?></h4>
+                                                <h4 class="m-0">Rp <?= $sales_gf[0]->gross ? $sales_gf[0]->gross : 0 ?></h4>
                                             </nobr>
                                         </td>
                                         <td>
                                             <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_gf[0]->net ?></h4>
+                                                <h4 class="m-0">Rp <?= $sales_gf[0]->net ? $sales_gf[0]->net : 0 ?></h4>
                                             </nobr>
                                         </td>
                                     </tr>
@@ -216,19 +231,19 @@
                                                     </b></h4>
                                             </label></td>
                                         <td>
-                                            <h4 class="m-0"><?= $sales_fl1[0]->tot_trx ?> trx</h4>
+                                            <h4 class="m-0"><?= $sales_fl1[0]->tot_trx ? $sales_fl1[0]->tot_trx : 0 ?> trx</h4>
                                         </td>
                                         <td>
-                                            <h4 class="m-0"><?= $sales_fl1[0]->tot_qty ?> pcs</h4>
+                                            <h4 class="m-0"><?= $sales_fl1[0]->tot_qty ? $sales_fl1[0]->tot_qty : 0 ?> pcs</h4>
                                         </td>
                                         <td>
                                             <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_fl1[0]->gross ?></h4>
+                                                <h4 class="m-0">Rp <?= $sales_fl1[0]->gross ? $sales_fl1[0]->gross : 0 ?></h4>
                                             </nobr>
                                         </td>
                                         <td>
                                             <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_fl1[0]->net ?></h4>
+                                                <h4 class="m-0">Rp <?= $sales_fl1[0]->net ? $sales_fl1[0]->net : 0 ?></h4>
                                             </nobr>
                                         </td>
                                     </tr>
@@ -241,19 +256,19 @@
                                                     </b></h4>
                                             </label></td>
                                         <td>
-                                            <h4 class="m-0"><?= $sales_fl2[0]->tot_trx ?> trx</h4>
+                                            <h4 class="m-0"><?= $sales_fl2[0]->tot_trx ? $sales_fl2[0]->tot_trx : 0 ?> trx</h4>
                                         </td>
                                         <td>
-                                            <h4 class="m-0"><?= $sales_fl2[0]->tot_qty ?> pcs</h4>
+                                            <h4 class="m-0"><?= $sales_fl2[0]->tot_qty ? $sales_fl2[0]->tot_qty : 0 ?> pcs</h4>
                                         </td>
                                         <td>
                                             <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_fl2[0]->gross ?></h4>
+                                                <h4 class="m-0">Rp <?= $sales_fl2[0]->gross ? $sales_fl2[0]->gross : 0 ?></h4>
                                             </nobr>
                                         </td>
                                         <td>
                                             <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_fl2[0]->net ?></h4>
+                                                <h4 class="m-0">Rp <?= $sales_fl2[0]->net ? $sales_fl2[0]->net : 0 ?></h4>
                                             </nobr>
                                         </td>
                                     </tr>
@@ -266,19 +281,19 @@
                                                     </b></h4>
                                             </label></td>
                                         <td>
-                                            <h4 class="m-0"><?= $sales_rd[0]->tot_trx ?> trx</h4>
+                                            <h4 class="m-0"><?= $sales_rd[0]->tot_trx ? $sales_rd[0]->tot_trx : 0 ?> trx</h4>
                                         </td>
                                         <td>
-                                            <h4 class="m-0"><?= $sales_rd[0]->tot_qty ?> pcs</h4>
+                                            <h4 class="m-0"><?= $sales_rd[0]->tot_qty ? $sales_rd[0]->tot_qty : 0 ?> pcs</h4>
                                         </td>
                                         <td>
                                             <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_rd[0]->gross ?></h4>
+                                                <h4 class="m-0">Rp <?= $sales_rd[0]->gross ? $sales_rd[0]->gross : 0 ?></h4>
                                             </nobr>
                                         </td>
                                         <td>
                                             <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_rd[0]->net ?></h4>
+                                                <h4 class="m-0">Rp <?= $sales_rd[0]->net ? $sales_rd[0]->net : 0 ?></h4>
                                             </nobr>
                                         </td>
                                     </tr>
@@ -291,19 +306,19 @@
                                                     </b></h4>
                                             </label></td>
                                         <td>
-                                            <h4 class="m-0"><?= $sales_rs[0]->tot_trx ?> trx</h4>
+                                            <h4 class="m-0"><?= $sales_rs[0]->tot_trx ? $sales_rs[0]->tot_trx : 0 ?> trx</h4>
                                         </td>
                                         <td>
-                                            <h4 class="m-0"><?= $sales_rs[0]->tot_qty ?> pcs</h4>
+                                            <h4 class="m-0"><?= $sales_rs[0]->tot_qty ? $sales_rs[0]->tot_qty : 0 ?> pcs</h4>
                                         </td>
                                         <td>
                                             <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_rs[0]->gross ?></h4>
+                                                <h4 class="m-0">Rp <?= $sales_rs[0]->gross ? $sales_rs[0]->gross : 0 ?></h4>
                                             </nobr>
                                         </td>
                                         <td>
                                             <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_rs[0]->net ?></h4>
+                                                <h4 class="m-0">Rp <?= $sales_rs[0]->net ? $sales_rs[0]->net : 0 ?></h4>
                                             </nobr>
                                         </td>
                                     </tr>
@@ -316,19 +331,19 @@
                                                     </b></h4>
                                             </label></td>
                                         <td>
-                                            <h4 class="m-0"><?= $sales_bazaar[0]->tot_trx ?> trx</h4>
+                                            <h4 class="m-0"><?= $sales_bazaar[0]->tot_trx ? $sales_bazaar[0]->tot_trx : 0 ?> trx</h4>
                                         </td>
                                         <td>
-                                            <h4 class="m-0"><?= $sales_bazaar[0]->tot_qty ?> pcs</h4>
+                                            <h4 class="m-0"><?= $sales_bazaar[0]->tot_qty ? $sales_bazaar[0]->tot_qty : 0 ?> pcs</h4>
                                         </td>
                                         <td>
                                             <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_bazaar[0]->gross ?></h4>
+                                                <h4 class="m-0">Rp <?= $sales_bazaar[0]->gross ? $sales_bazaar[0]->gross : 0 ?></h4>
                                             </nobr>
                                         </td>
                                         <td>
                                             <nobr>
-                                                <h4 class="m-0">Rp <?= $sales_bazaar[0]->net ?></h4>
+                                                <h4 class="m-0">Rp <?= $sales_bazaar[0]->net ? $sales_bazaar[0]->net : 0 ?></h4>
                                             </nobr>
                                         </td>
                                     </tr>
