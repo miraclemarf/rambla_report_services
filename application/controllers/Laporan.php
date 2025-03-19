@@ -207,8 +207,11 @@ class Laporan extends My_Controller
         $postData = $this->input->post();
 
         $data['username'] = $this->input->cookie('cookie_invent_user');
+        $data['tipe'] = $this->input->cookie('cookie_invent_tipe');
         $kode_brand = array(null);
         $category = array(null);
+
+        $kode_dashboard = "";
 
         // START CEK ADA DEPT NGGA
         $cek_user_dept = $this->db->query("SELECT * from m_user_sub_division where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
@@ -251,8 +254,19 @@ class Laporan extends My_Controller
         $config = Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($metabaseSecretKey));
         $builder = $config->builder();
 
+        if($postData['is_operation'] == 1){
+            $kode_dashboard = 239;
+        }else{
+            // CEK TIM ECOM
+            if($data['tipe'] == 3){
+                $kode_dashboard = 276;
+            }else{
+                $kode_dashboard = 238;
+            }
+        }
+
         $token = $builder
-            ->withClaim('resource', ['dashboard' => ($postData['is_operation'] == '1') ? 239 : 238])
+            ->withClaim('resource', ['dashboard' => $kode_dashboard])
             ->withClaim('params', [
                 'store'         => $store,
                 'periode'       => $periode,
