@@ -87,6 +87,33 @@ class Masterdata extends My_Controller
         }
     }
 
+    public function get_list_register()
+    {
+        extract(populateform());
+
+        if ($store == 'R002') {
+            $dbStore = $this->load->database('storeR002', TRUE);
+        } else if ($store == 'V001') {
+            $dbStore = $this->load->database('storeV001', TRUE);
+        } else if ($store == 'R001') {
+            $dbStore = $this->load->database('storeR001', TRUE);
+        } else if ($store == 'S002') {
+            $dbStore = $this->load->database('storeS002', TRUE);
+        } else if ($store == 'S003') {
+            $dbStore = $this->load->database('storeS003', TRUE);
+        } else if ($store == 'V002') {
+            $dbStore = $this->load->database('storeV002', TRUE);
+        } else if ($store == 'V003') {
+            $dbStore = $this->load->database('storeV003', TRUE);
+        }
+        
+        $data['hasil']          = $dbStore->query("SELECT DISTINCT substring(trans_no,9,3) as kode_register from dbserver_history.t_sales_trans_hdr ORDER BY substring(trans_no,9,3)")->result();
+        echo "<option value=''>-- Pilih Data --</option>";
+        foreach ($data['hasil'] as $row) {
+            echo "<option value='" . $row->kode_register . "'>" . $row->kode_register . "</option>";
+        }
+    }
+
     public function get_unit()
     {
         extract(populateform());

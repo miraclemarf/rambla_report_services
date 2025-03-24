@@ -724,4 +724,123 @@ class M_Sales extends CI_Model
 
         return $response;
     }
+
+    public function getSalesHistory($postData = null){
+
+        $store = $postData['store'];
+        if ($store == 'R002') {
+            $dbStore = $this->load->database('storeR002', TRUE);
+        } else if ($store == 'V001') {
+            $dbStore = $this->load->database('storeV001', TRUE);
+        } else if ($store == 'R001') {
+            $dbStore = $this->load->database('storeR001', TRUE);
+        } else if ($store == 'S002') {
+            $dbStore = $this->load->database('storeS002', TRUE);
+        } else if ($store == 'S003') {
+            $dbStore = $this->load->database('storeS003', TRUE);
+        } else if ($store == 'V002') {
+            $dbStore = $this->load->database('storeV002', TRUE);
+        } else if ($store == 'V003') {
+            $dbStore = $this->load->database('storeV003', TRUE);
+        }
+        $response = array();
+
+        $draw = $postData['draw'];
+        $start = $postData['start'];
+        $rowperpage = $postData['length']; // Rows display per page
+        $columnIndex = $postData['order'][0]['column']; // Column index
+        $columnName = $postData['columns'][$columnIndex]['data']; // Column name
+        $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+        $searchValue = $postData['search']['value']; // Search value
+
+        $trans_no = $postData['params1'] ? $postData['params1'] : '';
+        $kode_reg = $postData['params2'] ? $postData['params2'] : '';
+        $date = $postData['params3'] ? $postData['params3'] : '';
+        $trans_status = $postData['params4'] ? $postData['params4'] : '';
+
+        $whereClause = "";
+
+        if($trans_no != ''){
+            $whereClause .= " AND a.trans_no ='".$trans_no."'";
+        }
+
+        if($kode_reg != ''){
+            $whereClause .= " AND substring(a.trans_no,9,3) ='".$kode_reg."'";
+        }
+
+        if($trans_status != ''){
+            $whereClause .= " AND trans_status ='".$trans_status."'";
+        }
+
+        if ($date != '') {
+            if (strpos($date, '-') !== false) {
+                $tgl = explode("-", $date);
+                $fromdate = date("Y-m-d", strtotime($tgl[0]));
+                $todate = date("Y-m-d", strtotime($tgl[1]));
+            }
+            $whereClause .= " AND DATE_FORMAT(trans_date,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
+        }
+
+        $query = "SELECT DISTINCT a.trans_no,trans_status, case 
+        when trans_status = 0 then 'Hold'
+        when trans_status = 1 then 'Success'
+        when trans_status = 2 then 'Cancel'
+        when trans_status = 3 then 'Trader'
+        end as status_desc,date_format( trans_date, '%Y-%m-%d %00:%00:%00' ) AS periode, trans_time, cashier_id, substring(a.trans_no,9,3) as kode_register,sum(b.qty) as tot_qty, sum(berat) as tot_berat, sum(net_price) as net_price, total_amount, paid_amount from dbserver_history.t_sales_trans_hdr a
+        inner join dbserver_history.t_sales_trans_dtl b
+        on a.trans_no = b.trans_no
+        where DATE_FORMAT(a.trans_date,'%Y-%m-%d') >= ( CURDATE() - INTERVAL 3 DAY )
+        $whereClause 
+        GROUP BY a.trans_no, trans_time";
+
+        $searchQuery = "";
+        if ($searchValue != '') {
+            $searchQuery = " (trans_no like '%" . $searchValue . "%' or cashier_id like '%" . $searchValue . "%' or kode_register like'%" . $searchValue . "%' ) ";
+        }
+
+
+        $orderBy = "";
+
+        $totalRecords = $dbStore->query($query)->num_rows();
+
+        ## Fetch records
+        //$dbStore->select('*');
+        if ($searchQuery != '') {
+            $dbStore->where($searchQuery);
+        }
+        $totalRecordwithFilter = $dbStore->query($query)->num_rows();
+        // $dbStore->order_by($columnName, $columnSortOrder);
+        $limitStart = ' LIMIT ' . $rowperpage . ' OFFSET ' . $start;
+        $records = $dbStore->query($query . $orderBy . $limitStart)->result();
+
+        //var_dump($query.$whereClause.$limitStart);
+        $data = array();
+        foreach ($records as $record) {
+
+            $data[] = array(
+                "trans_no"      => $record->trans_no,
+                "trans_status"  => $record->trans_status,
+                "status_desc"   => $record->status_desc,
+                "periode"       => $record->periode,
+                "trans_time"    => $record->trans_time,
+                "cashier_id"    => $record->cashier_id,
+                "kode_register" => $record->kode_register,
+                "tot_qty"       => $record->tot_qty,
+                "tot_berat"     => $record->tot_berat,
+                "net_price"     => $record->net_price,
+                "total_amount"  => $record->total_amount,
+                "paid_amount"   => $record->paid_amount
+            );
+        }
+
+        ## Response
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordwithFilter,
+            "aaData" => $data
+        );
+
+        return $response;
+    }
 }

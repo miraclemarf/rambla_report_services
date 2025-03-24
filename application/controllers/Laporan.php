@@ -116,7 +116,7 @@ class Laporan extends My_Controller
         $dbCentral->query($sql_central);
         
         if ($this->db->affected_rows()) {
-            $dbCentral->query("call insert_log_data('m_item_master','isactive','".$data_item->isactive."','".$active."','".$username."','".$sql_central."')");
+            $dbCentral->query("call update_log_data('m_item_master','isactive','".$data_item->isactive."','".$active."','".$username."','".$sql_central."')");
         } 
         // else {
         //     $data['status'] = false;
