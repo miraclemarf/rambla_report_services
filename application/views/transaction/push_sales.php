@@ -136,7 +136,6 @@
 <script type="text/javascript" src="<?= base_url(); ?>assets/vendor/chartjs/js/loader.js"></script>
 <script src="<?= base_url(); ?>assets/vendor/chartjs/js/chart.js"></script>
 <script type="text/JavaScript">
-    var store = $('.opt-store .dropdown-item').data('store');
     // console.log(store);
     var tabel = null;
     function push_sales(trans_no){
@@ -169,7 +168,6 @@
         });
     }
     $(document).ready(function() {
-        get_register();
         
         var params1 = null; 
         var params2 = null;
@@ -177,7 +175,9 @@
         var params4 = null;
         var kode_reg = null;
         var trans_status = null;
-        store = $('.opt-store .dropdown-item').data('store');
+        var store = $('.opt-store .dropdown-item').data('store');
+
+        get_register();
 
         load_data_pushsales(params1, params2, params3,store, params4);
 
@@ -186,10 +186,11 @@
                 //console.log($(this).attr('data'));
                 $('#choose-store').html('<i class="typcn typcn-location mr-2"></i>'+$(this).text());
                 $('#filter-store input').val($(this).attr('data'));
-                $('#filter-store form').trigger('submit');
+                // $('#filter-store form').trigger('submit');
 
-                store = $('.opt-store .dropdown-item').data('store');
-                // console.log(store);
+                store = $(this).data('store');
+                console.log(params1, params2, params3 ,store, params4);
+                load_data_pushsales(params1, params2, params3 ,store, params4);
             })
         });
 
