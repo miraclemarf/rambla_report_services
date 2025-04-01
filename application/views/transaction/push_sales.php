@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col-sm-6">
             <h3 class="mb-0 font-weight-bold">List Transaction DB Server History</h3>
-            <p>Sales 3 Hari Terkahir
+            <p>Sales 7 Hari Terkahir
             </p>
         </div>
         <div class="col-sm-6">
