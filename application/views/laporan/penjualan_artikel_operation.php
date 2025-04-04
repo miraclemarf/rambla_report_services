@@ -1,13 +1,35 @@
 <style>
-    /* Gaya CSS untuk iframe */
-    /* iframe {
-        border: none;
+    
+@media (min-width: 768px) {
+    .member-only {
+        padding: 0px;
+    }
+    .frame-meta {
+        height:550px;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .member-only {
+        padding: 0px;
+    }
+}
+
+
+/* Responsive columns */
+@media (max-width: 575.98px) {
+    .card {
+        min-height: 500px;
+        max-height: 100%;
     }
 
-    iframe::content .fullscreen-normal-text thead {
-        background-color: #FF5733;
-        color: white;
-    } */
+    .embed-responsive {
+        height: 100%;
+    }
+    .member-only {
+        padding: 15px;
+    }
+}
 </style>
 <div class="content-wrapper">
     <?php $this->load->view('modal/filter-penjualanartikel', true); ?>
