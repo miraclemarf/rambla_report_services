@@ -786,7 +786,7 @@ class M_Sales extends CI_Model
         when trans_status = 1 then 'Success'
         when trans_status = 2 then 'Cancel'
         when trans_status = 3 then 'Trader'
-        end as status_desc,date_format( trans_date, '%Y-%m-%d %00:%00:%00' ) AS periode, trans_time, cashier_id, substring(a.trans_no,9,3) as kode_register,sum(b.qty) as tot_qty, sum(berat) as tot_berat, sum(net_price) as net_price, total_amount, paid_amount from dbserver_history.t_sales_trans_hdr a
+        end as status_desc,date_format( trans_date, '%Y-%m-%d %00:%00:%00' ) AS periode, trans_time, count(b.barcode) as jml_record, cashier_id, substring(a.trans_no,9,3) as kode_register,sum(b.qty) as tot_qty, sum(berat) as tot_berat, sum(net_price) as net_price, total_amount, paid_amount from dbserver_history.t_sales_trans_hdr a
         inner join dbserver_history.t_sales_trans_dtl b
         on a.trans_no = b.trans_no
         where DATE_FORMAT(a.trans_date,'%Y-%m-%d') >= ( CURDATE() - INTERVAL 7 DAY )
@@ -825,6 +825,7 @@ class M_Sales extends CI_Model
                 "trans_time"    => $record->trans_time,
                 "cashier_id"    => $record->cashier_id,
                 "kode_register" => $record->kode_register,
+                "jml_record"    => $record->jml_record,
                 "tot_qty"       => $record->tot_qty,
                 "tot_berat"     => $record->tot_berat,
                 "net_price"     => $record->net_price,

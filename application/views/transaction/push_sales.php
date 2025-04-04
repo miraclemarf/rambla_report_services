@@ -111,6 +111,9 @@
                                         <nobr>Kode Register</nobr>
                                     </th>
                                     <th>
+                                        <nobr>Jumlah Record</nobr>
+                                    </th>
+                                    <th>
                                         <nobr>Tot Qty</nobr>
                                     </th>
                                     <th>
@@ -144,7 +147,8 @@
             url: "<?= base_url('Transaction'); ?>/insert_sales",
             dataType: "json",
             data: {
-                "trans_no": trans_no
+                "trans_no"  : trans_no,
+                "method"    : "push"
             },
             success: function(data) {
                 // console.log(data);
@@ -155,7 +159,38 @@
                 }else{
                     $('.prefix-' + trans_no).html('<label class="badge badge-danger badge-sm" style="cursor: pointer" onclick="push_sales('+trans_no+')"><i class="typcn typcn-upload menu-icon"></i> Need Push</label>');
                     $('.prefix-' + trans_no).removeClass('d-none');
-                    swal("Oops !", 'Harap Hubungi IT!' , "error");
+                    swal("Oops !", data["message"] , "error");
+                }
+            },
+            beforeSend: function(){
+                    swal("Loading", "Harap Tunggu..." , "warning");
+                },
+            error: function (jqXHR, exception) {
+                console.log(exception);
+                swal("Oops !", "Harap Hubungi IT" , "error");
+            },
+        });
+    }
+
+    function sync_sales(trans_no){
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url('Transaction'); ?>/insert_sales",
+            dataType: "json",
+            data: {
+                "trans_no"  : trans_no,
+                "method"    : "sync"
+            },
+            success: function(data) {
+                console.log(data);
+                if(data["status"] == "1"){
+                    $('.prefix-' + trans_no).html('<label class="badge badge-success badge-sm">Synchronized</label>');
+                    $('.prefix-' + trans_no).removeClass('d-none');
+                    swal("Success", "Transaksi Berhasil di Sync" , "success");
+                }else{
+                    $('.prefix-' + trans_no).html('<label class="badge badge-warning badge-sm text-white" style="cursor: pointer" onclick="sync_sales('+trans_no+')"><i class="typcn typcn-upload menu-icon"></i> Sync Now</label>');
+                    $('.prefix-' + trans_no).removeClass('d-none');
+                    swal("Oops !", data["message"] , "error");
                 }
             },
             beforeSend: function(){
@@ -189,7 +224,7 @@
                 // $('#filter-store form').trigger('submit');
 
                 store = $(this).data('store');
-                console.log(params1, params2, params3 ,store, params4);
+                // console.log(params1, params2, params3 ,store, params4);
                 load_data_pushsales(params1, params2, params3 ,store, params4);
             })
         });
@@ -329,6 +364,12 @@
                         },
                     },
                     {
+                        "data": "jml_record",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
                         "data": "tot_qty",
                         "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
@@ -349,14 +390,14 @@
                     {
                         "data": "",
                         "render": function(data, type, row) {
-                            return '<nobr class= "prefix-'+row.trans_no+' d-none">' + cek_central(row.trans_no) + '</nobr>';
+                            return '<nobr class= "prefix-'+row.trans_no+' d-none">' + cek_central(row.trans_no, row.jml_record, row.tot_qty, row.net_price) + '</nobr>';
                         },
                     },
                 ],
             });
         }
 
-        function cek_central(trans_no){
+        function cek_central(trans_no, jml_record, tot_qty, net_price){
             var store_code = trans_no.substring(6, 8);
             // console.log(store_code);
             $.ajax({
@@ -364,15 +405,21 @@
                 url: "<?= base_url('Transaction'); ?>/cek_central",
                 dataType: "json",
                 data: {
-                    "trans_no": trans_no,
-                    "store_code": store_code
+                    "trans_no"  : trans_no,
+                    "store_code": store_code,
+                    "jml_record": jml_record,
+                    "tot_qty"   : tot_qty,
+                    "net_price" : net_price
                 },
                 success: function(data) {
                     // console.log(data["hasil"]);
-                    if(data["hasil"]){
+                    if(data["hasil"] == 1){
                         $('.prefix-' + trans_no).html('<label class="badge badge-success badge-sm">Synchronized</label>');
                         $('.prefix-' + trans_no).removeClass('d-none');
-                    } else {
+                    } else if(data["hasil"] == 2){
+                        $('.prefix-' + trans_no).html('<label class="badge badge-warning badge-sm text-white" style="cursor: pointer" onclick="sync_sales('+trans_no+')"><i class="typcn typcn-upload menu-icon"></i> Sync Now</label>');
+                        $('.prefix-' + trans_no).removeClass('d-none');
+                    }else {
                         $('.prefix-' + trans_no).html('<label class="badge badge-danger badge-sm" style="cursor: pointer" onclick="push_sales('+trans_no+')"><i class="typcn typcn-upload menu-icon"></i> Need Push</label>');
                         $('.prefix-' + trans_no).removeClass('d-none');
                     }
