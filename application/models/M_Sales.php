@@ -411,6 +411,7 @@ class M_Sales extends CI_Model
         $date2 = $postData['params9'] ? $postData['params9'] : '';
         $division = $postData['params4'] ? $postData['params4'] : '';
         $sub_division = $postData['params5'] ? $postData['params5'] : '';
+        $dept = $postData['params6'] ? $postData['params6'] : '';
         // $deltype = $postData['deltype'] ? $postData['deltype'] : '';
         // $paytype = $postData['paytype'] ? $postData['paytype'] : '';
 
@@ -461,6 +462,11 @@ class M_Sales extends CI_Model
             $whereClause .= " AND SUB_DIVISION ='" . $sub_division . "'";
         }
 
+        if ($dept != '') {
+            $whereClause .= " AND DEPT ='" . $dept . "'";
+        }
+
+
         $cache_key = "getPenjualanKategori_{$start}_length_{$rowperpage}_draw_{$draw}_store_{$store}_tp_{$this_period}_lp_{$last_period}_search_" . md5($whereClause) . "_is_operation_" . $cek_operation;
         $cached_data = $this->redislib->get($cache_key); // Try to fetch cached data
 
@@ -471,6 +477,7 @@ class M_Sales extends CI_Model
         $query = "SELECT 
         CASE WHEN LP.branch_id is null then TP.branch_id else LP.branch_id end as STORE, 
         CASE WHEN LP.SUB_DIVISION is null then  TP.SUB_DIVISION else LP.SUB_DIVISION end as SBU, 
+        CASE WHEN LP.DEPT is null then  TP.DEPT else LP.DEPT end as DEPT,
         -- FLOOR
         LP.net_floor as LP_Sales1, '' as TP_Target1, TP.net_floor as TP_Sales1, '' as Achieve1,
         case when LP.net_floor IS NULL OR TP.net_floor IS NULL THEN 0 else ifnull(round(((TP.net_floor - LP.net_floor) / LP.net_floor) *100,0),0) end as Growth1, 
@@ -494,10 +501,10 @@ class M_Sales extends CI_Model
         (ifnull(round(LP.margin_value_floor,0),0)+ifnull(round(LP.margin_value_online,0),0)+ifnull(round(LP.margin_value_bazaar,0),0)) as LP_Margin_Value4,
         (ifnull(round(TP.margin_value_floor,0),0)+ifnull(round(TP.margin_value_online,0),0)+ifnull(round(TP.margin_value_bazaar,0),0)) as TP_Margin_Value4
         from (
-        SELECT branch_id, SUB_DIVISION, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
+        SELECT branch_id, SUB_DIVISION, DEPT, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
         sum(margin_value_floor) as margin_value_floor, sum(margin_value_bazaar) as margin_value_bazaar, sum(margin_value_online) as margin_value_online,
         sum(margin_percent_floor) as margin_percent_floor, sum(margin_percent_bazaar) as margin_percent_bazaar, sum(margin_percent_online) as margin_percent_online FROM (
-        select branch_id, SUB_DIVISION, 
+        select branch_id, SUB_DIVISION, DEPT,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_af else 0 end) net_floor,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_af else 0 end) net_bazaar,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_af else 0 end) net_online,
@@ -515,22 +522,22 @@ class M_Sales extends CI_Model
         $last_period
         and branch_id = '" . $store . "'
         $whereClause
-        GROUP BY branch_id, SUB_DIVISION,
+        GROUP BY branch_id, SUB_DIVISION, DEPT,
         CASE
             WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
             WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
             WHEN substring(trans_no, 9, 1) = '3' THEN 'BAZAAR'
         END
         ) A
-        GROUP BY branch_id, SUB_DIVISION
+        GROUP BY branch_id, SUB_DIVISION, DEPT
         ) LP
         left join 
         (
-        SELECT branch_id, SUB_DIVISION, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
+        SELECT branch_id, SUB_DIVISION, DEPT, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
         sum(margin_value_floor) as margin_value_floor, sum(margin_value_bazaar) as margin_value_bazaar, sum(margin_value_online) as margin_value_online,
         sum(margin_percent_floor) as margin_percent_floor, sum(margin_percent_bazaar) as margin_percent_bazaar, sum(margin_percent_online) as margin_percent_online
         FROM (
-        select branch_id, SUB_DIVISION,
+        select branch_id, SUB_DIVISION, DEPT,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_af else 0 end) net_floor,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_af else 0 end) net_bazaar,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_af else 0 end) net_online,
@@ -548,18 +555,19 @@ class M_Sales extends CI_Model
         $this_period
         and branch_id = '" . $store . "'
         $whereClause
-        GROUP BY branch_id, SUB_DIVISION,
+        GROUP BY branch_id, SUB_DIVISION, DEPT,
         CASE
             WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
             WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
             WHEN substring(trans_no, 9, 1) = '3' THEN 'BAZAAR'
         END
-        ) A GROUP BY branch_id, SUB_DIVISION
-        ) TP on LP.SUB_DIVISION = TP.SUB_DIVISION  
+        ) A GROUP BY branch_id, SUB_DIVISION, DEPT
+        ) TP on LP.SUB_DIVISION = TP.SUB_DIVISION AND LP.DEPT = TP.DEPT 
         union
         SELECT 
         CASE WHEN LP.branch_id is null then TP.branch_id else LP.branch_id end as STORE, 
         CASE WHEN LP.SUB_DIVISION is null then  TP.SUB_DIVISION else LP.SUB_DIVISION end as SBU, 
+        CASE WHEN LP.DEPT is null then  TP.DEPT else LP.DEPT end as DEPT,
         -- FLOOR
         LP.net_floor as LP_Sales1, '' as TP_Target1, TP.net_floor as TP_Sales1, '' as Achieve1,
         case when LP.net_floor IS NULL OR TP.net_floor IS NULL THEN 0 else ifnull(round(((TP.net_floor - LP.net_floor) / LP.net_floor) *100,0),0) end as Growth1, 
@@ -583,10 +591,10 @@ class M_Sales extends CI_Model
         (ifnull(round(LP.margin_value_floor,0),0)+ifnull(round(LP.margin_value_online,0),0)+ifnull(round(LP.margin_value_bazaar,0),0)) as LP_Margin_Value4,
         (ifnull(round(TP.margin_value_floor,0),0)+ifnull(round(TP.margin_value_online,0),0)+ifnull(round(TP.margin_value_bazaar,0),0)) as TP_Margin_Value4
         from (
-        SELECT branch_id, SUB_DIVISION, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
+        SELECT branch_id, SUB_DIVISION, DEPT, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
         sum(margin_value_floor) as margin_value_floor, sum(margin_value_bazaar) as margin_value_bazaar, sum(margin_value_online) as margin_value_online,
         sum(margin_percent_floor) as margin_percent_floor, sum(margin_percent_bazaar) as margin_percent_bazaar, sum(margin_percent_online) as margin_percent_online FROM (
-        select branch_id, SUB_DIVISION, 
+        select branch_id, SUB_DIVISION, DEPT,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_af else 0 end) net_floor,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_af else 0 end) net_bazaar,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_af else 0 end) net_online,
@@ -604,22 +612,22 @@ class M_Sales extends CI_Model
         $last_period
         and branch_id = '" . $store . "'
         $whereClause
-        GROUP BY branch_id, SUB_DIVISION,
+        GROUP BY branch_id, SUB_DIVISION, DEPT,
         CASE
             WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
             WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
             WHEN substring(trans_no, 9, 1) = '3' THEN 'BAZAAR'
         END
         ) A
-        GROUP BY branch_id, SUB_DIVISION
+        GROUP BY branch_id, SUB_DIVISION, DEPT
         ) LP
         right join 
         (
-        SELECT branch_id, SUB_DIVISION, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
+        SELECT branch_id, SUB_DIVISION, DEPT, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
         sum(margin_value_floor) as margin_value_floor, sum(margin_value_bazaar) as margin_value_bazaar, sum(margin_value_online) as margin_value_online,
         sum(margin_percent_floor) as margin_percent_floor, sum(margin_percent_bazaar) as margin_percent_bazaar, sum(margin_percent_online) as margin_percent_online
         FROM (
-        select branch_id, SUB_DIVISION,
+        select branch_id, SUB_DIVISION, DEPT,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_af else 0 end) net_floor,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_af else 0 end) net_bazaar,
         sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_af else 0 end) net_online,
@@ -637,15 +645,15 @@ class M_Sales extends CI_Model
         $this_period
         and branch_id = '" . $store . "'
         $whereClause
-        GROUP BY branch_id, SUB_DIVISION,
+        GROUP BY branch_id, SUB_DIVISION, DEPT,
         CASE
             WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
             WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
             WHEN substring(trans_no, 9, 1) = '3' THEN 'BAZAAR'
         END
-        ) A GROUP BY branch_id, SUB_DIVISION
-        ) TP on LP.SUB_DIVISION = TP.SUB_DIVISION  
-        ORDER BY SBU";
+        ) A GROUP BY branch_id, SUB_DIVISION, DEPT
+        ) TP on LP.SUB_DIVISION = TP.SUB_DIVISION AND LP.DEPT = TP.DEPT  
+        ORDER BY SBU, DEPT";
 
         $searchQuery = "";
         if ($searchValue != '') {
@@ -673,6 +681,7 @@ class M_Sales extends CI_Model
             $data[] = array(
                 "STORE"                 => $record->STORE,
                 "SBU"                   => $record->SBU,
+                "DEPT"                  => $record->DEPT,
                 "LP_Sales1"             => ($record->LP_Sales1) ? "Rp " . $record->LP_Sales1 : "",
                 "TP_Target1"            => ($record->TP_Target1) ? "Rp " . $record->TP_Target1 : "",
                 "TP_Sales1"             => ($record->TP_Sales1) ? "Rp " . $record->TP_Sales1 : "",
@@ -831,6 +840,301 @@ class M_Sales extends CI_Model
                 "net_price"     => $record->net_price,
                 "total_amount"  => $record->total_amount,
                 "paid_amount"   => $record->paid_amount
+            );
+        }
+
+        ## Response
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordwithFilter,
+            "aaData" => $data
+        );
+
+        return $response;
+    }
+
+    public function getSalesToday($postData = null){
+
+        $store = $postData['store'];
+        if ($store == 'R002') {
+            $dbStore = $this->load->database('storeR002', TRUE);
+        } else if ($store == 'V001') {
+            $dbStore = $this->load->database('storeV001', TRUE);
+        } else if ($store == 'R001') {
+            $dbStore = $this->load->database('storeR001', TRUE);
+        } else if ($store == 'S002') {
+            $dbStore = $this->load->database('storeS002', TRUE);
+        } else if ($store == 'S003') {
+            $dbStore = $this->load->database('storeS003', TRUE);
+        } else if ($store == 'V002') {
+            $dbStore = $this->load->database('storeV002', TRUE);
+        } else if ($store == 'V003') {
+            $dbStore = $this->load->database('storeV003', TRUE);
+        }
+        $response = array();
+
+        $draw = $postData['draw'];
+        $start = $postData['start'];
+        $rowperpage = $postData['length']; // Rows display per page
+        $columnIndex = $postData['order'][0]['column']; // Column index
+        $columnName = $postData['columns'][$columnIndex]['data']; // Column name
+        $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+        $searchValue = $postData['search']['value']; // Search value
+
+        $trans_no = $postData['params1'] ? $postData['params1'] : '';
+        $kode_reg = $postData['params2'] ? $postData['params2'] : '';
+        $date = $postData['params3'] ? $postData['params3'] : '';
+        $trans_status = $postData['params4'] ? $postData['params4'] : '';
+
+        $whereClause = "";
+
+        if($trans_no != ''){
+            $whereClause .= " AND a.trans_no ='".$trans_no."'";
+        }
+
+        if($kode_reg != ''){
+            $whereClause .= " AND substring(a.trans_no,9,3) ='".$kode_reg."'";
+        }
+
+        if($trans_status != ''){
+            $whereClause .= " AND trans_status ='".$trans_status."'";
+        }
+
+        if ($date != '') {
+            if (strpos($date, '-') !== false) {
+                $tgl = explode("-", $date);
+                $fromdate = date("Y-m-d", strtotime($tgl[0]));
+                $todate = date("Y-m-d", strtotime($tgl[1]));
+            }
+            $whereClause .= " AND DATE_FORMAT(trans_date,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
+        }
+
+        $query = "SELECT DISTINCT a.trans_no,trans_status, case 
+        when trans_status = 0 then 'Hold'
+        when trans_status = 1 then 'Success'
+        when trans_status = 2 then 'Cancel'
+        when trans_status = 3 then 'Trader'
+        end as status_desc,date_format( trans_date, '%Y-%m-%d %00:%00:%00' ) AS periode, trans_time, count(b.barcode) as jml_record, cashier_id, substring(a.trans_no,9,3) as kode_register,sum(b.qty) as tot_qty, sum(berat) as tot_berat, sum(net_price) as net_price, total_amount, paid_amount from t_sales_trans_hdr a
+        inner join t_sales_trans_dtl b
+        on a.trans_no = b.trans_no
+        $whereClause 
+        GROUP BY a.trans_no, trans_time";
+
+        $searchQuery = "";
+        if ($searchValue != '') {
+            $searchQuery = " (trans_no like '%" . $searchValue . "%' or cashier_id like '%" . $searchValue . "%' or kode_register like'%" . $searchValue . "%' ) ";
+        }
+
+        $orderBy = "";
+
+        $totalRecords = $dbStore->query($query)->num_rows();
+
+        ## Fetch records
+        //$dbStore->select('*');
+        if ($searchQuery != '') {
+            $dbStore->where($searchQuery);
+        }
+        $totalRecordwithFilter = $dbStore->query($query)->num_rows();
+        // $dbStore->order_by($columnName, $columnSortOrder);
+        $limitStart = ' LIMIT ' . $rowperpage . ' OFFSET ' . $start;
+        $records = $dbStore->query($query . $orderBy . $limitStart)->result();
+
+        //var_dump($query.$whereClause.$limitStart);
+        $data = array();
+        foreach ($records as $record) {
+
+            $data[] = array(
+                "trans_no"      => $record->trans_no,
+                "trans_status"  => $record->trans_status,
+                "status_desc"   => $record->status_desc,
+                "periode"       => $record->periode,
+                "trans_time"    => $record->trans_time,
+                "cashier_id"    => $record->cashier_id,
+                "kode_register" => $record->kode_register,
+                "jml_record"    => $record->jml_record,
+                "tot_qty"       => $record->tot_qty,
+                "tot_berat"     => $record->tot_berat,
+                "net_price"     => $record->net_price,
+                "total_amount"  => $record->total_amount,
+                "paid_amount"   => $record->paid_amount
+            );
+        }
+
+        ## Response
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordwithFilter,
+            "aaData" => $data
+        );
+
+        return $response;
+    }
+
+    public function getPaidToday($postData = null){
+
+        $store = $postData['store'];
+        if ($store == 'R002') {
+            $dbStore = $this->load->database('storeR002', TRUE);
+        } else if ($store == 'V001') {
+            $dbStore = $this->load->database('storeV001', TRUE);
+        } else if ($store == 'R001') {
+            $dbStore = $this->load->database('storeR001', TRUE);
+        } else if ($store == 'S002') {
+            $dbStore = $this->load->database('storeS002', TRUE);
+        } else if ($store == 'S003') {
+            $dbStore = $this->load->database('storeS003', TRUE);
+        } else if ($store == 'V002') {
+            $dbStore = $this->load->database('storeV002', TRUE);
+        } else if ($store == 'V003') {
+            $dbStore = $this->load->database('storeV003', TRUE);
+        }
+        $response = array();
+
+        $draw = $postData['draw'];
+        $start = $postData['start'];
+        $rowperpage = $postData['length']; // Rows display per page
+        $columnIndex = $postData['order'][0]['column']; // Column index
+        $columnName = $postData['columns'][$columnIndex]['data']; // Column name
+        $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+        $searchValue = $postData['search']['value']; // Search value
+        $trans_no = $postData['trans_no'] ? $postData['trans_no'] : '';
+        $whereClause = "";
+
+        if($trans_no != ''){
+            $whereClause .= " AND a.trans_no ='".$trans_no."'";
+        }
+
+        $query = "SELECT row_number( ) OVER ( PARTITION BY a.trans_no ORDER BY a.trans_no ) AS no_urut, a.trans_no, card_number, card_name, paid_amount, `description` from t_paid a
+        left join m_mop b
+        on a.mop_code = b.mop_code
+        WHERE trans_no = '".$trans_no."'
+        $whereClause order by a.seq";
+
+        $searchQuery = "";
+        if ($searchValue != '') {
+            $searchQuery = " (trans_no like '%" . $searchValue . "%' or description like '%" . $searchValue . "%' ) ";
+        }
+
+        $orderBy = "";
+
+        $totalRecords = $dbStore->query($query)->num_rows();
+
+        ## Fetch records
+        //$dbStore->select('*');
+        if ($searchQuery != '') {
+            $dbStore->where($searchQuery);
+        }
+        $totalRecordwithFilter = $dbStore->query($query)->num_rows();
+        // $dbStore->order_by($columnName, $columnSortOrder);
+        $limitStart = ' LIMIT ' . $rowperpage . ' OFFSET ' . $start;
+        $records = $dbStore->query($query . $orderBy . $limitStart)->result();
+
+        //var_dump($query.$whereClause.$limitStart);
+        $data = array();
+        foreach ($records as $record) {
+
+            $data[] = array(
+                "no_urut"       => $record->no_urut,
+                "trans_no"      => $record->trans_no,
+                "card_number"   => $record->card_number,
+                "card_name"     => $record->card_name,
+                "paid_amount"   => $record->paid_amount,
+                "description"   => $record->description
+            );
+        }
+
+        ## Response
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordwithFilter,
+            "aaData" => $data
+        );
+
+        return $response;
+    }
+
+    public function getSalesDetailToday($postData = null){
+
+        $store = $postData['store'];
+        if ($store == 'R002') {
+            $dbStore = $this->load->database('storeR002', TRUE);
+        } else if ($store == 'V001') {
+            $dbStore = $this->load->database('storeV001', TRUE);
+        } else if ($store == 'R001') {
+            $dbStore = $this->load->database('storeR001', TRUE);
+        } else if ($store == 'S002') {
+            $dbStore = $this->load->database('storeS002', TRUE);
+        } else if ($store == 'S003') {
+            $dbStore = $this->load->database('storeS003', TRUE);
+        } else if ($store == 'V002') {
+            $dbStore = $this->load->database('storeV002', TRUE);
+        } else if ($store == 'V003') {
+            $dbStore = $this->load->database('storeV003', TRUE);
+        }
+        $response = array();
+
+        $draw = $postData['draw'];
+        $start = $postData['start'];
+        $rowperpage = $postData['length']; // Rows display per page
+        $columnIndex = $postData['order'][0]['column']; // Column index
+        $columnName = $postData['columns'][$columnIndex]['data']; // Column name
+        $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+        $searchValue = $postData['search']['value']; // Search value
+        $trans_no = $postData['trans_no'] ? $postData['trans_no'] : '';
+        $whereClause = "";
+
+        if($trans_no != ''){
+            $whereClause .= " AND a.trans_no ='".$trans_no."'";
+        }
+
+        $query = "SELECT a.seq as no_urut, a.trans_no, barcode, article_code, article_name, supplier_pcode, supplier_pname, qty, berat, price, disc_pct, disc_amt, moredisc_pct, moredisc_amt, net_price, no_ref from t_sales_trans_dtl a
+        inner join t_sales_trans_hdr b
+        on a.trans_no = b.trans_no
+        WHERE a.trans_no = '".$trans_no."'
+        $whereClause order by a.seq";
+
+        $searchQuery = "";
+        if ($searchValue != '') {
+            $searchQuery = " (trans_no like '%" . $searchValue . "%' or barcode like '%" . $searchValue . "%' ) ";
+        }
+
+        $orderBy = "";
+
+        $totalRecords = $dbStore->query($query)->num_rows();
+
+        ## Fetch records
+        //$dbStore->select('*');
+        if ($searchQuery != '') {
+            $dbStore->where($searchQuery);
+        }
+        $totalRecordwithFilter = $dbStore->query($query)->num_rows();
+        // $dbStore->order_by($columnName, $columnSortOrder);
+        $limitStart = ' LIMIT ' . $rowperpage . ' OFFSET ' . $start;
+        $records = $dbStore->query($query . $orderBy . $limitStart)->result();
+
+        //var_dump($query.$whereClause.$limitStart);
+        $data = array();
+        foreach ($records as $record) {
+
+            $data[] = array(
+                "no_urut"           => $record->no_urut,
+                "trans_no"          => $record->trans_no,
+                "barcode"           => $record->barcode,
+                "article_code"      => $record->article_code,
+                "supplier_pcode"    => $record->supplier_pcode,
+                "supplier_pname"    => $record->supplier_pname,
+                "qty"               => $record->qty,
+                "berat"             => $record->berat,
+                "price"             => $record->price,
+                "disc_pct"          => $record->disc_pct,
+                "disc_amt"          => $record->disc_amt,
+                "moredisc_pct"      => $record->moredisc_pct,
+                "moredisc_amt"      => $record->moredisc_amt,
+                "net_price"         => $record->net_price,
+                "no_ref"            => $record->no_ref
             );
         }
 

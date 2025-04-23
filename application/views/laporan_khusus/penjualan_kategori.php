@@ -39,6 +39,9 @@
                                     <th rowspan="2" style="vertical-align: middle; text-align:center;">
                                         <nobr>SBU</nobr>
                                     </th>
+                                    <th rowspan="2" style="vertical-align: middle; text-align:center;">
+                                        <nobr>DEPT</nobr>
+                                    </th>
                                     <th colspan="9" style="vertical-align: middle; text-align:center; background-color:#ff5252">FLOOR</td>
                                     <th colspan="9" style="vertical-align: middle; text-align:center; background-color: #ff5252">ATRIUM</td>
                                     <th colspan="9" style="vertical-align: middle; text-align:center; background-color: #ff5252">ONLINE</td>
@@ -276,7 +279,7 @@
                     "this_periode": params9
                 },
                 success: function(data) {
-                    window.location.href = "<?= base_url('LaporanKhusus/export_excel_penjualankategori/'); ?>" + data.fromdate1 + '/' + data.todate1 + '/' + data.fromdate2 + '/' + data.todate2 + '/' + params4 + '/' + params5 + '/' + params8;
+                    window.location.href = "<?= base_url('LaporanKhusus/export_excel_penjualankategori/'); ?>" + data.fromdate1 + '/' + data.todate1 + '/' + data.fromdate2 + '/' + data.todate2 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params8;
                 }
             });
         }
@@ -362,7 +365,12 @@
                             return '<nobr>' + data + '</nobr>';
                         },
                     },
-
+                    {
+                        "data": "DEPT",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
                     {
                         "data": "LP_Sales1",
                         "render": function(data, type, row) {

@@ -44,10 +44,60 @@ class Transaction extends My_Controller
         $this->load->view('template_member/footer', $data);
     }
 
+    public function upload_sales()
+    {
+        extract(populateform());
+        $data['title']          = 'Rambla | Sales Transaction';
+        $data['username']       = $this->input->cookie('cookie_invent_user');
+
+        $data['site'] = $this->db->query("SELECT a.branch_id, b.branch_name from m_user_site a
+        inner join m_branches b
+        on a.branch_id = b.branch_id
+        where a.flagactv ='1'
+        and username ='" . $data['username'] . "'")->result();
+
+        if ($data['site']) {
+            $data['storename'] = $data['site'][0]->branch_name;
+            $store = !$this->input->post('storeid') ? $data['site'][0]->branch_id : $this->input->post('storeid');
+        } else {
+            $data['storename'] = 'Rambla Kelapa Gading';
+            $store = !$this->input->post('storeid') ? 'R001' : $this->input->post('storeid');
+        }
+
+        $data['storeid']        =  $store ? $store : 'R001';
+
+        $this->load->view('template_member/header', $data);
+        $this->load->view('template_member/navbar', $data);
+        $this->load->view('template_member/sidebar', $data);
+        $this->load->view('transaction/upload_sales', $data);
+        $this->load->view('template_member/footer', $data);
+    }
+
     public function list_sales_history()
     {
         $postData = $this->input->post();
         $data = $this->M_Sales->getSalesHistory($postData);
+        echo json_encode($data);
+    }
+
+    public function list_sales_today()
+    {
+        $postData = $this->input->post();
+        $data = $this->M_Sales->getSalesToday($postData);
+        echo json_encode($data);
+    }
+
+    public function list_paid_today()
+    {
+        $postData = $this->input->post();
+        $data = $this->M_Sales->getPaidToday($postData);
+        echo json_encode($data);
+    }
+
+    public function list_sales_detail_today()
+    {
+        $postData = $this->input->post();
+        $data = $this->M_Sales->getSalesDetailToday($postData);
         echo json_encode($data);
     }
 
