@@ -105,6 +105,9 @@
                                         <nobr>Last Update</nobr>
                                     </th>
                                     <th>
+                                        <nobr>PPN Jual</nobr>
+                                    </th>
+                                    <th>
                                         <nobr>Article Status</nobr>
                                     </th>
                                 </tr>
@@ -422,6 +425,15 @@
                     },
                     {
                         "data": "last_update",
+                        "render": function(data, type, row) {
+                            if (data == null) {
+                                data = ''
+                            }
+                            return '<nobr>' + data.substring(0, 10) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "ppn_jual",
                         "render": function(data, type, row) {
                             if (data == null) {
                                 data = ''

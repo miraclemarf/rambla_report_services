@@ -1016,7 +1016,8 @@ class Laporan extends My_Controller
         $sheet->setCellValue('Y1', 'Flag 2');
         $sheet->setCellValue('Z1', 'Add Date');
         $sheet->setCellValue('AA1', 'Last Update');
-        $sheet->setCellValue('AB1', 'Article Status');
+        $sheet->setCellValue('AB1', 'PPN Jual');
+        $sheet->setCellValue('AC1', 'Article Status');
 
         /* Excel Data */
         $row_number = 2;
@@ -1048,7 +1049,8 @@ class Laporan extends My_Controller
             $sheet->setCellValue('Y' . $row_number, $row['flag_2']);
             $sheet->setCellValue('Z' . $row_number, substr($row['add_date'], 0, 10));
             $sheet->setCellValue('AA' . $row_number, substr($row['last_update'], 0, 10));
-            $sheet->setCellValue('AB' . $row_number, $row['status_article']);
+            $sheet->setCellValue('AB' . $row_number, $row['ppn_jual']);
+            $sheet->setCellValue('AC' . $row_number, $row['status_article']);
             $row_number++;
         }
 
@@ -1643,10 +1645,10 @@ class Laporan extends My_Controller
         }
         $delimiter = ';';
 
-        $data = $this->db->query("SELECT branch_id,article_number,article_code,barcode,supplier_pcode,category_code, article_name,supplier_pname, vendor_code, vendor_name, brand,brand_name, option1,varian_option1,option2,varian_option2, division, sub_division, dept, sub_dept, normal_price, current_price, tag_5, flag_2, SUBSTRING(add_date, 1, 10) as add_date,SUBSTRING(last_update, 1, 10) as last_update, status_article FROM r_item_master where 1=1 $where")->result_array();
+        $data = $this->db->query("SELECT branch_id,article_number,article_code,barcode,supplier_pcode,category_code, article_name,supplier_pname, vendor_code, vendor_name, brand,brand_name, option1,varian_option1,option2,varian_option2, division, sub_division, dept, sub_dept, normal_price, current_price, tag_5, flag_2, SUBSTRING(add_date, 1, 10) as add_date,SUBSTRING(last_update, 1, 10) as last_update,ppn_jual,status_article FROM r_item_master where 1=1 $where")->result_array();
         $file = fopen('php://output', 'w');
 
-        $header = array('branch id', 'article number', 'article code', 'barcode', 'supplier_pcode', 'category code', 'article name', 'supplier pname', 'vendor code', 'vendor name', 'brand code', 'brand name', 'option1', 'varian option1', 'option2', 'varian option2', 'division', 'sub division', 'dept', 'sub dept', 'normal_price', 'current_price', 'tag 5', 'flag 2', 'add_date', 'last_update', 'article status');
+        $header = array('branch id', 'article number', 'article code', 'barcode', 'supplier_pcode', 'category code', 'article name', 'supplier pname', 'vendor code', 'vendor name', 'brand code', 'brand name', 'option1', 'varian option1', 'option2', 'varian option2', 'division', 'sub division', 'dept', 'sub dept', 'normal_price', 'current_price', 'tag 5', 'flag 2', 'add_date', 'last_update','ppn jual' ,'article status');
 
         fputcsv($file, $header, $delimiter);
 
