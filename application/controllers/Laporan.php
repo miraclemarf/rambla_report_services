@@ -834,35 +834,36 @@ class Laporan extends My_Controller
         $sheet->setCellValue('K1', 'Article Name');
         $sheet->setCellValue('L1', 'Varian Option1');
         $sheet->setCellValue('M1', 'Varian Option2');
-        $sheet->setCellValue('N1', 'Promo desc');
-        $sheet->setCellValue('O1', 'Current Price');
-        $sheet->setCellValue('P1', 'Min Qty');
-        $sheet->setCellValue('Q1', 'Min Purchase');
-        $sheet->setCellValue('R1', 'Disc %');
-        $sheet->setCellValue('S1', 'Disc Amount');
-        $sheet->setCellValue('T1', 'Add Disc %');
-        $sheet->setCellValue('U1', 'Free Qty');
+        $sheet->setCellValue('N1', 'Promo desc (POS)');
+        $sheet->setCellValue('O1', 'Promo desc (Internal)');
+        $sheet->setCellValue('P1', 'Current Price');
+        $sheet->setCellValue('Q1', 'Min Qty');
+        $sheet->setCellValue('R1', 'Min Purchase');
+        $sheet->setCellValue('S1', 'Disc %');
+        $sheet->setCellValue('T1', 'Disc Amount');
+        $sheet->setCellValue('U1', 'Add Disc %');
+        $sheet->setCellValue('V1', 'Free Qty');
 
-        $sheet->setCellValue('V1', 'Q0');
-        $sheet->setCellValue('W1', 'Price 0');
-        $sheet->setCellValue('X1', 'Q1');
-        $sheet->setCellValue('Y1', 'Price 1');
-        $sheet->setCellValue('Z1', 'Q2');
-        $sheet->setCellValue('AA1', 'Price 2');
+        $sheet->setCellValue('W1', 'Q0');
+        $sheet->setCellValue('X1', 'Price 0');
+        $sheet->setCellValue('Y1', 'Q1');
+        $sheet->setCellValue('Z1', 'Price 1');
+        $sheet->setCellValue('AA1', 'Q2');
+        $sheet->setCellValue('AB1', 'Price 2');
 
-        $sheet->setCellValue('AB1', 'Special Price');
-        $sheet->setCellValue('AC1', 'Aktif');
-        $sheet->setCellValue('AD1', 'Monday');
-        $sheet->setCellValue('AE1', 'Tuesday');
-        $sheet->setCellValue('AF1', 'Wednesday');
-        $sheet->setCellValue('AG1', 'Thusday');
-        $sheet->setCellValue('AH1', 'Friday');
-        $sheet->setCellValue('AI1', 'Saturday');
-        $sheet->setCellValue('AJ1', 'Sunday');
-        $sheet->setCellValue('AK1', 'Division');
-        $sheet->setCellValue('AL1', 'Sub Division');
-        $sheet->setCellValue('AM1', 'Dept');
-        $sheet->setCellValue('AN1', 'Sub Dept');
+        $sheet->setCellValue('AC1', 'Special Price');
+        $sheet->setCellValue('AD1', 'Aktif');
+        $sheet->setCellValue('AE1', 'Monday');
+        $sheet->setCellValue('AF1', 'Tuesday');
+        $sheet->setCellValue('AG1', 'Wednesday');
+        $sheet->setCellValue('AH1', 'Thusday');
+        $sheet->setCellValue('AI1', 'Friday');
+        $sheet->setCellValue('AJ1', 'Saturday');
+        $sheet->setCellValue('AK1', 'Sunday');
+        $sheet->setCellValue('AL1', 'Division');
+        $sheet->setCellValue('AM1', 'Sub Division');
+        $sheet->setCellValue('AN1', 'Dept');
+        $sheet->setCellValue('AO1', 'Sub Dept');
 
         /* Excel Data */
         $row_number = 2;
@@ -881,35 +882,36 @@ class Laporan extends My_Controller
             $sheet->setCellValue('L' . $row_number, $row['varian_option1']);
             $sheet->setCellValue('M' . $row_number, $row['varian_option2']);
             $sheet->setCellValue('N' . $row_number, $row['promo_desc']);
-            $sheet->setCellValue('O' . $row_number, $row['current_price']);
-            $sheet->setCellValue('P' . $row_number, $row['min_qty']);
-            $sheet->setCellValue('Q' . $row_number, $row['min_purchase']);
-            $sheet->setCellValue('R' . $row_number, $row['disc_percentage']);
-            $sheet->setCellValue('S' . $row_number, $row['disc_amount']);
-            $sheet->setCellValue('T' . $row_number, $row['add_disc_percentage']);
-            $sheet->setCellValue('U' . $row_number, $row['free_qty']);
+            $sheet->setCellValue('O' . $row_number, $row['promo_intdesc']);
+            $sheet->setCellValue('P' . $row_number, $row['current_price']);
+            $sheet->setCellValue('Q' . $row_number, $row['min_qty']);
+            $sheet->setCellValue('R' . $row_number, $row['min_purchase']);
+            $sheet->setCellValue('S' . $row_number, $row['disc_percentage']);
+            $sheet->setCellValue('T' . $row_number, $row['disc_amount']);
+            $sheet->setCellValue('U' . $row_number, $row['add_disc_percentage']);
+            $sheet->setCellValue('V' . $row_number, $row['free_qty']);
 
-            $sheet->setCellValue('V' . $row_number, $row['Q0']);
-            $sheet->setCellValue('W' . $row_number, $row['price0']);
-            $sheet->setCellValue('X' . $row_number, $row['Q1']);
-            $sheet->setCellValue('Y' . $row_number, $row['price1']);
-            $sheet->setCellValue('Z' . $row_number, $row['Q2']);
-            $sheet->setCellValue('AA' . $row_number, $row['price2']);
+            $sheet->setCellValue('W' . $row_number, $row['Q0']);
+            $sheet->setCellValue('X' . $row_number, $row['price0']);
+            $sheet->setCellValue('Y' . $row_number, $row['Q1']);
+            $sheet->setCellValue('Z' . $row_number, $row['price1']);
+            $sheet->setCellValue('AA' . $row_number, $row['Q2']);
+            $sheet->setCellValue('AB' . $row_number, $row['price2']);
 
 
-            $sheet->setCellValue('AB' . $row_number, $row['special_price']);
-            $sheet->setCellValue('AC' . $row_number, $row['aktif']);
-            $sheet->setCellValue('AD' . $row_number, $row['active_monday']);
-            $sheet->setCellValue('AE' . $row_number, $row['active_tuesday']);
-            $sheet->setCellValue('AF' . $row_number, $row['active_wednesday']);
-            $sheet->setCellValue('AG' . $row_number, $row['active_thursday']);
-            $sheet->setCellValue('AH' . $row_number, $row['active_friday']);
-            $sheet->setCellValue('AI' . $row_number, $row['active_saturday']);
-            $sheet->setCellValue('AJ' . $row_number, $row['active_sunday']);
-            $sheet->setCellValue('AK' . $row_number, $row['DIVISION']);
-            $sheet->setCellValue('AL' . $row_number, $row['SUB_DIVISION']);
-            $sheet->setCellValue('AM' . $row_number, $row['DEPT']);
-            $sheet->setCellValue('AN' . $row_number, $row['SUB_DEPT']);
+            $sheet->setCellValue('AC' . $row_number, $row['special_price']);
+            $sheet->setCellValue('AD' . $row_number, $row['aktif']);
+            $sheet->setCellValue('AE' . $row_number, $row['active_monday']);
+            $sheet->setCellValue('AF' . $row_number, $row['active_tuesday']);
+            $sheet->setCellValue('AG' . $row_number, $row['active_wednesday']);
+            $sheet->setCellValue('AH' . $row_number, $row['active_thursday']);
+            $sheet->setCellValue('AI' . $row_number, $row['active_friday']);
+            $sheet->setCellValue('AJ' . $row_number, $row['active_saturday']);
+            $sheet->setCellValue('AK' . $row_number, $row['active_sunday']);
+            $sheet->setCellValue('AL' . $row_number, $row['DIVISION']);
+            $sheet->setCellValue('AM' . $row_number, $row['SUB_DIVISION']);
+            $sheet->setCellValue('AN' . $row_number, $row['DEPT']);
+            $sheet->setCellValue('AO' . $row_number, $row['SUB_DEPT']);
 
             $row_number++;
         }
@@ -1724,10 +1726,10 @@ class Laporan extends My_Controller
             $where .= " AND branch_id = '" . $branch_id . "'";
         }
 
-        $data = $this->db->query("SELECT branch_id, start_date,end_date,promo_id,promo_type,category_code,vendor_name,brand,barcode,pos_pname,varian_option1,varian_option2,promo_desc,current_price,min_qty,min_purchase,disc_percentage,disc_amount,add_disc_percentage,free_qty,Q0, price0, Q1, price1, Q2, price2, special_price,aktif,active_monday,active_tuesday,active_wednesday,active_thursday,active_friday,active_saturday,active_sunday,DIVISION, SUB_DIVISION, DEPT, SUB_DEPT FROM r_promo_aktif WHERE 1=1 $where")->result_array();
+        $data = $this->db->query("SELECT branch_id, start_date,end_date,promo_id,promo_type,category_code,vendor_name,brand,barcode,pos_pname,varian_option1,varian_option2,promo_desc,promo_intdesc,current_price,min_qty,min_purchase,disc_percentage,disc_amount,add_disc_percentage,free_qty,Q0, price0, Q1, price1, Q2, price2, special_price,aktif,active_monday,active_tuesday,active_wednesday,active_thursday,active_friday,active_saturday,active_sunday,DIVISION, SUB_DIVISION, DEPT, SUB_DEPT FROM r_promo_aktif WHERE 1=1 $where")->result_array();
         $file = fopen('php://output', 'w');
 
-        $header = array('Store', 'Start Date', 'End Date', 'Promo Id', 'Promo Type', 'Category Code', 'Vendor Name', 'Brand', 'Barcode', 'Article Name', 'Varian Option1', 'Varian Option2', 'Promo desc', 'Current Price', 'Min Qty', 'Min Purchase', 'Disc %', 'Disc Amount', 'Add Disc %', 'Free Qty', 'Q0', 'Price0', 'Q1', 'Price1', 'Q2', 'Price2', 'Special Price', 'Aktif', 'Monday', 'Tuesday', 'Wednesday', 'Thusday', 'Friday', 'Saturday', 'Sunday', 'Division', 'Sub Division', 'Dept', 'Sub Dept');
+        $header = array('Store', 'Start Date', 'End Date', 'Promo Id', 'Promo Type', 'Category Code', 'Vendor Name', 'Brand', 'Barcode', 'Article Name', 'Varian Option1', 'Varian Option2', 'Promo desc (POS)','Promo desc (Internal)', 'Current Price', 'Min Qty', 'Min Purchase', 'Disc %', 'Disc Amount', 'Add Disc %', 'Free Qty', 'Q0', 'Price0', 'Q1', 'Price1', 'Q2', 'Price2', 'Special Price', 'Aktif', 'Monday', 'Tuesday', 'Wednesday', 'Thusday', 'Friday', 'Saturday', 'Sunday', 'Division', 'Sub Division', 'Dept', 'Sub Dept');
 
         fputcsv($file, $header);
 

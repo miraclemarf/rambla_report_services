@@ -61,7 +61,10 @@
                                         <nobr>Varian Option2</nobr>
                                     </th>
                                     <th>
-                                        <nobr>Promo desc</nobr>
+                                        <nobr>Promo desc (POS)</nobr>
+                                    </th>
+                                    <th>
+                                        <nobr>Promo desc (Internal)</nobr>
                                     </th>
                                     <th>
                                         <nobr>Current Price</nobr>
@@ -425,6 +428,12 @@
                     },
                     {
                         "data": "promo_desc",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "promo_intdesc",
                         "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
                         },
