@@ -6,19 +6,19 @@
     }
 </style>
 <div class="content-wrapper">
-    <?php $this->load->view('modal/export-penjualankategori', true); ?>
-    <?php $this->load->view('modal/filter-penjualankategori', true); ?>
+    <?php $this->load->view('modal/export-penjualansbu', true); ?>
+    <?php $this->load->view('modal/filter-penjualansbu', true); ?>
     <div class="row">
         <div class="col-lg-12 d-flex grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex flex-wrap justify-content-between mb-3">
                         <div>
-                            <h4 class="card-title mb-0">Laporan Penjualan By Dept</h4>
+                            <h4 class="card-title mb-0">Laporan Penjualan By SBU</h4>
                             <p class="text-muted mb-2">Terapkan filter untuk menampilkan data.</p>
                         </div>
                         <div class="align-self-end">
-                            <button type="button" class="btn btn-success btn-sm btn-icon-text btn-export-penjualankategori ml-2" style="float:right">
+                            <button type="button" class="btn btn-success btn-sm btn-icon-text btn-export-penjualansbu ml-2" style="float:right">
                                 <i class="typcn typcn-download btn-icon-prepend"></i>
                                 Export File
                             </button>
@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="">
-                        <table class="table table-striped table-custom d-none" id="tb_penjualankategori_list">
+                        <table class="table table-striped table-custom d-none" id="tb_penjualansbu_list">
                             <thead class="table-rambla">
                                 <tr>
                                     <th rowspan="2" style="vertical-align: middle; text-align:center;">#</th>
@@ -38,9 +38,6 @@
                                     </th>
                                     <th rowspan="2" style="vertical-align: middle; text-align:center;">
                                         <nobr>SBU</nobr>
-                                    </th>
-                                    <th rowspan="2" style="vertical-align: middle; text-align:center;">
-                                        <nobr>DEPT</nobr>
                                     </th>
                                     <th colspan="9" style="vertical-align: middle; text-align:center; background-color:#ff5252">FLOOR</td>
                                     <th colspan="9" style="vertical-align: middle; text-align:center; background-color: #ff5252">ATRIUM</td>
@@ -198,14 +195,14 @@
 
         //load_data_penjualanartikel(params1,params2,params3,params4,params5,params6,params7,params8,params9);
 
-        $('#modal-filter-penjualankategori').modal('show');
+        $('#modal-filter-penjualansbu').modal('show');
 
-        $('.btn-export-penjualankategori').on("click", function() {
-            $('#modal-export-penjualankategori').modal('show');
+        $('.btn-export-penjualansbu').on("click", function() {
+            $('#modal-export-penjualansbu').modal('show');
         });
 
         $('.btn-filter-pejualanbrand').on("click", function() {
-            $('#modal-filter-penjualankategori').modal('show');
+            $('#modal-filter-penjualansbu').modal('show');
         });
 
         $('.list_user_brand').on('change', function(e) {
@@ -261,14 +258,14 @@
                 params9 = null;
             }
             // console.log(params1, params2, params3, params4, params5, params6, params7, params8, params9);
-            load_data_penjualankategori(params1, params2, params3, params4, params5, params6, params7, params8, params9);
+            load_data_penjualansbu(params1, params2, params3, params4, params5, params6, params7, params8, params9);
         });
 
         $('.btn-export').on("click", function() {
-            export_penjualankategori(params1, params2, params3, params4, params5, params6, params7, params8, params9);
+            export_penjualansbu(params1, params2, params3, params4, params5, params6, params7, params8, params9);
         });
 
-        function export_penjualankategori(params1, params2, params3, params4, params5, params6, params7, params8, params9) {
+        function export_penjualansbu(params1, params2, params3, params4, params5, params6, params7, params8, params9) {
             //console.log(params9)
             $.ajax({
                 type: "POST",
@@ -279,7 +276,7 @@
                     "this_periode": params9
                 },
                 success: function(data) {
-                    window.location.href = "<?= base_url('LaporanKhusus/export_excel_penjualankategori/'); ?>" + data.fromdate1 + '/' + data.todate1 + '/' + data.fromdate2 + '/' + data.todate2 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params8;
+                    window.location.href = "<?= base_url('LaporanKhusus/export_excel_penjualansbu/'); ?>" + data.fromdate1 + '/' + data.todate1 + '/' + data.fromdate2 + '/' + data.todate2 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params8;
                 }
             });
         }
@@ -313,9 +310,9 @@
         // }
 
 
-        function load_data_penjualankategori(params1, params2, params3, params4, params5, params6, params7, params8, params9) {
-            $('#tb_penjualankategori_list').removeClass('d-none');
-            tabel = $('#tb_penjualankategori_list').DataTable({
+        function load_data_penjualansbu(params1, params2, params3, params4, params5, params6, params7, params8, params9) {
+            $('#tb_penjualansbu_list').removeClass('d-none');
+            tabel = $('#tb_penjualansbu_list').DataTable({
                 "processing": true,
                 "responsive": true,
                 "serverSide": true,
@@ -325,7 +322,7 @@
                     [0, 'asc']
                 ], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
                 "ajax": {
-                    "url": "<?= base_url('LaporanKhusus/penjualan_kategori_where'); ?>", // URL file untuk proses select datanya
+                    "url": "<?= base_url('LaporanKhusus/penjualan_sbu_where'); ?>", // URL file untuk proses select datanya
                     "type": "POST",
                     "data": {
                         "params1": params1,
@@ -361,12 +358,6 @@
                     },
                     {
                         "data": "SBU",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "DEPT",
                         "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
                         },
@@ -598,15 +589,15 @@
                 dataType: "html",
                 success: function(data) {
                     $(".loading").hide();
-                    $("#export-penjualankategori").show();
-                    $("#filter-penjualankategori").show();
+                    $("#export-penjualansbu").show();
+                    $("#filter-penjualansbu").show();
                     $('.list_user_brand').html(data);
                 },
                 beforeSend: function(xhr) {
                     // console.log(xhr);
                     $(".loading").show();
-                    $("#filter-penjualankategori").hide();
-                    $("#export-penjualankategori").hide();
+                    $("#filter-penjualansbu").hide();
+                    $("#export-penjualansbu").hide();
                 }
             });
         }
@@ -619,14 +610,14 @@
                 dataType: "html",
                 success: function(data) {
                     $(".loading").hide();
-                    $("#export-penjualankategori").show();
-                    $("#filter-penjualankategori").show();
+                    $("#export-penjualansbu").show();
+                    $("#filter-penjualansbu").show();
                     $('.list_store').html(data);
                 },
                 beforeSend: function(xhr) {
                     $(".loading").show();
-                    $("#filter-penjualankategori").hide();
-                    $("#export-penjualankategori").hide();
+                    $("#filter-penjualansbu").hide();
+                    $("#export-penjualansbu").hide();
                 }
             });
         }

@@ -734,6 +734,341 @@ class M_Sales extends CI_Model
         return $response;
     }
 
+    public function getPenjualanSBU($postData = null)
+    {
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+        $cek_operation = $this->db->query("SELECT * from m_login where username ='" . $data['username'] . "'")->row();
+        $cek_operation = $cek_operation->login_type_id;
+
+        $response = array();
+
+        $draw = $postData['draw'];
+        $start = $postData['start'];
+        $rowperpage = $postData['length']; // Rows display per page
+        $columnIndex = $postData['order'][0]['column']; // Column index
+        $columnName = $postData['columns'][$columnIndex]['data']; // Column name
+        $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+        $searchValue = $postData['search']['value']; // Search value
+
+        $store = $postData['params8'] ? $postData['params8'] : '';
+        $date = $postData['params3'] ? $postData['params3'] : '';
+        $date2 = $postData['params9'] ? $postData['params9'] : '';
+        $division = $postData['params4'] ? $postData['params4'] : '';
+        $sub_division = $postData['params5'] ? $postData['params5'] : '';
+        // $deltype = $postData['deltype'] ? $postData['deltype'] : '';
+        // $paytype = $postData['paytype'] ? $postData['paytype'] : '';
+
+        $whereClause = "";
+
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+        // START CEK ADA KATEGORINYA NGGA
+        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
+
+        // CEK ADA USER SITENYA NGGA
+        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+        if ($cek_user_category) {
+            $whereClause = $this->M_Categories->get_category($data['username']);
+        } else if ($cek_user_site) {
+            $whereClause = $this->M_Division->get_division($data['username'], $store);
+        } else {
+            // UNTUK MD
+            $whereClause = "AND brand_code in (
+                select distinct brand from m_user_brand 
+                where username = '" . $data['username'] . "'
+            )";
+        }
+        // END CEK ADA KATEGORINYA NGGA
+
+        if ($date != '') {
+            if (strpos($date, '-') !== false) {
+                $tgl = explode("-", $date);
+                $fromdate = date("Y-m-d", strtotime($tgl[0]));
+                $todate = date("Y-m-d", strtotime($tgl[1]));
+            }
+            $last_period = " WHERE DATE_FORMAT(periode,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
+        }
+
+        if ($date2 != '') {
+            if (strpos($date2, '-') !== false) {
+                $tgl2 = explode("-", $date2);
+                $fromdate2 = date("Y-m-d", strtotime($tgl2[0]));
+                $todate2 = date("Y-m-d", strtotime($tgl2[1]));
+            }
+            $this_period = " WHERE DATE_FORMAT(periode,'%Y-%m-%d') BETWEEN '" . $fromdate2 . "' and '" . $todate2 . "'";
+        }
+
+        if ($division != '') {
+            $whereClause .= " AND DIVISION ='" . $division . "'";
+        }
+
+        if ($sub_division != '') {
+            $whereClause .= " AND SUB_DIVISION ='" . $sub_division . "'";
+        }
+
+        $cache_key = "getPenjualanSBU_{$start}_length_{$rowperpage}_draw_{$draw}_store_{$store}_tp_{$this_period}_lp_{$last_period}_search_" . md5($whereClause) . "_is_operation_" . $cek_operation;
+        $cached_data = $this->redislib->get($cache_key); // Try to fetch cached data
+
+        if ($cached_data) {
+            return json_decode($cached_data, true);
+        }
+
+        $query = "SELECT 
+        CASE WHEN LP.branch_id is null then TP.branch_id else LP.branch_id end as STORE, 
+        CASE WHEN LP.SUB_DIVISION is null then  TP.SUB_DIVISION else LP.SUB_DIVISION end as SBU, 
+        -- FLOOR
+        LP.net_floor as LP_Sales1, '' as TP_Target1, TP.net_floor as TP_Sales1, '' as Achieve1,
+        case when LP.net_floor IS NULL OR TP.net_floor IS NULL THEN 0 else ifnull(round(((TP.net_floor - LP.net_floor) / LP.net_floor) *100,0),0) end as Growth1, 
+        ifnull(round(LP.margin_percent_floor,2),0) as LP_Margin_Percent1, ifnull(round(LP.margin_value_floor,0),0) as LP_Margin_Value1,  
+        ifnull(round(TP.margin_percent_floor,2),0) as TP_Margin_Percent1, ifnull(round(TP.margin_value_floor,0),0) as TP_Margin_Value1,  
+        -- ATRIUM
+        LP.net_bazaar as LP_Sales2, '' as TP_Target2, TP.net_bazaar as TP_Sales2, '' as Achieve2,
+        case when LP.net_bazaar IS NULL OR TP.net_bazaar IS NULL THEN 0 else ifnull(round(((TP.net_bazaar - LP.net_bazaar) / LP.net_bazaar) *100,0),0) end as Growth2, 
+        ifnull(round(LP.margin_percent_bazaar,2),0) as LP_Margin_Percent2, ifnull(round(LP.margin_value_bazaar,0),0) as LP_Margin_Value2,  
+        ifnull(round(TP.margin_percent_bazaar,2),0) as TP_Margin_Percent2, ifnull(round(TP.margin_value_bazaar,0),0) as TP_Margin_Value2,  
+        -- ONLINE
+        LP.net_online as LP_Sales3, '' as TP_Target3, TP.net_online as TP_Sales3, '' as Achieve3,
+        case when LP.net_online IS NULL OR TP.net_online IS NULL THEN 0 else ifnull(round(((TP.net_online - LP.net_online) /LP.net_online)*100,0),0) end as Growth3, 
+        ifnull(round(LP.margin_percent_online,2),0) as LP_Margin_Percent3, ifnull(round(LP.margin_value_online,0),0) as LP_Margin_Value3,  
+        ifnull(round(TP.margin_percent_online,2),0) as TP_Margin_Percent3, ifnull(round(TP.margin_value_online,0),0) as TP_Margin_Value3,  
+        -- TOTAL
+        (LP.net_floor+LP.net_bazaar+LP.net_online) as LP_Sales4, '' as TP_Target4, (TP.net_floor+TP.net_bazaar+TP.net_online) as TP_Sales4, '' as Achieve4,
+        case when (LP.net_floor+LP.net_bazaar+LP.net_online) IS NULL OR (TP.net_floor+TP.net_bazaar+LP.net_online) IS NULL THEN 0 else ifnull(round((((TP.net_floor+TP.net_bazaar+TP.net_online) -  (LP.net_floor+LP.net_bazaar+LP.net_online))  / (LP.net_floor+LP.net_bazaar+LP.net_online))*100,0),0) end as Growth4,
+        (ifnull(round(LP.margin_percent_floor,2),0)+ifnull(round(LP.margin_percent_online,2),0)+ifnull(round(LP.margin_percent_bazaar,2),0)) as LP_Margin_Percent4,
+        (ifnull(round(TP.margin_percent_floor,2),0)+ifnull(round(TP.margin_percent_online,2),0)+ifnull(round(TP.margin_percent_bazaar,2),0)) as TP_Margin_Percent4,
+        (ifnull(round(LP.margin_value_floor,0),0)+ifnull(round(LP.margin_value_online,0),0)+ifnull(round(LP.margin_value_bazaar,0),0)) as LP_Margin_Value4,
+        (ifnull(round(TP.margin_value_floor,0),0)+ifnull(round(TP.margin_value_online,0),0)+ifnull(round(TP.margin_value_bazaar,0),0)) as TP_Margin_Value4
+        from (
+        SELECT branch_id, SUB_DIVISION, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
+        sum(margin_value_floor) as margin_value_floor, sum(margin_value_bazaar) as margin_value_bazaar, sum(margin_value_online) as margin_value_online,
+        sum(margin_percent_floor) as margin_percent_floor, sum(margin_percent_bazaar) as margin_percent_bazaar, sum(margin_percent_online) as margin_percent_online FROM (
+        select branch_id, SUB_DIVISION, 
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_af else 0 end) net_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_af else 0 end) net_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_af else 0 end) net_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) margin_value_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) margin_value_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) margin_value_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf else 0 end) * 100 as margin_percent_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf else 0 end) * 100 as margin_percent_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf else 0 end) * 100 as margin_percent_online,
+        CASE
+            WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
+            WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
+            WHEN substring(trans_no, 9, 1) = '3' THEN 'BAZAAR'
+        END areatrx  from report_service.r_sales
+        $last_period
+        and branch_id = '" . $store . "'
+        $whereClause
+        GROUP BY branch_id, SUB_DIVISION,
+        CASE
+            WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
+            WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
+            WHEN substring(trans_no, 9, 1) = '3' THEN 'BAZAAR'
+        END
+        ) A
+        GROUP BY branch_id, SUB_DIVISION
+        ) LP
+        left join 
+        (
+        SELECT branch_id, SUB_DIVISION, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
+        sum(margin_value_floor) as margin_value_floor, sum(margin_value_bazaar) as margin_value_bazaar, sum(margin_value_online) as margin_value_online,
+        sum(margin_percent_floor) as margin_percent_floor, sum(margin_percent_bazaar) as margin_percent_bazaar, sum(margin_percent_online) as margin_percent_online
+        FROM (
+        select branch_id, SUB_DIVISION,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_af else 0 end) net_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_af else 0 end) net_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_af else 0 end) net_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) margin_value_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) margin_value_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) margin_value_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf else 0 end) * 100 as margin_percent_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf else 0 end) * 100 as margin_percent_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf else 0 end) * 100 as margin_percent_online,
+        CASE
+            WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
+            WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
+        WHEN substring(trans_no, 9, 1) = '3' THEN 'BAZAAR'
+        END areatrx  from report_service.r_sales
+        $this_period
+        and branch_id = '" . $store . "'
+        $whereClause
+        GROUP BY branch_id, SUB_DIVISION,
+        CASE
+            WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
+            WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
+            WHEN substring(trans_no, 9, 1) = '3' THEN 'BAZAAR'
+        END
+        ) A GROUP BY branch_id, SUB_DIVISION
+        ) TP on LP.SUB_DIVISION = TP.SUB_DIVISION  
+        union
+        SELECT 
+        CASE WHEN LP.branch_id is null then TP.branch_id else LP.branch_id end as STORE, 
+        CASE WHEN LP.SUB_DIVISION is null then  TP.SUB_DIVISION else LP.SUB_DIVISION end as SBU, 
+        -- FLOOR
+        LP.net_floor as LP_Sales1, '' as TP_Target1, TP.net_floor as TP_Sales1, '' as Achieve1,
+        case when LP.net_floor IS NULL OR TP.net_floor IS NULL THEN 0 else ifnull(round(((TP.net_floor - LP.net_floor) / LP.net_floor) *100,0),0) end as Growth1, 
+        ifnull(round(LP.margin_percent_floor,2),0) as LP_Margin_Percent1, ifnull(round(LP.margin_value_floor,0),0) as LP_Margin_Value1,  
+        ifnull(round(TP.margin_percent_floor,2),0) as TP_Margin_Percent1, ifnull(round(TP.margin_value_floor,0),0) as TP_Margin_Value1,  
+        -- ATRIUM
+        LP.net_bazaar as LP_Sales2, '' as TP_Target2, TP.net_bazaar as TP_Sales2, '' as Achieve2,
+        case when LP.net_bazaar IS NULL OR TP.net_bazaar IS NULL THEN 0 else ifnull(round(((TP.net_bazaar - LP.net_bazaar) / LP.net_bazaar) *100,0),0) end as Growth2, 
+        ifnull(round(LP.margin_percent_bazaar,2),0) as LP_Margin_Percent2, ifnull(round(LP.margin_value_bazaar,0),0) as LP_Margin_Value2,  
+        ifnull(round(TP.margin_percent_bazaar,2),0) as TP_Margin_Percent2, ifnull(round(TP.margin_value_bazaar,0),0) as TP_Margin_Value2,  
+        -- ONLINE
+        LP.net_online as LP_Sales3, '' as TP_Target3, TP.net_online as TP_Sales3, '' as Achieve3,
+        case when LP.net_online IS NULL OR TP.net_online IS NULL THEN 0 else ifnull(round(((TP.net_online - LP.net_online) /LP.net_online)*100,0),0) end as Growth3, 
+        ifnull(round(LP.margin_percent_online,2),0) as LP_Margin_Percent3, ifnull(round(LP.margin_value_online,0),0) as LP_Margin_Value3,  
+        ifnull(round(TP.margin_percent_online,2),0) as TP_Margin_Percent3, ifnull(round(TP.margin_value_online,0),0) as TP_Margin_Value3,  
+        -- TOTAL
+        (LP.net_floor+LP.net_bazaar+LP.net_online) as LP_Sales4, '' as TP_Target4, (TP.net_floor+TP.net_bazaar+TP.net_online) as TP_Sales4, '' as Achieve4,
+        case when (LP.net_floor+LP.net_bazaar+LP.net_online) IS NULL OR (TP.net_floor+TP.net_bazaar+LP.net_online) IS NULL THEN 0 else ifnull(round((((TP.net_floor+TP.net_bazaar+TP.net_online) -  (LP.net_floor+LP.net_bazaar+LP.net_online))  / (LP.net_floor+LP.net_bazaar+LP.net_online))*100,0),0) end as Growth4,
+        (ifnull(round(LP.margin_percent_floor,2),0)+ifnull(round(LP.margin_percent_online,2),0)+ifnull(round(LP.margin_percent_bazaar,2),0)) as LP_Margin_Percent4,
+        (ifnull(round(TP.margin_percent_floor,2),0)+ifnull(round(TP.margin_percent_online,2),0)+ifnull(round(TP.margin_percent_bazaar,2),0)) as TP_Margin_Percent4,
+        (ifnull(round(LP.margin_value_floor,0),0)+ifnull(round(LP.margin_value_online,0),0)+ifnull(round(LP.margin_value_bazaar,0),0)) as LP_Margin_Value4,
+        (ifnull(round(TP.margin_value_floor,0),0)+ifnull(round(TP.margin_value_online,0),0)+ifnull(round(TP.margin_value_bazaar,0),0)) as TP_Margin_Value4
+        from (
+        SELECT branch_id, SUB_DIVISION, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
+        sum(margin_value_floor) as margin_value_floor, sum(margin_value_bazaar) as margin_value_bazaar, sum(margin_value_online) as margin_value_online,
+        sum(margin_percent_floor) as margin_percent_floor, sum(margin_percent_bazaar) as margin_percent_bazaar, sum(margin_percent_online) as margin_percent_online FROM (
+        select branch_id, SUB_DIVISION, 
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_af else 0 end) net_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_af else 0 end) net_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_af else 0 end) net_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) margin_value_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) margin_value_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) margin_value_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf else 0 end) * 100 as margin_percent_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf else 0 end) * 100 as margin_percent_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf else 0 end) * 100 as margin_percent_online,
+        CASE
+            WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
+            WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
+            WHEN substring(trans_no, 9, 1) = '3' THEN 'BAZAAR'
+        END areatrx  from report_service.r_sales
+        $last_period
+        and branch_id = '" . $store . "'
+        $whereClause
+        GROUP BY branch_id, SUB_DIVISION,
+        CASE
+            WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
+            WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
+            WHEN substring(trans_no, 9, 1) = '3' THEN 'BAZAAR'
+        END
+        ) A
+        GROUP BY branch_id, SUB_DIVISION
+        ) LP
+        right join 
+        (
+        SELECT branch_id, SUB_DIVISION, sum(net_floor) as net_floor,sum(net_bazaar) as net_bazaar, sum(net_online) as net_online,
+        sum(margin_value_floor) as margin_value_floor, sum(margin_value_bazaar) as margin_value_bazaar, sum(margin_value_online) as margin_value_online,
+        sum(margin_percent_floor) as margin_percent_floor, sum(margin_percent_bazaar) as margin_percent_bazaar, sum(margin_percent_online) as margin_percent_online
+        FROM (
+        select branch_id, SUB_DIVISION,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_af else 0 end) net_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_af else 0 end) net_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_af else 0 end) net_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) margin_value_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) margin_value_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) margin_value_online,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('0','1','2') then net_bf else 0 end) * 100 as margin_percent_floor,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('3') then net_bf else 0 end) * 100 as margin_percent_bazaar,
+        sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf*margin/100 else 0 end) / sum(CASE WHEN substring(trans_no, 9, 1) in ('5') then net_bf else 0 end) * 100 as margin_percent_online,
+        CASE
+            WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
+            WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
+        WHEN substring(trans_no, 9, 1) = '3' THEN 'BAZAAR'
+        END areatrx  from report_service.r_sales
+        $this_period
+        and branch_id = '" . $store . "'
+        $whereClause
+        GROUP BY branch_id, SUB_DIVISION,
+        CASE
+            WHEN substring(trans_no, 9, 1) in ('0','1','2') THEN 'FLOOR'
+            WHEN substring(trans_no, 9, 1) = '5' THEN 'ONLINE'
+            WHEN substring(trans_no, 9, 1) = '3' THEN 'BAZAAR'
+        END
+        ) A GROUP BY branch_id, SUB_DIVISION
+        ) TP on LP.SUB_DIVISION = TP.SUB_DIVISION  
+        ORDER BY SBU";
+
+        $searchQuery = "";
+        if ($searchValue != '') {
+            $searchQuery = " (SBU like '%" . $searchValue . "%') ";
+        }
+
+        $orderBy = "";
+
+        $totalRecords = $this->db->query($query)->num_rows();
+
+        ## Fetch records
+        //$this->db->select('*');
+        if ($searchQuery != '') {
+            $this->db->where($searchQuery);
+        }
+        $totalRecordwithFilter = $this->db->query($query)->num_rows();
+        // $this->db->order_by($columnName, $columnSortOrder);
+        $limitStart = ' LIMIT ' . $rowperpage . ' OFFSET ' . $start;
+        $records = $this->db->query($query . $orderBy . $limitStart)->result();
+
+        //var_dump($query.$whereClause.$limitStart);
+        $data = array();
+        foreach ($records as $record) {
+
+            $data[] = array(
+                "STORE"                 => $record->STORE,
+                "SBU"                   => $record->SBU,
+                "LP_Sales1"             => ($record->LP_Sales1) ? "Rp " . $record->LP_Sales1 : "",
+                "TP_Target1"            => ($record->TP_Target1) ? "Rp " . $record->TP_Target1 : "",
+                "TP_Sales1"             => ($record->TP_Sales1) ? "Rp " . $record->TP_Sales1 : "",
+                "Achieve1"              => $record->Achieve1,
+                "Growth1"               => $record->Growth1,
+                "LP_Margin_Percent1"    => ($cek_operation == "1") ? "" : $record->LP_Margin_Percent1 . "%",
+                "LP_Margin_Value1"      => ($cek_operation == "1") ? "" : "Rp " . $record->LP_Margin_Value1,
+                "TP_Margin_Percent1"    => ($cek_operation == "1") ? "" : $record->TP_Margin_Percent1 . "%",
+                "TP_Margin_Value1"      => ($cek_operation == "1") ? "" : "Rp " . $record->TP_Margin_Value1,
+                "LP_Sales2"             => ($record->LP_Sales2) ? "Rp " . $record->LP_Sales2 : "",
+                "TP_Target2"            => ($record->TP_Target2) ? "Rp " . $record->TP_Target2 : "",
+                "TP_Sales2"             => ($record->TP_Sales2) ? "Rp " . $record->TP_Sales2 : "",
+                "Achieve2"              => $record->Achieve2,
+                "Growth2"               => $record->Growth2,
+                "LP_Margin_Percent2"    => ($cek_operation == "1") ? "" : $record->LP_Margin_Percent2 . "%",
+                "LP_Margin_Value2"      => ($cek_operation == "1") ? "" : "Rp " . $record->LP_Margin_Value2,
+                "TP_Margin_Percent2"    => ($cek_operation == "1") ? "" : $record->TP_Margin_Percent2 . "%",
+                "TP_Margin_Value2"      => ($cek_operation == "1") ? "" : "Rp " . $record->TP_Margin_Value2,
+                "LP_Sales3"             => ($record->LP_Sales3) ? "Rp " . $record->LP_Sales3 : "",
+                "TP_Target3"            => ($record->TP_Target3) ? "Rp " . $record->TP_Target3 : "",
+                "TP_Sales3"             => ($record->TP_Sales3) ? "Rp " . $record->TP_Sales3 : "",
+                "Achieve3"              => $record->Achieve3,
+                "Growth3"               => $record->Growth3,
+                "LP_Margin_Percent3"    => ($cek_operation == "1") ? "" : $record->LP_Margin_Percent3 . "%",
+                "LP_Margin_Value3"      => ($cek_operation == "1") ? "" : "Rp " . $record->LP_Margin_Value3,
+                "TP_Margin_Percent3"    => ($cek_operation == "1") ? "" : $record->TP_Margin_Percent3 . "%",
+                "TP_Margin_Value3"      => ($cek_operation == "1") ? "" : "Rp " . $record->TP_Margin_Value3,
+                "LP_Sales4"             => ($record->LP_Sales4) ? "Rp " . $record->LP_Sales4 : "",
+                "TP_Target4"            => ($record->TP_Target4) ? "Rp " . $record->TP_Target4 : "",
+                "TP_Sales4"             => ($record->TP_Sales4) ? "Rp " . $record->TP_Sales4 : "",
+                "Achieve4"              => $record->Achieve4,
+                "Growth4"               => $record->Growth4,
+                "LP_Margin_Percent4"    => ($cek_operation == "1") ? "" : $record->LP_Margin_Percent4 . "%",
+                "LP_Margin_Value4"      => ($cek_operation == "1") ? "" : "Rp " . $record->LP_Margin_Value4,
+                "TP_Margin_Percent4"    => ($cek_operation == "1") ? "" : $record->TP_Margin_Percent4 . "%",
+                "TP_Margin_Value4"      => ($cek_operation == "1") ? "" : "Rp " . $record->TP_Margin_Value4,
+            );
+        }
+
+        ## Response
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordwithFilter,
+            "aaData" => $data
+        );
+
+        $this->redislib->set($cache_key, json_encode($response));
+
+        return $response;
+    }
+
     public function getSalesHistory($postData = null){
 
         $store = $postData['store'];

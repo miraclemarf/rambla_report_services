@@ -1,9 +1,9 @@
-<div class="modal fade" id="modal-filter-penjualankategori" tabindex="-1" role="dialog" aria-labelledby="openModal" aria-hidden="true">
+<div class="modal fade" id="modal-filter-penjualansbu" tabindex="-1" role="dialog" aria-labelledby="openModal" aria-hidden="true">
     <div class="vertical-alignment-helper">
         <div class="modal-dialog vertical-align-center" role="document" style="width: 350px;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="openModal">Filter Data Penjualan By Dept</h5>
+                    <h5 class="modal-title" id="openModal">Filter Data Penjualan By SBU</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <p class="text-center loading">Loading</p>
-                            <div id="filter-penjualankategori">
+                            <div id="filter-penjualansbu">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <label class="mt-1">Last Periode <span class="text-danger">*</span></label>
@@ -59,7 +59,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row mt-2">
+                                <!-- <div class="row mt-2">
                                     <div class="col-md-4">
                                         <label class="mt-1">Dept</label>
                                     </div>
@@ -68,7 +68,7 @@
                                             <option value=''>Please Wait...</option>
                                         </select>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

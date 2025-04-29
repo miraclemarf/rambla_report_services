@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-export-penjualankategori" tabindex="-1" role="dialog" aria-labelledby="openModal" aria-hidden="true">
+<div class="modal fade" id="modal-export-penjualansbu" tabindex="-1" role="dialog" aria-labelledby="openModal" aria-hidden="true">
     <div class="vertical-alignment-helper">
         <div class="modal-dialog vertical-align-center" role="document" style="width: 325px;">
             <div class="modal-content">
@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <p class="text-center loading">Loading</p>
-                            <div id="export-penjualankategori">
+                            <div id="export-penjualansbu">
 
                                 <div class="row">
                                     <div class="col-md-4">
