@@ -86,7 +86,7 @@ class Transaction extends My_Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://10.20.34.248/api-central-dev/public/api/ops/pos/sales/upload',
+        CURLOPT_URL => $_ENV['APICENTRALDEV'].'ops/pos/sales/upload',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -96,7 +96,7 @@ class Transaction extends My_Controller
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS => array('file'=> new CURLFILE($file_path),'user_id' => $data['username'],'branch_id' => $store),
         CURLOPT_HTTPHEADER => array(
-            'Authorization: Iwb#4646!'
+            'Authorization: '.$_ENV['APIAUTHVALUE']
         ),
         ));
 
@@ -144,7 +144,7 @@ class Transaction extends My_Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://10.20.34.248/api-central-dev/public/api/ops/pos/sales/upload/update',
+        CURLOPT_URL => $_ENV['APICENTRALDEV'].'ops/pos/sales/upload/update',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -154,9 +154,62 @@ class Transaction extends My_Controller
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS => array('no_ref'=> $no_ref,'user_id' => $data['username'],'branch_id' => $store,'type' => $status),
         CURLOPT_HTTPHEADER => array(
-            'Authorization: Iwb#4646!'
+            'Authorization: '.$_ENV['APIAUTHVALUE']
         ),
         ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $message = "";
+
+        $hasil = json_decode($response);
+        if($hasil){
+            if($hasil->status == "error"){
+                $message = "Data gagal di update!";
+                // unlink($file_path);
+                $data['status']     = 0;
+                $data['message']    = $message;
+                // $this->session->set_flashdata('failed-upload', $message);
+                // redirect(base_url() . "Transaction/import_page/".$store);
+            } else if($hasil->status == "success"){
+                $message = "Data berhasil di update!";
+                $data['status']     = 1;
+                $data['message']    = $message;
+                // $this->session->set_flashdata('success-upload', $message);
+                // redirect(base_url() . "Transaction/upload_sales");
+            }
+
+        } else {
+            $message = "Update gagal, silakan diulang kembali!";
+            $data['status']     = 0;
+            $data['message']    = $message;
+        }
+        echo json_encode($data);
+    }
+
+    public function submit_transaksi(){
+        extract(populateform());
+        $data['username']   = $this->input->cookie('cookie_invent_user');
+        $data['status']     = 0;
+        $data['message']    = "";
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => $_ENV['APICENTRALDEV'].'ops/pos/sales/upload/submit',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => array('no_ref'=> $no_ref,'user_id' => $data['username'],'branch_id' => $store),
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: '.$_ENV['APIAUTHVALUE']
+        ),
+        ));
+        
 
         $response = curl_exec($curl);
         curl_close($curl);
@@ -237,11 +290,23 @@ class Transaction extends My_Controller
         echo json_encode($data);
     }
 
-    public function list_sales_upload()
+    public function list_detail_sales_upload()
     {
         $postData = $this->input->post();
-        $data = $this->M_Sales->getSalesUpload($postData);
+        $data = $this->M_Sales->getDetailSalesUpload($postData);
         echo json_encode($data);
+    }
+
+    public function list_header_sales_upload()
+    {
+        $postData = $this->input->post();
+        try {
+            $data = $this->M_Sales->getHeaderSalesUpload($postData);
+            echo json_encode($data);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(["error" => "Terjadi kesalahan saat memuat data: " . $e->getMessage()]);
+        }
     }
 
     public function list_paid_today()
