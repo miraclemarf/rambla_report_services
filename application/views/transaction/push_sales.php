@@ -212,7 +212,7 @@
         var trans_status = null;
         var store = $('.opt-store .dropdown-item').data('store');
 
-        get_register();
+        get_register(store);
 
         load_data_pushsales(params1, params2, params3,store, params4);
 
@@ -224,13 +224,14 @@
                 // $('#filter-store form').trigger('submit');
 
                 store = $(this).data('store');
+                get_register(store);
                 // console.log(params1, params2, params3 ,store, params4);
                 load_data_pushsales(params1, params2, params3 ,store, params4);
             })
         });
 
         // START REGISTER
-         function get_register() {
+         function get_register(store) {
             $.ajax({
                 type: "POST",
                 url: "<?= base_url('Masterdata'); ?>/get_list_register",

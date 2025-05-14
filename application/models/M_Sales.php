@@ -1189,24 +1189,170 @@ class M_Sales extends CI_Model
         return $response;
     }
 
+    public function hapusSalesUpload($postData = null){
+        $response = array();
+        $store  = $postData['store'];
+        $no_ref = $postData['no_ref'];
+        // if ($store == 'R002') {
+        //     $dbStore = $this->load->database('storeR002', TRUE);
+        // } else if ($store == 'V001') {
+        //     $dbStore = $this->load->database('storeV001', TRUE);
+        // } else if ($store == 'R001') {
+        //     $dbStore = $this->load->database('storeR001', TRUE);
+        // } else if ($store == 'S002') {
+        //     $dbStore = $this->load->database('storeS002', TRUE);
+        // } else if ($store == 'S003') {
+        //     $dbStore = $this->load->database('storeS003', TRUE);
+        // } else if ($store == 'V002') {
+        //     $dbStore = $this->load->database('storeV002', TRUE);
+        // } else if ($store == 'V003') {
+        //     $dbStore = $this->load->database('storeV003', TRUE);
+        // }
+        $dbStore = $this->load->database('dbserver_dev', TRUE);
+        $query   = "DELETE FROM t_sales_trans_upload where no_ref ='".$no_ref."'";
+        $dbStore->query($query);
+        if($dbStore->affected_rows()){
+            $response = array(
+                "status" => "success",
+                "msg" => "Data berhasil di hapus!"
+            );
+        }else{
+            $response = array(
+                "status" => "error",
+                "msg" => "Data gagal di hapus!"
+            );
+        }
+        return $response;
+    }
+
+    public function getSalesUpload($postData = null){
+
+        $store = $postData['store'];
+        // if ($store == 'R002') {
+        //     $dbStore = $this->load->database('storeR002', TRUE);
+        // } else if ($store == 'V001') {
+        //     $dbStore = $this->load->database('storeV001', TRUE);
+        // } else if ($store == 'R001') {
+        //     $dbStore = $this->load->database('storeR001', TRUE);
+        // } else if ($store == 'S002') {
+        //     $dbStore = $this->load->database('storeS002', TRUE);
+        // } else if ($store == 'S003') {
+        //     $dbStore = $this->load->database('storeS003', TRUE);
+        // } else if ($store == 'V002') {
+        //     $dbStore = $this->load->database('storeV002', TRUE);
+        // } else if ($store == 'V003') {
+        //     $dbStore = $this->load->database('storeV003', TRUE);
+        // }
+        $dbStore = $this->load->database('dbserver_dev', TRUE);
+        
+        $response = array();
+
+        $draw = $postData['draw'];
+        $start = $postData['start'];
+        $rowperpage = $postData['length']; // Rows display per page
+        $columnIndex = $postData['order'][0]['column']; // Column index
+        $columnName = $postData['columns'][$columnIndex]['data']; // Column name
+        $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+        $searchValue = $postData['search']['value']; // Search value
+
+        $status = $postData['status'] ? $postData['status'] : '';
+        $marketplace = $postData['params2'] ? $postData['params2'] : '';
+        $date = $postData['params3'] ? $postData['params3'] : '';
+
+        $whereClause = "";
+
+        if($status != ''){
+            $whereClause .= " AND a.status ='".$status."'";
+        }
+
+        if($marketplace != ''){
+            $whereClause .= " AND a.marketplace ='".$marketplace."'";
+        }
+
+        if ($date != '') {
+            if (strpos($date, '-') !== false) {
+                $tgl = explode("-", $date);
+                $fromdate = date("Y-m-d", strtotime($tgl[0]));
+                $todate = date("Y-m-d", strtotime($tgl[1]));
+            }
+            $whereClause .= " AND DATE_FORMAT(upload_date,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
+        }
+
+        $query = "SELECT a.barcode,quantity, article_name, price_item, disc_pct, more_disc_pct, net_price, payment_type, marketplace, no_ref, upload_date, upload_by, a.status from t_sales_trans_upload a
+        inner join m_codebar b
+        on a.barcode = b.barcode
+        inner join m_item_master c
+        on b.article_number = c.article_number where 1=1 $whereClause order by no_ref, date_format(upload_date,'%Y-%m-%d') desc";
+
+        $searchQuery = "";
+        if ($searchValue != '') {
+            $searchQuery = " (barcode like '%" . $searchValue . "%' or article_name like '%" . $searchValue . "%' ) ";
+        }
+
+        $orderBy = "";
+
+        $totalRecords = $dbStore->query($query)->num_rows();
+
+        ## Fetch records
+        //$dbStore->select('*');
+        if ($searchQuery != '') {
+            $dbStore->where($searchQuery);
+        }
+        $totalRecordwithFilter = $dbStore->query($query)->num_rows();
+        // $dbStore->order_by($columnName, $columnSortOrder);
+        $limitStart = ' LIMIT ' . $rowperpage . ' OFFSET ' . $start;
+        $records = $dbStore->query($query . $orderBy . $limitStart)->result();
+
+        //var_dump($query.$whereClause.$limitStart);
+        $data = array();
+        foreach ($records as $record) {
+            $data[] = array(
+                "barcode"       => $record->barcode,
+                "quantity"      => $record->quantity,
+                "article_name"  => $record->article_name,
+                "price_item"    => $record->price_item,
+                "disc_pct"      => $record->disc_pct,
+                "more_disc_pct" => $record->more_disc_pct,
+                "net_price"     => $record->net_price,
+                "payment_type"  => $record->payment_type,
+                "marketplace"   => $record->marketplace,
+                "no_ref"        => $record->no_ref,
+                "upload_date"   => $record->upload_date,
+                "upload_by"     => $record->upload_by
+            );
+        }
+
+        ## Response
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordwithFilter,
+            "aaData" => $data
+        );
+
+        return $response;
+    }
+
     public function getSalesToday($postData = null){
 
         $store = $postData['store'];
-        if ($store == 'R002') {
-            $dbStore = $this->load->database('storeR002', TRUE);
-        } else if ($store == 'V001') {
-            $dbStore = $this->load->database('storeV001', TRUE);
-        } else if ($store == 'R001') {
-            $dbStore = $this->load->database('storeR001', TRUE);
-        } else if ($store == 'S002') {
-            $dbStore = $this->load->database('storeS002', TRUE);
-        } else if ($store == 'S003') {
-            $dbStore = $this->load->database('storeS003', TRUE);
-        } else if ($store == 'V002') {
-            $dbStore = $this->load->database('storeV002', TRUE);
-        } else if ($store == 'V003') {
-            $dbStore = $this->load->database('storeV003', TRUE);
-        }
+        // if ($store == 'R002') {
+        //     $dbStore = $this->load->database('storeR002', TRUE);
+        // } else if ($store == 'V001') {
+        //     $dbStore = $this->load->database('storeV001', TRUE);
+        // } else if ($store == 'R001') {
+        //     $dbStore = $this->load->database('storeR001', TRUE);
+        // } else if ($store == 'S002') {
+        //     $dbStore = $this->load->database('storeS002', TRUE);
+        // } else if ($store == 'S003') {
+        //     $dbStore = $this->load->database('storeS003', TRUE);
+        // } else if ($store == 'V002') {
+        //     $dbStore = $this->load->database('storeV002', TRUE);
+        // } else if ($store == 'V003') {
+        //     $dbStore = $this->load->database('storeV003', TRUE);
+        // }
+        $dbStore = $this->load->database('dbserver_dev', TRUE);
+        
         $response = array();
 
         $draw = $postData['draw'];

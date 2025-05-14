@@ -293,3 +293,25 @@ $db['dbcentral'] = array(
 	'failover' => array(),
 	'save_queries' => TRUE
 );
+
+$db['dbserver_dev'] = array(
+	// 'dsn'	=> '',
+	'hostname' => $_ENV['DB_HOST_DEV'],
+	'username' => $_ENV['DB_USERNAME_DEV'],
+	'password' => $_ENV['DB_PASSWORD_DEV'],
+	'database' => $_ENV['DB_NAME_DEV'],
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);

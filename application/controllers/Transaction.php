@@ -1,6 +1,11 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Reader\Csv;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+
 class Transaction extends My_Controller
 {
 
@@ -12,6 +17,7 @@ class Transaction extends My_Controller
         $this->load->model('models', '', TRUE);
         $this->load->model('M_Store');
         $this->load->model('M_Sales');
+        $this->load->library('session');
         $this->ceklogin();
     }
 
@@ -42,6 +48,143 @@ class Transaction extends My_Controller
         $this->load->view('template_member/sidebar', $data);
         $this->load->view('transaction/push_sales', $data);
         $this->load->view('template_member/footer', $data);
+    }
+
+    public function import_page($store){
+        extract(populateform());
+        $data['title']          = 'Rambla | Sales Transaction';
+        $data['username']       = $this->input->cookie('cookie_invent_user');
+
+        $data['store'] = $store;
+
+        // CEK PRIVILAGE
+        $data['site'] = $this->db->query("SELECT a.branch_id, b.branch_name from m_user_site a
+        inner join m_branches b
+        on a.branch_id = b.branch_id
+        where a.flagactv ='1'
+        and username ='" . $data['username'] . "' and a.branch_id ='".$store."'")->row();
+
+        if(!$data['site']){
+            die("<script language='JavaScript'>alert('Akses dilarang!!!'); document.location='" . base_url() . "Transaction/upload_sales'</script>");
+        }
+
+        $this->load->view('template_member/header', $data);
+        $this->load->view('template_member/navbar', $data);
+        $this->load->view('template_member/sidebar', $data);
+        $this->load->view('transaction/import_page', $data);
+        $this->load->view('template_member/footer', $data);
+    }
+
+    public function import_process(){
+        extract(populateform());
+        $unlink_file        = $_SERVER['DOCUMENT_ROOT']."/report-service/assets/excel/".$namafile;
+        $file_path          = base_url().'/assets/excel/'.$namafile;
+        $data['username']   = $this->input->cookie('cookie_invent_user');
+        $data['status']     = 0;
+        $data['message']    = "";
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://10.20.34.248/api-central-dev/public/api/ops/pos/sales/upload',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => array('file'=> new CURLFILE($file_path),'user_id' => $data['username'],'branch_id' => $store),
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Iwb#4646!'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $message = "";
+
+        $hasil = json_decode($response);
+        if($hasil){
+            if($hasil->status == "error"){
+                foreach($hasil->errors as $row){
+                    $message .= $row." \n";
+                }
+                // unlink($file_path);
+                $data['status']     = 0;
+                $data['message']    = $message;
+                // $this->session->set_flashdata('failed-upload', $message);
+                // redirect(base_url() . "Transaction/import_page/".$store);
+            } else if($hasil->status == "success"){
+                $message = "Data berhasil di upload!";
+                $data['status']     = 1;
+                $data['message']    = $message;
+                // $this->session->set_flashdata('success-upload', $message);
+                // redirect(base_url() . "Transaction/upload_sales");
+            }
+
+        } else {
+            $message = "Upload gagal, silakan diulang kembali!";
+            // unlink($file_path);
+            $data['status']     = 0;
+            $data['message']    = $message;
+            // $this->session->set_flashdata('failed-upload', $message);
+            // redirect(base_url() . "Transaction/import_page/".$store);
+        }
+        unlink($unlink_file);
+        echo json_encode($data);
+    }
+
+    public function update_transaksi(){
+        extract(populateform());
+        $data['username']   = $this->input->cookie('cookie_invent_user');
+        $data['status']     = 0;
+        $data['message']    = "";
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://10.20.34.248/api-central-dev/public/api/ops/pos/sales/upload/update',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => array('no_ref'=> $no_ref,'user_id' => $data['username'],'branch_id' => $store,'type' => $status),
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Iwb#4646!'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $message = "";
+
+        $hasil = json_decode($response);
+        if($hasil){
+            if($hasil->status == "error"){
+                $message = "Data gagal di update!";
+                // unlink($file_path);
+                $data['status']     = 0;
+                $data['message']    = $message;
+                // $this->session->set_flashdata('failed-upload', $message);
+                // redirect(base_url() . "Transaction/import_page/".$store);
+            } else if($hasil->status == "success"){
+                $message = "Data berhasil di update!";
+                $data['status']     = 1;
+                $data['message']    = $message;
+                // $this->session->set_flashdata('success-upload', $message);
+                // redirect(base_url() . "Transaction/upload_sales");
+            }
+
+        } else {
+            $message = "Update gagal, silakan diulang kembali!";
+            $data['status']     = 0;
+            $data['message']    = $message;
+        }
+        echo json_encode($data);
     }
 
     public function upload_sales()
@@ -84,6 +227,20 @@ class Transaction extends My_Controller
     {
         $postData = $this->input->post();
         $data = $this->M_Sales->getSalesToday($postData);
+        echo json_encode($data);
+    }
+
+    public function hapus_transaksi()
+    {
+        $postData = $this->input->post();
+        $data = $this->M_Sales->hapusSalesUpload($postData);
+        echo json_encode($data);
+    }
+
+    public function list_sales_upload()
+    {
+        $postData = $this->input->post();
+        $data = $this->M_Sales->getSalesUpload($postData);
         echo json_encode($data);
     }
 
