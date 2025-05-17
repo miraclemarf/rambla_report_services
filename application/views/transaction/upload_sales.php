@@ -1,23 +1,22 @@
 <style>
     @media (max-width: 575.98px) {
-    .card {
-        height: 100%;
-        /* background: gold; */
-    }
+        .card {
+            height: 100%;
+            /* background: gold; */
+        }
 
-    .embed-responsive {
-        height: 100%;
-    }
-    .member-only {
-        padding: 15px;
-    }
-}
+        .embed-responsive {
+            height: 100%;
+        }
 
-
+        .member-only {
+            padding: 15px;
+        }
+    }
 </style>
 <div class="content-wrapper">
-<?php $this->load->view('modal/filter-uploadsales', true); ?>
-<?php $this->load->view('modal/detail-uploadsales', true); ?>
+    <?php $this->load->view('modal/filter-uploadsales', true); ?>
+    <?php $this->load->view('modal/detail-uploadsales', true); ?>
 
     <div class="row">
         <div class="col-sm-6">
@@ -55,7 +54,7 @@
                             style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 35px, 0px);">
                             <h6 class="dropdown-header"></h6>
                             <?php foreach ($site as $row) : ?>
-                                <a class="dropdown-item" style="cursor:pointer" data-store= "<?= $row->branch_id; ?>" data="<?= $row->branch_id; ?>"><?= $row->branch_name; ?> (<?= $row->branch_id; ?>)</a>
+                                <a class="dropdown-item" style="cursor:pointer" data-store="<?= $row->branch_id; ?>" data="<?= $row->branch_id; ?>"><?= $row->branch_name; ?> (<?= $row->branch_id; ?>)</a>
                             <?php endforeach; ?>
                             <!-- <a class="dropdown-item" style="cursor:pointer" data="R001">Rambla Kelapa Gading</a>
                             <a class="dropdown-item" style="cursor:pointer" data="R002">Rambla Bandung</a>
@@ -71,250 +70,268 @@
     <div class="row">
 
         <div class="col-xl-12 grid-margin stretch-card">
-            
+
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex flex-wrap justify-content-between mb-3">
-                            <div>
-                                <!-- <h4 class="card-title mb-0">Laporan Penjualan By Artikel</h4>
+                        <div>
+                            <!-- <h4 class="card-title mb-0">Laporan Penjualan By Artikel</h4>
                                 <p class="text-muted mb-2">Terapkan filter untuk menampilkan data.</p> -->
-                            </div> 
-                            <div class="align-self-end">
-                                <button type="button" class="btn btn-info btn-sm btn-icon-text btn-filter-uploadsales" style="float:right">
-                                    <i class="typcn typcn-filter"></i>
-                                    Filter
-                                </button>
-                                <button type="button" class="btn btn-success btn-sm btn-icon-text btn-upload-sales mr-2" style="float:right">
-                                    <i class="typcn typcn-upload menu-icon"></i>
-                                    Upload
-                                </button>
-                            </div>
                         </div>
-
-                        <ul class="nav nav-tabs multi-tab">
-                            <li class="nav-item">
-                                <a class="nav-link active draft" data-toggle="tab" href="#home">Draft</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link review" data-toggle="tab" href="#tab1">Review</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link setuju" data-toggle="tab" href="#tab2">Setuju</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link batal" data-toggle="tab" href="#tab3">Batal</a>
-                            </li>
-                        </ul>
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div id="home" class="tab-pane active m-0"><br>
-                                <table class="table table-striped table-custom d-none" id="tb_sales_upload1">
-                                    <thead class="table-rambla">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>
-                                                <nobr>No Ref</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Marketplace</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Quantity</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Price Item</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Disc Percentage</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>More Disc Percentage</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Net Price</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Upload By</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Upload Time</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Approve By</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Approve Time</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Cancel By</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Cancel Time</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Action</nobr>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                            <div id="tab1" class="tab-pane m-0"><br>
-                                <table class="table table-striped table-custom d-none" id="tb_sales_upload2">
-                                    <thead class="table-rambla">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>
-                                                <nobr>No Ref</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Marketplace</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Quantity</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Price Item</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Disc Percentage</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>More Disc Percentage</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Net Price</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Upload By</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Upload Time</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Approve By</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Approve Time</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Cancel By</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Cancel Time</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Action</nobr>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                            <div id="tab2" class="tab-pane m-0"><br>
-                                <table class="table table-striped table-custom d-none" id="tb_sales_upload3">
-                                    <thead class="table-rambla">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>
-                                                <nobr>No Ref</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Marketplace</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Quantity</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Price Item</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Disc Percentage</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>More Disc Percentage</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Net Price</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Upload By</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Upload Time</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Approve By</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Approve Time</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Cancel By</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Cancel Time</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Action</nobr>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                            <div id="tab3" class="tab-pane m-0"><br>
-                                <table class="table table-striped table-custom d-none" id="tb_sales_upload4">
-                                    <thead class="table-rambla">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>
-                                                <nobr>No Ref</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Marketplace</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Quantity</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Price Item</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Disc Percentage</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>More Disc Percentage</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Net Price</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Upload By</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Upload Time</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Approve By</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Approve Time</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Cancel By</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Cancel Time</nobr>
-                                            </th>
-                                            <th>
-                                                <nobr>Action</nobr>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
+                        <div class="align-self-end">
+                            <button type="button" class="btn btn-info btn-sm btn-icon-text btn-filter-uploadsales" style="float:right">
+                                <i class="typcn typcn-filter"></i>
+                                Filter
+                            </button>
+                            <button type="button" class="btn btn-success btn-sm btn-icon-text btn-upload-sales mr-2" style="float:right">
+                                <i class="typcn typcn-upload menu-icon"></i>
+                                Upload
+                            </button>
                         </div>
-                        <!-- <h4 class="card-title">Target Today</h4> -->
-                        
                     </div>
+
+                    <ul class="nav nav-tabs multi-tab">
+                        <li class="nav-item">
+                            <a class="nav-link active draft" data-toggle="tab" href="#home">Draft</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link review" data-toggle="tab" href="#tab1">Review</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link setuju" data-toggle="tab" href="#tab2">Setuju</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link batal" data-toggle="tab" href="#tab3">Batal</a>
+                        </li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div id="home" class="tab-pane active m-0">
+                            <button type="button" class="btn btn-danger btn-icon-text btn-hapus" disabled>
+                                <i class="typcn typcn-trash btn-icon-prepend"></i>
+                                Hapus
+                            </button>
+                            <button type="button" class="btn btn-info btn-icon-text btn-verif ml-1" disabled>
+                                <i class="typcn typcn-folder btn-icon-prepend"></i>
+                                Submit
+                            </button>
+                            <br><br>
+                            <table class="table table-striped table-custom d-none" id="tb_sales_upload1">
+                                <thead class="table-rambla">
+                                    <tr>
+                                        <th><input type="checkbox" class="select-all"></th>
+                                        <th>
+                                            <nobr>No Ref</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Marketplace</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Quantity</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Price Item</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Disc Percentage</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>More Disc Percentage</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Net Price</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Upload By</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Upload Time</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Approve By</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Approve Time</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Cancel By</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Cancel Time</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Action</nobr>
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div id="tab1" class="tab-pane m-0">
+                            <button type="button" class="btn btn-warning btn-icon-text btn-batal text-white" disabled>
+                                <i class="typcn typcn-cancel btn-icon-prepend"></i>
+                                Batal
+                            </button>
+                            <button type="button" class="btn btn-success btn-icon-text btn-approve ml-1" disabled>
+                                <i class="typcn typcn-input-checked btn-icon-prepend"></i>
+                                Approve
+                            </button>
+                            <br><br>
+                            <table class="table table-striped table-custom d-none" id="tb_sales_upload2">
+                                <thead class="table-rambla">
+                                    <tr>
+                                        <th><input type="checkbox" class="select-all"></th>
+                                        <th>
+                                            <nobr>No Ref</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Marketplace</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Quantity</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Price Item</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Disc Percentage</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>More Disc Percentage</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Net Price</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Upload By</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Upload Time</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Approve By</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Approve Time</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Cancel By</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Cancel Time</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Action</nobr>
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div id="tab2" class="tab-pane m-0"><br>
+                            <table class="table table-striped table-custom d-none" id="tb_sales_upload3">
+                                <thead class="table-rambla">
+                                    <tr>
+                                        <th><input type="checkbox" class="select-all"></th>
+                                        <th>
+                                            <nobr>No Ref</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Marketplace</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Quantity</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Price Item</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Disc Percentage</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>More Disc Percentage</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Net Price</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Upload By</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Upload Time</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Approve By</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Approve Time</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Cancel By</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Cancel Time</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Action</nobr>
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div id="tab3" class="tab-pane m-0"><br>
+                            <table class="table table-striped table-custom d-none" id="tb_sales_upload4">
+                                <thead class="table-rambla">
+                                    <tr>
+                                        <th><input type="checkbox" class="select-all"></th>
+                                        <th>
+                                            <nobr>No Ref</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Marketplace</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Quantity</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Price Item</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Disc Percentage</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>More Disc Percentage</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Net Price</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Upload By</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Upload Time</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Approve By</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Approve Time</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Cancel By</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Cancel Time</nobr>
+                                        </th>
+                                        <th>
+                                            <nobr>Action</nobr>
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- <h4 class="card-title">Target Today</h4> -->
+
+                </div>
             </div>
         </div>
     </div>
@@ -332,7 +349,6 @@
     var table3 = null;
     var store = $('.opt-store .dropdown-item').data('store');
 
-    console.log(role);
                                 
     $(document).ready(function() {
         
@@ -402,7 +418,7 @@
             }else if(activeTabText == "Setuju"){
                 load_data_upload_sales_excel('S',store, params2, params3);
             }else if(activeTabText == "Batal"){
-                load_data_upload_sales_excel('S',store, params2, params3);
+                load_data_upload_sales_excel('B',store, params2, params3);
             }
             
            
@@ -455,13 +471,13 @@
                 "columns": [{
                         "data": 'no_ref',
                         "sortable": false,
-                        // "render": function ( data, type, row, meta ) {
-                        //     var i = meta.row + meta.settings._iDisplayStart + 1;
-                        //     return '<div class="form-check"><label class="form-check-label text-muted"><input type="checkbox" class="form-check-input" name="checkbox_'+i+'"><i class="input-helper"></i></label></div>';
-                        // },
-                        "render": function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
+                        "render": function ( data, type, row, meta ) {
+                            var i = meta.row + meta.settings._iDisplayStart + 1;
+                            return '<div class="form-check"><label class="form-check-label text-muted"><input type="checkbox" class="form-check-input row-checkbox" name="checkbox_'+i+'"><i class="input-helper"></i></label></div>';
                         },
+                        // "render": function(data, type, row, meta) {
+                        //     return meta.row + meta.settings._iDisplayStart + 1;
+                        // },
                     },
                     {
                         "data": "no_ref",
@@ -546,32 +562,198 @@
                         "data": "",
                         "render": function(data, type, row) {
                             // console.log(transaksiSeen);
-                            if(status == "D"){
-                                if(role == "1" || role == "3"){ 
-                                    return `<nobr><button type="button" onclick="hapus('`+row.no_ref+`','`+store+`')" class="btn btn-danger btn-sm">Hapus</button> | <button type="button" onclick="verif('R','`+row.no_ref+`','`+store+`')" class="btn btn-info btn-sm btn-verif">Verifikasi</button> | <button type="button" onclick="show('`+row.no_ref+`','`+store+`')" class="btn btn-secondary btn-sm btn-verif">Show</button></nobr>`;
-                                }
-                            }else if(status == "R"){
-                                if(role == "1" || role == "4"){
-                                    return `<nobr><button type="button" onclick="batal('B','`+row.no_ref+`','`+store+`')" class="btn btn-danger btn-sm">Batal</button> | <button type="button" onclick="approve('`+row.no_ref+`','`+store+`')" class="btn btn-success btn-sm btn-approve">Approve</button> | <button type="button" onclick="show('`+row.no_ref+`','`+store+`')" class="btn btn-secondary btn-sm btn-verif">Show</button></nobr>`;
-                                } else {
-                                    return `<nobr><button type="button" onclick="show('`+row.no_ref+`','`+store+`')" class="btn btn-secondary btn-sm btn-verif">Show</button></nobr>`; 
-                                }
-                            } else {
-                                return `<nobr><button type="button" onclick="show('`+row.no_ref+`','`+store+`')" class="btn btn-secondary btn-sm btn-verif">Show</button></nobr>`;
-                            }
+                            return `<nobr><button type="button" onclick="show('`+row.no_ref+`','`+store+`')" class="btn btn-secondary btn-sm">Show</button></nobr>`;
                         },
                     },
                 ],
             });
+
+            // Handle Select All Checkbox
+            $('.select-all').on('click', function(){
+                var isChecked = $(this).prop('checked');
+                // console.log(isChecked);
+                $('.row-checkbox').prop('checked', isChecked);
+                var checkedCount = $('.row-checkbox:checked').length;
+                if (checkedCount > 0) {
+                    $('.btn-verif').prop("disabled",false);
+                    $('.btn-hapus').prop("disabled",false);
+                    $('.btn-batal').prop("disabled",false);
+                    $('.btn-approve').prop("disabled",false);
+                } else {
+                    $('.btn-verif').prop("disabled",true);
+                    $('.btn-hapus').prop("disabled",true);
+                    $('.btn-batal').prop("disabled",true);
+                    $('.btn-approve').prop("disabled",true);
+                }
+            });
+
+            // Handle individual row checkbox change
+            $('#'+id_table+' tbody').on('change', '.row-checkbox', function() {
+                var isChecked = $('.row-checkbox:checked').length == $('.row-checkbox').length;
+                $('.select-all').prop('checked', isChecked);
+                // console.log(isChecked);
+                var checkedCount = $('.row-checkbox:checked').length;
+                if (checkedCount > 0) {
+                    $('.btn-verif').prop("disabled",false);
+                    $('.btn-hapus').prop("disabled",false);
+                    $('.btn-batal').prop("disabled",false);
+                    $('.btn-approve').prop("disabled",false);
+                } else {
+                    $('.btn-verif').prop("disabled",true);
+                    $('.btn-hapus').prop("disabled",true);
+                    $('.btn-batal').prop("disabled",true);
+                    $('.btn-approve').prop("disabled",true);
+                }
+            });
+
+            // Handle Delete Selected Button
+            $('.btn-verif').off('click').on('click', function() {
+                var selectedRows = [];
+                $('.row-checkbox:checked').each(function() {
+                    var rowData = table1.row($(this).closest('tr')).data();
+                    selectedRows.push(rowData);
+                });
+
+                if (selectedRows.length > 0) {
+                    // console.log("Selected rows to delete:", selectedRows);
+                    update_status('R', selectedRows, store);
+                } else {
+                    alert("Please select at least one row.");
+                }
+            });
+
+            // Handle Delete Selected Button
+            $('.btn-batal').off('click').on('click', function() {
+                var selectedRows = [];
+                $('.row-checkbox:checked').each(function() {
+                    var rowData = table1.row($(this).closest('tr')).data();
+                    selectedRows.push(rowData);
+                });
+
+                if (selectedRows.length > 0) {
+                    // console.log("Selected rows to delete:", selectedRows);
+                    update_status('B', selectedRows, store);
+                } else {
+                    alert("Please select at least one row.");
+                }
+            });
+
+            $('.btn-approve').off('click').on('click', function() {
+                var selectedRows = [];
+                $('.row-checkbox:checked').each(function() {
+                    var rowData = table1.row($(this).closest('tr')).data();
+                    selectedRows.push(rowData);
+                });
+
+                if (selectedRows.length > 0) {
+                    $.ajax({
+                        type: "POST",
+                        url: "<?= base_url('Transaction'); ?>/submit_transaksi",
+                        dataType: "json",
+                        data: {
+                            "selectedRows": selectedRows,
+                            "store"       : store
+                        },
+                        success: function(data) {
+                            if(data.status == "1"){
+                                swal("Success", data["message"] , "success");
+                            }else{
+                                swal("Oops !", data["message"] , "error");
+                            }
+                            setTimeout(
+                            function() {
+                                window.location = base_url+"Transaction/upload_sales";
+                            }, 2000);
+                        },
+                        beforeSend: function(){
+                            swal("Loading", "Harap Tunggu..." , "warning");
+                        },
+                        error: function (jqXHR, exception) {
+                            swal("Oops !", "Harap Hubungi IT" , "error");
+                        },
+                    });
+                } else {
+                    alert("Please select at least one row.");
+                }
+            });
+
+            $('.btn-hapus').off('click').on('click', function() {
+                if (confirm("Anda yakin mau hapus data ini?")) {
+                    var selectedRows = [];
+                    $('.row-checkbox:checked').each(function() {
+                        var rowData = table1.row($(this).closest('tr')).data();
+                        selectedRows.push(rowData);
+                    });
+
+                    if (selectedRows.length > 0) {
+                        $.ajax({
+                            type: "POST",
+                            url: "<?= base_url('Transaction'); ?>/hapus_transaksi",
+                            dataType: "json",
+                            data: {
+                                "selectedRows": selectedRows,
+                                "store"       : store
+                            },
+                            success: function(data) {
+                                // console.log(data);
+                                if(data.status == "1"){
+                                    swal("Success", data["message"] , "success");
+                                    table1.row($(this).closest('tr')).remove().draw();
+                                }else{
+                                    swal("Oops !", data["message"] , "error");
+                                }
+                                setTimeout(
+                                function() {
+                                    window.location = base_url+"Transaction/upload_sales";
+                                }, 2000);
+                            },
+                            beforeSend: function(){
+                                swal("Loading", "Harap Tunggu..." , "warning");
+                            },
+                            error: function (jqXHR, exception) {
+                                swal("Oops !", "Harap Hubungi IT" , "error");
+                            },
+                        });
+                    } else {
+                        alert("Please select at least one row.");
+                    }
+                } 
+            });
         }
     });
 
-    // function more(trans_no){
-    //     $('#modal-detail-moresales').modal('show');
-    //     load_data_paid_sales(trans_no);
-    //     load_data_detail_sales(trans_no);
-    //     // $('#btnTrigger').click();
-    // }
+    function update_status(status, selectedRows, store){
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url('Transaction'); ?>/update_transaksi",
+            dataType: "json",
+            data: {
+                "selectedRows": selectedRows,
+                "status"      : status,
+                "store"       : store
+            },
+            success: function(data) {
+                // console.log(data);
+                //table1.row($(this).closest('tr')).remove().draw();
+                if(data.status == "1"){
+                    swal("Success", data["message"] , "success");
+                }else{
+                    swal("Oops !", data["message"] , "error");
+                }
+                setTimeout(
+                function() {
+                    window.location = base_url+"Transaction/upload_sales";
+                }, 2000);
+            },
+            beforeSend: function(){
+                swal("Loading", "Harap Tunggu..." , "warning");
+            },
+            error: function (jqXHR, exception) {
+                swal("Oops !", "Harap Hubungi IT" , "error");
+            },
+        });
+    }
+
     function show(no_ref, store){
         $('#modal-detail-uploadsales').modal('show');
         load_data_detail_sales(no_ref, store);
@@ -661,105 +843,40 @@
         });
     }
 
-    function verif(status, no_ref, store){
-        update_status(status, no_ref, store);
-    }
-
-    function approve(no_ref, store){
-        $.ajax({
-            type: "POST",
-            url: "<?= base_url('Transaction'); ?>/submit_transaksi",
-            dataType: "json",
-            data: {
-                "no_ref": no_ref,
-                "store" : store,
-                "status": status
-            },
-            success: function(data) {
-                if(data.status == "1"){
-                    swal("Success", data["message"] , "success");
-                }else{
-                    swal("Oops !", data["message"] , "error");
-                }
-                setTimeout(
-                function() {
-                    window.location = base_url+"Transaction/upload_sales";
-                }, 2000);
-            },
-            beforeSend: function(){
-                swal("Loading", "Harap Tunggu..." , "warning");
-            },
-            error: function (jqXHR, exception) {
-                console.log(exception);
-                swal("Oops !", "Harap Hubungi IT" , "error");
-            },
-        });
-    }
-
     function batal(status, no_ref, store){
         update_status(status, no_ref, store);
     }
 
-    function update_status(status, no_ref, store){
-        $.ajax({
-            type: "POST",
-            url: "<?= base_url('Transaction'); ?>/update_transaksi",
-            dataType: "json",
-            data: {
-                "no_ref": no_ref,
-                "store" : store,
-                "status": status
-            },
-            success: function(data) {
-                if(data.status == "1"){
-                    swal("Success", data["message"] , "success");
-                }else{
-                    swal("Oops !", data["message"] , "error");
-                }
-                setTimeout(
-                function() {
-                    window.location = base_url+"Transaction/upload_sales";
-                }, 2000);
-            },
-            beforeSend: function(){
-                swal("Loading", "Harap Tunggu..." , "warning");
-            },
-            error: function (jqXHR, exception) {
-                console.log(exception);
-                swal("Oops !", "Harap Hubungi IT" , "error");
-            },
-        });
-    }
-
-    function hapus(no_ref, store){
-        $.ajax({
-            type: "POST",
-            url: "<?= base_url('Transaction'); ?>/hapus_transaksi",
-            dataType: "json",
-            data: {
-                "no_ref": no_ref,
-                "store" : store
-            },
-            success: function(data) {
-                if(data.status == "success"){
-                    swal("Success", data.msg , "success");
-                }else{
-                    swal("Oops !", data.msg , "error");
-                }
-                setTimeout(
-                function() {
-                    window.location = base_url+"Transaction/upload_sales";
-                }, 2000);
-            },
-            beforeSend: function(){
-                swal("Loading", "Harap Tunggu..." , "warning");
-            },
-            error: function (jqXHR, exception) {
-                console.log(exception);
-                swal("Oops !", "Harap Hubungi IT" , "error");
-            },
-        });
-    }
+    // function update_status(status, no_ref, store){
+    //     $.ajax({
+    //         type: "POST",
+    //         url: "<?= base_url('Transaction'); ?>/update_transaksi",
+    //         dataType: "json",
+    //         data: {
+    //             "no_ref": no_ref,
+    //             "store" : store,
+    //             "status": status
+    //         },
+    //         success: function(data) {
+    //             if(data.status == "1"){
+    //                 swal("Success", data["message"] , "success");
+    //             }else{
+    //                 swal("Oops !", data["message"] , "error");
+    //             }
+    //             setTimeout(
+    //             function() {
+    //                 window.location = base_url+"Transaction/upload_sales";
+    //             }, 2000);
+    //         },
+    //         beforeSend: function(){
+    //             swal("Loading", "Harap Tunggu..." , "warning");
+    //         },
+    //         error: function (jqXHR, exception) {
+    //             console.log(exception);
+    //             swal("Oops !", "Harap Hubungi IT" , "error");
+    //         },
+    //     });
+    // }
 
     // function load_data_paid_sales(trans_no) {
     //     $('#tb_paid').removeClass('d-none');
@@ -831,6 +948,3 @@
 
 
 </script>
-
-
-   

@@ -1069,7 +1069,8 @@ class M_Sales extends CI_Model
         return $response;
     }
 
-    public function getSalesHistory($postData = null){
+    public function getSalesHistory($postData = null)
+    {
 
         $store = $postData['store'];
         if ($store == 'R002') {
@@ -1104,16 +1105,16 @@ class M_Sales extends CI_Model
 
         $whereClause = "";
 
-        if($trans_no != ''){
-            $whereClause .= " AND a.trans_no ='".$trans_no."'";
+        if ($trans_no != '') {
+            $whereClause .= " AND a.trans_no ='" . $trans_no . "'";
         }
 
-        if($kode_reg != ''){
-            $whereClause .= " AND substring(a.trans_no,9,3) ='".$kode_reg."'";
+        if ($kode_reg != '') {
+            $whereClause .= " AND substring(a.trans_no,9,3) ='" . $kode_reg . "'";
         }
 
-        if($trans_status != ''){
-            $whereClause .= " AND trans_status ='".$trans_status."'";
+        if ($trans_status != '') {
+            $whereClause .= " AND trans_status ='" . $trans_status . "'";
         }
 
         if ($date != '') {
@@ -1189,10 +1190,8 @@ class M_Sales extends CI_Model
         return $response;
     }
 
-    public function hapusSalesUpload($postData = null){
-        $response = array();
-        $store  = $postData['store'];
-        $no_ref = $postData['no_ref'];
+    public function hapusSalesUpload($no_ref = null, $store = null)
+    {
         // if ($store == 'R002') {
         //     $dbStore = $this->load->database('storeR002', TRUE);
         // } else if ($store == 'V001') {
@@ -1209,24 +1208,18 @@ class M_Sales extends CI_Model
         //     $dbStore = $this->load->database('storeV003', TRUE);
         // }
         $dbStore = $this->load->database('dbserver_dev', TRUE);
-        $query   = "DELETE FROM t_sales_trans_upload where no_ref ='".$no_ref."'";
+        $query   = "DELETE FROM t_sales_trans_upload where no_ref ='" . $no_ref . "'";
         $dbStore->query($query);
-        if($dbStore->affected_rows()){
-            $response = array(
-                "status" => "success",
-                "msg" => "Data berhasil di hapus!"
-            );
-        }else{
-            $response = array(
-                "status" => "error",
-                "msg" => "Data gagal di hapus!"
-            );
+        if ($dbStore->affected_rows()) {
+            return true;
+        } else {
+            return false;
         }
-        return $response;
     }
 
-    public function getHeaderSalesUpload($postData = null){
-        
+    public function getHeaderSalesUpload($postData = null)
+    {
+
         $store = $postData['store'];
         // if ($store == 'R002') {
         //     $dbStore = $this->load->database('storeR002', TRUE);
@@ -1244,7 +1237,7 @@ class M_Sales extends CI_Model
         //     $dbStore = $this->load->database('storeV003', TRUE);
         // }
         $dbStore = $this->load->database('dbserver_dev', TRUE);
-        
+
         $response = array();
 
         $draw = $postData['draw'];
@@ -1261,12 +1254,12 @@ class M_Sales extends CI_Model
 
         $whereClause = "";
 
-        if($status != ''){
-            $whereClause .= " AND status ='".$status."'";
+        if ($status != '') {
+            $whereClause .= " AND status ='" . $status . "'";
         }
 
-        if($marketplace != ''){
-            $whereClause .= " AND marketplace ='".$marketplace."'";
+        if ($marketplace != '') {
+            $whereClause .= " AND marketplace ='" . $marketplace . "'";
         }
 
         if ($date != '') {
@@ -1308,8 +1301,8 @@ class M_Sales extends CI_Model
                 "marketplace"   => $record->marketplace,
                 "quantity"      => $record->quantity,
                 "price_item"    => $record->price_item,
-                "disc_pct"      => ($record->disc_pct) ? $record->disc_pct."%" : "",
-                "more_disc_pct" => ($record->more_disc_pct) ? $record->more_disc_pct."%" : "",
+                "disc_pct"      => ($record->disc_pct) ? $record->disc_pct . "%" : "",
+                "more_disc_pct" => ($record->more_disc_pct) ? $record->more_disc_pct . "%" : "",
                 "net_price"     => $record->net_price,
                 "upload_date"   => ($record->upload_date) ? $record->upload_date : "",
                 "upload_by"     => ($record->upload_by) ? $record->upload_by : "",
@@ -1331,7 +1324,8 @@ class M_Sales extends CI_Model
         return $response;
     }
 
-    public function getDetailSalesUpload($postData = null){
+    public function getDetailSalesUpload($postData = null)
+    {
 
         $store = $postData['store'];
         // if ($store == 'R002') {
@@ -1350,7 +1344,7 @@ class M_Sales extends CI_Model
         //     $dbStore = $this->load->database('storeV003', TRUE);
         // }
         $dbStore = $this->load->database('dbserver_dev', TRUE);
-        
+
         $response = array();
 
         $draw = $postData['draw'];
@@ -1365,11 +1359,11 @@ class M_Sales extends CI_Model
 
         $whereClause = "";
 
-        if($no_ref != ''){
-            $whereClause .= " AND no_ref ='".$no_ref."'";
+        if ($no_ref != '') {
+            $whereClause .= " AND no_ref ='" . $no_ref . "'";
         }
 
-        $query = "SELECT a.barcode,quantity, article_name, price_item, disc_pct, more_disc_pct, net_price, payment_type, marketplace, no_ref, upload_date, upload_by, a.approve_by, a.approve_date, a.cancel_by, a.cancel_date, a.status from t_sales_trans_upload a
+        $query = "SELECT DISTINCT a.barcode,quantity, article_name, price_item, disc_pct, more_disc_pct, net_price, payment_type, marketplace, no_ref, upload_date, upload_by, a.approve_by, a.approve_date, a.cancel_by, a.cancel_date, a.status from t_sales_trans_upload a
         inner join m_codebar b
         on a.barcode = b.barcode
         inner join m_item_master c
@@ -1402,8 +1396,8 @@ class M_Sales extends CI_Model
                 "quantity"      => $record->quantity,
                 "article_name"  => $record->article_name,
                 "price_item"    => $record->price_item,
-                "disc_pct"      => ($record->disc_pct) ? $record->disc_pct."%" : "",
-                "more_disc_pct" => ($record->more_disc_pct) ? $record->more_disc_pct."%" : "",
+                "disc_pct"      => ($record->disc_pct) ? $record->disc_pct . "%" : "",
+                "more_disc_pct" => ($record->more_disc_pct) ? $record->more_disc_pct . "%" : "",
                 "net_price"     => $record->net_price,
                 "payment_type"  => $record->payment_type,
                 "marketplace"   => $record->marketplace,
@@ -1428,7 +1422,8 @@ class M_Sales extends CI_Model
         return $response;
     }
 
-    public function getSalesToday($postData = null){
+    public function getSalesToday($postData = null)
+    {
 
         $store = $postData['store'];
         // if ($store == 'R002') {
@@ -1447,7 +1442,7 @@ class M_Sales extends CI_Model
         //     $dbStore = $this->load->database('storeV003', TRUE);
         // }
         $dbStore = $this->load->database('dbserver_dev', TRUE);
-        
+
         $response = array();
 
         $draw = $postData['draw'];
@@ -1465,16 +1460,16 @@ class M_Sales extends CI_Model
 
         $whereClause = "";
 
-        if($trans_no != ''){
-            $whereClause .= " AND a.trans_no ='".$trans_no."'";
+        if ($trans_no != '') {
+            $whereClause .= " AND a.trans_no ='" . $trans_no . "'";
         }
 
-        if($kode_reg != ''){
-            $whereClause .= " AND substring(a.trans_no,9,3) ='".$kode_reg."'";
+        if ($kode_reg != '') {
+            $whereClause .= " AND substring(a.trans_no,9,3) ='" . $kode_reg . "'";
         }
 
-        if($trans_status != ''){
-            $whereClause .= " AND trans_status ='".$trans_status."'";
+        if ($trans_status != '') {
+            $whereClause .= " AND trans_status ='" . $trans_status . "'";
         }
 
         if ($date != '') {
@@ -1548,7 +1543,8 @@ class M_Sales extends CI_Model
         return $response;
     }
 
-    public function getPaidToday($postData = null){
+    public function getPaidToday($postData = null)
+    {
 
         $store = $postData['store'];
         if ($store == 'R002') {
@@ -1578,14 +1574,14 @@ class M_Sales extends CI_Model
         $trans_no = $postData['trans_no'] ? $postData['trans_no'] : '';
         $whereClause = "";
 
-        if($trans_no != ''){
-            $whereClause .= " AND a.trans_no ='".$trans_no."'";
+        if ($trans_no != '') {
+            $whereClause .= " AND a.trans_no ='" . $trans_no . "'";
         }
 
         $query = "SELECT row_number( ) OVER ( PARTITION BY a.trans_no ORDER BY a.trans_no ) AS no_urut, a.trans_no, card_number, card_name, paid_amount, `description` from t_paid a
         left join m_mop b
         on a.mop_code = b.mop_code
-        WHERE trans_no = '".$trans_no."'
+        WHERE trans_no = '" . $trans_no . "'
         $whereClause order by a.seq";
 
         $searchQuery = "";
@@ -1632,7 +1628,8 @@ class M_Sales extends CI_Model
         return $response;
     }
 
-    public function getSalesDetailToday($postData = null){
+    public function getSalesDetailToday($postData = null)
+    {
 
         $store = $postData['store'];
         if ($store == 'R002') {
@@ -1662,14 +1659,14 @@ class M_Sales extends CI_Model
         $trans_no = $postData['trans_no'] ? $postData['trans_no'] : '';
         $whereClause = "";
 
-        if($trans_no != ''){
-            $whereClause .= " AND a.trans_no ='".$trans_no."'";
+        if ($trans_no != '') {
+            $whereClause .= " AND a.trans_no ='" . $trans_no . "'";
         }
 
         $query = "SELECT a.seq as no_urut, a.trans_no, barcode, article_code, article_name, supplier_pcode, supplier_pname, qty, berat, price, disc_pct, disc_amt, moredisc_pct, moredisc_amt, net_price, no_ref from t_sales_trans_dtl a
         inner join t_sales_trans_hdr b
         on a.trans_no = b.trans_no
-        WHERE a.trans_no = '".$trans_no."'
+        WHERE a.trans_no = '" . $trans_no . "'
         $whereClause order by a.seq";
 
         $searchQuery = "";

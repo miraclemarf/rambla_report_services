@@ -1,35 +1,36 @@
 <style>
-    
-@media (min-width: 768px) {
-    .member-only {
-        padding: 0px;
-    }
-    .frame-meta {
-        height:550px;
-    }
-}
+    @media (min-width: 768px) {
+        .member-only {
+            padding: 0px;
+        }
 
-@media (min-width: 576px) and (max-width: 767.98px) {
-    .member-only {
-        padding: 0px;
-    }
-}
-
-
-/* Responsive columns */
-@media (max-width: 575.98px) {
-    .card {
-        min-height: 500px;
-        max-height: 100%;
+        .frame-meta {
+            height: 550px;
+        }
     }
 
-    .embed-responsive {
-        height: 100%;
+    @media (min-width: 576px) and (max-width: 767.98px) {
+        .member-only {
+            padding: 0px;
+        }
     }
-    .member-only {
-        padding: 15px;
+
+
+    /* Responsive columns */
+    @media (max-width: 575.98px) {
+        .card {
+            min-height: 500px;
+            max-height: 100%;
+        }
+
+        .embed-responsive {
+            height: 100%;
+        }
+
+        .member-only {
+            padding: 15px;
+        }
     }
-}
 </style>
 <div class="content-wrapper">
     <?php $this->load->view('modal/filter-penjualanartikel', true); ?>
@@ -154,7 +155,7 @@
                 alert('Range Tanggal Maksimal 4 Bulan')
                 return false;
             }
-            if(hitungSelihBulan(params3) > 12 && userLoggedin == 'MD09'){
+            if (hitungSelihBulan(params3) > 12 && userLoggedin == 'MD09') {
                 alert('Range Tanggal Maksimal 12 Bulan')
                 return false;
             }

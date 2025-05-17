@@ -50,7 +50,8 @@ class Transaction extends My_Controller
         $this->load->view('template_member/footer', $data);
     }
 
-    public function import_page($store){
+    public function import_page($store)
+    {
         extract(populateform());
         $data['title']          = 'Rambla | Sales Transaction';
         $data['username']       = $this->input->cookie('cookie_invent_user');
@@ -62,9 +63,9 @@ class Transaction extends My_Controller
         inner join m_branches b
         on a.branch_id = b.branch_id
         where a.flagactv ='1'
-        and username ='" . $data['username'] . "' and a.branch_id ='".$store."'")->row();
+        and username ='" . $data['username'] . "' and a.branch_id ='" . $store . "'")->row();
 
-        if(!$data['site']){
+        if (!$data['site']) {
             die("<script language='JavaScript'>alert('Akses dilarang!!!'); document.location='" . base_url() . "Transaction/upload_sales'</script>");
         }
 
@@ -75,10 +76,11 @@ class Transaction extends My_Controller
         $this->load->view('template_member/footer', $data);
     }
 
-    public function import_process(){
+    public function import_process()
+    {
         extract(populateform());
-        $unlink_file        = $_SERVER['DOCUMENT_ROOT']."/report-service/assets/excel/".$namafile;
-        $file_path          = base_url().'/assets/excel/'.$namafile;
+        $unlink_file        = $_SERVER['DOCUMENT_ROOT'] . "/report-service/assets/excel/" . $namafile;
+        $file_path          = base_url() . '/assets/excel/' . $namafile;
         $data['username']   = $this->input->cookie('cookie_invent_user');
         $data['status']     = 0;
         $data['message']    = "";
@@ -86,18 +88,18 @@ class Transaction extends My_Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => $_ENV['APICENTRALDEV'].'ops/pos/sales/upload',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => array('file'=> new CURLFILE($file_path),'user_id' => $data['username'],'branch_id' => $store),
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: '.$_ENV['APIAUTHVALUE']
-        ),
+            CURLOPT_URL => $_ENV['APICENTRALDEV'] . 'ops/pos/sales/upload',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array('file' => new CURLFILE($file_path), 'user_id' => $data['username'], 'branch_id' => $store),
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: ' . $_ENV['APIAUTHVALUE']
+            ),
         ));
 
         $response = curl_exec($curl);
@@ -105,24 +107,23 @@ class Transaction extends My_Controller
         $message = "";
 
         $hasil = json_decode($response);
-        if($hasil){
-            if($hasil->status == "error"){
-                foreach($hasil->errors as $row){
-                    $message .= $row." \n";
+        if ($hasil) {
+            if ($hasil->status == "error") {
+                foreach ($hasil->errors as $row) {
+                    $message .= $row . " \n";
                 }
                 // unlink($file_path);
                 $data['status']     = 0;
                 $data['message']    = $message;
                 // $this->session->set_flashdata('failed-upload', $message);
                 // redirect(base_url() . "Transaction/import_page/".$store);
-            } else if($hasil->status == "success"){
+            } else if ($hasil->status == "success") {
                 $message = "Data berhasil di upload!";
                 $data['status']     = 1;
                 $data['message']    = $message;
                 // $this->session->set_flashdata('success-upload', $message);
                 // redirect(base_url() . "Transaction/upload_sales");
             }
-
         } else {
             $message = "Upload gagal, silakan diulang kembali!";
             // unlink($file_path);
@@ -135,109 +136,122 @@ class Transaction extends My_Controller
         echo json_encode($data);
     }
 
-    public function update_transaksi(){
+    public function update_transaksi()
+    {
         extract(populateform());
-        $data['username']   = $this->input->cookie('cookie_invent_user');
-        $data['status']     = 0;
-        $data['message']    = "";
 
-        $curl = curl_init();
+        $data = array();
+        $status_err = array();
+        $message_err = "";
 
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => $_ENV['APICENTRALDEV'].'ops/pos/sales/upload/update',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => array('no_ref'=> $no_ref,'user_id' => $data['username'],'branch_id' => $store,'type' => $status),
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: '.$_ENV['APIAUTHVALUE']
-        ),
-        ));
+        // Mulai transaksi database
+        try {
+            foreach ($selectedRows as $row) {
+                $no_ref = $row["no_ref"];
+                $username   = $this->input->cookie('cookie_invent_user');
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => $_ENV['APICENTRALDEV'] . 'ops/pos/sales/upload/update',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => array('no_ref' => $no_ref, 'user_id' => $username, 'branch_id' => $store, 'type' => $status),
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: ' . $_ENV['APIAUTHVALUE']
+                    ),
+                ));
 
-        $response = curl_exec($curl);
-        curl_close($curl);
-        $message = "";
-
-        $hasil = json_decode($response);
-        if($hasil){
-            if($hasil->status == "error"){
-                $message = "Data gagal di update!";
-                // unlink($file_path);
-                $data['status']     = 0;
-                $data['message']    = $message;
-                // $this->session->set_flashdata('failed-upload', $message);
-                // redirect(base_url() . "Transaction/import_page/".$store);
-            } else if($hasil->status == "success"){
-                $message = "Data berhasil di update!";
-                $data['status']     = 1;
-                $data['message']    = $message;
-                // $this->session->set_flashdata('success-upload', $message);
-                // redirect(base_url() . "Transaction/upload_sales");
+                $response = curl_exec($curl);
+                $hasil = json_decode($response);
+                if ($hasil) {
+                    if ($hasil->status == "error") {
+                        $err_code       = 0;
+                        $message        = "No Ref " . $no_ref . " gagal di update!";
+                    } else if ($hasil->status == "success") {
+                        $err_code       = 1;
+                        $message        = "No Ref " . $no_ref . " berhasil di update!";
+                    }
+                    array_push($status_err, $err_code);
+                    $message_err .= $message . " \n";
+                } else {
+                    throw new Exception('Curl error: ' . curl_error($curl));
+                }
+                curl_close($curl);  // Tutup cURL
             }
-
-        } else {
-            $message = "Update gagal, silakan diulang kembali!";
-            $data['status']     = 0;
-            $data['message']    = $message;
+            if (in_array(0, $status_err)) {
+                $data["status"] = 0;
+                $data["message"] = $message_err;
+            } else {
+                $data["status"] = 1;
+                $data["message"] = "Data berhasil di update!";
+            }
+            echo json_encode($data);
+        } catch (Exception $e) {
+            echo "Terjadi kesalahan: " . $e->getMessage();
         }
-        echo json_encode($data);
     }
 
-    public function submit_transaksi(){
+    public function submit_transaksi()
+    {
         extract(populateform());
-        $data['username']   = $this->input->cookie('cookie_invent_user');
-        $data['status']     = 0;
-        $data['message']    = "";
 
-        $curl = curl_init();
+        $data = array();
+        $status_err = array();
+        $message_err = "";
 
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => $_ENV['APICENTRALDEV'].'ops/pos/sales/upload/submit',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => array('no_ref'=> $no_ref,'user_id' => $data['username'],'branch_id' => $store),
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: '.$_ENV['APIAUTHVALUE']
-        ),
-        ));
-        
+        // Mulai transaksi database
+        try {
+            foreach ($selectedRows as $row) {
+                $no_ref = $row["no_ref"];
+                $username   = $this->input->cookie('cookie_invent_user');
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => $_ENV['APICENTRALDEV'] . 'ops/pos/sales/upload/submit',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => array('no_ref' => $no_ref, 'user_id' => $username, 'branch_id' => $store),
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: ' . $_ENV['APIAUTHVALUE']
+                    ),
+                ));
 
-        $response = curl_exec($curl);
-        curl_close($curl);
-        $message = "";
-
-        $hasil = json_decode($response);
-        if($hasil){
-            if($hasil->status == "error"){
-                $message = "Data gagal di update!";
-                // unlink($file_path);
-                $data['status']     = 0;
-                $data['message']    = $message;
-                // $this->session->set_flashdata('failed-upload', $message);
-                // redirect(base_url() . "Transaction/import_page/".$store);
-            } else if($hasil->status == "success"){
-                $message = "Data berhasil di update!";
-                $data['status']     = 1;
-                $data['message']    = $message;
-                // $this->session->set_flashdata('success-upload', $message);
-                // redirect(base_url() . "Transaction/upload_sales");
+                $response = curl_exec($curl);
+                $hasil = json_decode($response);
+                if ($hasil) {
+                    if ($hasil->status == "error") {
+                        $err_code       = 0;
+                        $message        = "No Ref " . $no_ref . " gagal di approve!";
+                    } else if ($hasil->status == "success") {
+                        $err_code       = 1;
+                        $message        = "No Ref " . $no_ref . " berhasil di approve!";
+                    }
+                    array_push($status_err, $err_code);
+                    $message_err .= $message . " \n";
+                } else {
+                    throw new Exception('Curl error: ' . curl_error($curl));
+                }
+                curl_close($curl);  // Tutup cURL
             }
-
-        } else {
-            $message = "Update gagal, silakan diulang kembali!";
-            $data['status']     = 0;
-            $data['message']    = $message;
+            if (in_array(0, $status_err)) {
+                $data["status"] = 0;
+                $data["message"] = $message_err;
+            } else {
+                $data["status"] = 1;
+                $data["message"] = "Data berhasil di approve!";
+            }
+            echo json_encode($data);
+        } catch (Exception $e) {
+            echo "Terjadi kesalahan: " . $e->getMessage();
         }
-        echo json_encode($data);
     }
 
     public function upload_sales()
@@ -285,9 +299,18 @@ class Transaction extends My_Controller
 
     public function hapus_transaksi()
     {
-        $postData = $this->input->post();
-        $data = $this->M_Sales->hapusSalesUpload($postData);
-        echo json_encode($data);
+        extract(populateform());
+        try {
+            foreach ($selectedRows as $row) {
+                $no_ref = $row["no_ref"];
+                $this->M_Sales->hapusSalesUpload($no_ref, $store);
+            }
+            $data["status"] = 1;
+            $data["message"] = "Data berhasil di hapus!";
+            echo json_encode($data);
+        } catch (Exception $e) {
+            echo "Terjadi kesalahan: " . $e->getMessage();
+        }
     }
 
     public function list_detail_sales_upload()
@@ -331,21 +354,21 @@ class Transaction extends My_Controller
         $data1 = $dbCentral->query("SELECT * FROM t_sales_trans_hdr a
         inner join t_sales_trans_dtl b
         on a.trans_no = b.trans_no
-        and substring(a.trans_no,7,2) = '".$postData['store_code']."' and a.trans_no ='".$postData['trans_no']."'")->row();
+        and substring(a.trans_no,7,2) = '" . $postData['store_code'] . "' and a.trans_no ='" . $postData['trans_no'] . "'")->row();
 
         // CEK JUMLAH RECORD
         $data2 = $dbCentral->query("SELECT * FROM (
         SELECT a.trans_no, count(b.barcode) as jml_record, sum(b.qty) as tot_qty, sum(net_price) as net_price FROM t_sales_trans_hdr a
         inner join t_sales_trans_dtl b
         on a.trans_no = b.trans_no
-        and substring(a.trans_no,7,2) = '".$postData['store_code']."' and a.trans_no ='".$postData['trans_no']."'
-        GROUP BY a.trans_no) a WHERE (jml_record = '".$postData['jml_record']."' and tot_qty = '".$postData['tot_qty']."' and net_price = '".$postData['net_price']."')")->row();
+        and substring(a.trans_no,7,2) = '" . $postData['store_code'] . "' and a.trans_no ='" . $postData['trans_no'] . "'
+        GROUP BY a.trans_no) a WHERE (jml_record = '" . $postData['jml_record'] . "' and tot_qty = '" . $postData['tot_qty'] . "' and net_price = '" . $postData['net_price'] . "')")->row();
 
-        if($data1 && $data2){
+        if ($data1 && $data2) {
             $data['hasil'] = 1;
-        } else if($data1 && !$data2){
+        } else if ($data1 && !$data2) {
             $data['hasil'] = 2;
-        } else{
+        } else {
             $data['hasil'] = 0;
         }
 
@@ -359,7 +382,7 @@ class Transaction extends My_Controller
         $dbCentral = $this->load->database('dbcentral', TRUE);
         $postData = $this->input->post();
         // $data['hasil'] = $postData['trans_no'];
-        $kode = substr($postData['trans_no'],6,2);
+        $kode = substr($postData['trans_no'], 6, 2);
         $store = "";
         if ($kode == "01") {
             $store = "R001";
@@ -386,20 +409,20 @@ class Transaction extends My_Controller
 
         $dbCentral->trans_start();
         try {
-            
+
             // CEK METHOD
-            if($postData['method'] == "sync"){
+            if ($postData['method'] == "sync") {
                 // CEK BOLEH DI DELETE NGGA
                 // CEK HEADER CENTRAL
-                $get_header = $dbCentral->query("SELECT * FROM t_sales_trans_hdr where trans_no = '".$postData['trans_no']."'")->row();
+                $get_header = $dbCentral->query("SELECT * FROM t_sales_trans_hdr where trans_no = '" . $postData['trans_no'] . "'")->row();
 
-                if($get_header->flag_central == '0'){
+                if ($get_header->flag_central == '0') {
                     // DELETE DATA CENTRAL
-                    $dbCentral->query("DELETE FROM t_sales_trans_hdr where trans_no ='".$postData['trans_no']."'");
-                    $dbCentral->query("DELETE FROM t_sales_trans_dtl where trans_no ='".$postData['trans_no']."'");
-                    $dbCentral->query("DELETE FROM t_paid where trans_no ='".$postData['trans_no']."'");
-                    $dbCentral->query("DELETE FROM report_service.r_sales where trans_no ='".$postData['trans_no']."'");
-                }else{
+                    $dbCentral->query("DELETE FROM t_sales_trans_hdr where trans_no ='" . $postData['trans_no'] . "'");
+                    $dbCentral->query("DELETE FROM t_sales_trans_dtl where trans_no ='" . $postData['trans_no'] . "'");
+                    $dbCentral->query("DELETE FROM t_paid where trans_no ='" . $postData['trans_no'] . "'");
+                    $dbCentral->query("DELETE FROM report_service.r_sales where trans_no ='" . $postData['trans_no'] . "'");
+                } else {
                     $dbCentral->trans_rollback();
                     $data['status']     = 0;
                     $data['message']    = "Sales sudah settlement, tidak bisa di ubah!";
@@ -408,7 +431,7 @@ class Transaction extends My_Controller
                 }
             }
 
-            $get_header_toko = $dbStore->query("SELECT * FROM dbserver_history.t_sales_trans_hdr where trans_no = '".$postData['trans_no']."'")->row();
+            $get_header_toko = $dbStore->query("SELECT * FROM dbserver_history.t_sales_trans_hdr where trans_no = '" . $postData['trans_no'] . "'")->row();
 
             // INSERT HEADER
             $trans_no       = $get_header_toko->trans_no;
@@ -433,7 +456,7 @@ class Transaction extends My_Controller
             $gift_msg       = $get_header_toko->gift_msg;
             $trans_status   = $get_header_toko->trans_status;
             $upload_status  = $get_header_toko->upload_status;
-            $delivery_number= $get_header_toko->delivery_number;
+            $delivery_number = $get_header_toko->delivery_number;
             $trx_source     = $get_header_toko->trx_source;
             $shift          = $get_header_toko->shift;
             $flag_return    = $get_header_toko->flag_return;
@@ -467,39 +490,39 @@ class Transaction extends My_Controller
             shift,
             flag_return,
             no_ref) VALUES (
-            '".$trans_no."',
-            '".$trans_date."',
-            '".$trans_time."',
-            '".$cashier_id."',
-            '".$member_id."',
-            '".$total_qty."',
-            '".$total_net."',
-            '".$total_discount."',
-            '".$total_fee."',
-            '".$total_tax."',
-            '".$total_amount."',
-            '".$paid_amount."',
-            '".$change_amount."',
-            '".$rounding."',
-            '".$add_point."',
-            '".$spend_point."',
-            '".$balance_point."',
-            '".$delivery_type."',
-            '".$notes."',
-            '".$gift_msg."',
-            '".$trans_status."',
-            '".$upload_status."',
-            '".$delivery_number."',
-            '".$trx_source."',
-            '".$shift."',
-            '".$flag_return."',
-            '".$no_ref."'
+            '" . $trans_no . "',
+            '" . $trans_date . "',
+            '" . $trans_time . "',
+            '" . $cashier_id . "',
+            '" . $member_id . "',
+            '" . $total_qty . "',
+            '" . $total_net . "',
+            '" . $total_discount . "',
+            '" . $total_fee . "',
+            '" . $total_tax . "',
+            '" . $total_amount . "',
+            '" . $paid_amount . "',
+            '" . $change_amount . "',
+            '" . $rounding . "',
+            '" . $add_point . "',
+            '" . $spend_point . "',
+            '" . $balance_point . "',
+            '" . $delivery_type . "',
+            '" . $notes . "',
+            '" . $gift_msg . "',
+            '" . $trans_status . "',
+            '" . $upload_status . "',
+            '" . $delivery_number . "',
+            '" . $trx_source . "',
+            '" . $shift . "',
+            '" . $flag_return . "',
+            '" . $no_ref . "'
             )");
-            
-            // CEK DTAIL TOKO
-            $get_detail_toko = $dbStore->query("SELECT * FROM dbserver_history.t_sales_trans_dtl where trans_no = '".$postData['trans_no']."'")->result();
 
-            foreach($get_detail_toko as $row){
+            // CEK DTAIL TOKO
+            $get_detail_toko = $dbStore->query("SELECT * FROM dbserver_history.t_sales_trans_dtl where trans_no = '" . $postData['trans_no'] . "'")->result();
+
+            foreach ($get_detail_toko as $row) {
                 $trans_no_dtl           = $row->trans_no;
                 $seq_dtl                = $row->seq;
                 $barcode_dtl            = $row->barcode;
@@ -595,59 +618,59 @@ class Transaction extends My_Controller
                     sku_code,
                     article_number
                     ) VALUES (
-                    '".$trans_no_dtl."',
-                    '".$seq_dtl."',
-                    '".$barcode_dtl."',
-                    '".$article_code_dtl."',
-                    '".$article_name_dtl."',
-                    '".$supplier_pcode_dtl."',
-                    '".$supplier_pname_dtl."',
-                    '".$brand_dtl."',
-                    '".$category_code_dtl."',
-                    '".$option1_dtl."',
-                    '".$varian_option1_dtl."',
-                    '".$option2_dtl."',
-                    '".$varian_option2_dtl."',
-                    '".$option3_dtl."',
-                    '".$varian_option3_dtl."',
-                    '".$qty_dtl."',
-                    '".$current_price_dtl."',
-                    '".$price_dtl."',
-                    '".$disc_pct_dtl."',
-                    '".$disc_amt_dtl."',
-                    '".$moredisc_pct_dtl."',
-                    '".$moredisc_amt_dtl."',
-                    '".$extradisc_pct_dtl."',
-                    '".$extradisc_amt_dtl."',
-                    '".$fee_dtl."',
-                    '".$margin_code_dtl."',
-                    '".$margin_number_dtl."',
-                    '".$flag_flexi_dtl."',
-                    '".$type_flex_dtl."',
-                    '".$flag_tier_dtl."',
-                    '".$type_tier_dtl."',
-                    '".$flag_void_dtl."',
-                    '".$promo_id_dtl."',
-                    '".$net_price_dtl."',
-                    '".$tax_dtl."',
-                    '".$berat_dtl."',
-                    '".$flag_tax_dtl."',
-                    '".$sa_no_dtl."',
-                    '".$tag_1_dtl."',
-                    '".$tag_2_dtl."',
-                    '".$tag_3_dtl."',
-                    '".$tag_4_dtl."',
-                    '".$tag_5_dtl."',
-                    '".$margin_level_dtl."',
-                    '".$sku_code_dtl."',
-                    '".$article_number_dtl."'
+                    '" . $trans_no_dtl . "',
+                    '" . $seq_dtl . "',
+                    '" . $barcode_dtl . "',
+                    '" . $article_code_dtl . "',
+                    '" . $article_name_dtl . "',
+                    '" . $supplier_pcode_dtl . "',
+                    '" . $supplier_pname_dtl . "',
+                    '" . $brand_dtl . "',
+                    '" . $category_code_dtl . "',
+                    '" . $option1_dtl . "',
+                    '" . $varian_option1_dtl . "',
+                    '" . $option2_dtl . "',
+                    '" . $varian_option2_dtl . "',
+                    '" . $option3_dtl . "',
+                    '" . $varian_option3_dtl . "',
+                    '" . $qty_dtl . "',
+                    '" . $current_price_dtl . "',
+                    '" . $price_dtl . "',
+                    '" . $disc_pct_dtl . "',
+                    '" . $disc_amt_dtl . "',
+                    '" . $moredisc_pct_dtl . "',
+                    '" . $moredisc_amt_dtl . "',
+                    '" . $extradisc_pct_dtl . "',
+                    '" . $extradisc_amt_dtl . "',
+                    '" . $fee_dtl . "',
+                    '" . $margin_code_dtl . "',
+                    '" . $margin_number_dtl . "',
+                    '" . $flag_flexi_dtl . "',
+                    '" . $type_flex_dtl . "',
+                    '" . $flag_tier_dtl . "',
+                    '" . $type_tier_dtl . "',
+                    '" . $flag_void_dtl . "',
+                    '" . $promo_id_dtl . "',
+                    '" . $net_price_dtl . "',
+                    '" . $tax_dtl . "',
+                    '" . $berat_dtl . "',
+                    '" . $flag_tax_dtl . "',
+                    '" . $sa_no_dtl . "',
+                    '" . $tag_1_dtl . "',
+                    '" . $tag_2_dtl . "',
+                    '" . $tag_3_dtl . "',
+                    '" . $tag_4_dtl . "',
+                    '" . $tag_5_dtl . "',
+                    '" . $margin_level_dtl . "',
+                    '" . $sku_code_dtl . "',
+                    '" . $article_number_dtl . "'
                 )");
             }
 
             // CEK PAID TOKO
-            $get_paid_toko = $dbStore->query("SELECT * FROM dbserver_history.t_paid where trans_no = '".$postData['trans_no']."'")->result();
+            $get_paid_toko = $dbStore->query("SELECT * FROM dbserver_history.t_paid where trans_no = '" . $postData['trans_no'] . "'")->result();
 
-            foreach($get_paid_toko as $row){
+            foreach ($get_paid_toko as $row) {
                 $trans_no_dtl           = $row->trans_no;
                 $seq_dtl                = $row->seq;
                 $mop_code_dtl           = $row->mop_code;
@@ -662,12 +685,12 @@ class Transaction extends My_Controller
                     card_number,
                     card_name,
                     paid_amount) VALUES (
-                    '".$trans_no_dtl."',
-                    '".$seq_dtl."',
-                    '".$mop_code_dtl."',
-                    '".$card_number_dtl."',
-                    '".$card_name_dtl."',
-                    '".$paid_amount_dtl."'
+                    '" . $trans_no_dtl . "',
+                    '" . $seq_dtl . "',
+                    '" . $mop_code_dtl . "',
+                    '" . $card_number_dtl . "',
+                    '" . $card_name_dtl . "',
+                    '" . $paid_amount_dtl . "'
                 )");
             }
 
@@ -678,7 +701,7 @@ class Transaction extends My_Controller
             select periode, DIVISION, SUB_DIVISION, category_code, DEPT, SUB_DEPT, brand_code, brand_name, barcode, article_name, varian_option1, varian_option2, price, vendor_code, vendor_name,
             margin, tot_qty, disc_pct, total_disc_amt, moredisc_pct, total_moredisc_amt, gross, net_bf, net_af, gross_after_margin, tag_5, vendor_type, fee, trans_no, no_ref,
             source_data, branch_id, article_code, tot_berat, trans_status from v_laporan_penjualan_perartikel_all
-            where trans_no = '".$postData['trans_no']."'");
+            where trans_no = '" . $postData['trans_no'] . "'");
 
             $dbCentral->trans_complete();
             // Check the transaction status
@@ -688,13 +711,12 @@ class Transaction extends My_Controller
                 $data['message']    = "Transaction failed, rolling back.";
                 //throw new Exception('Transaction failed, rolling back.');
             } else {
-                $dbCentral->query("call insert_log_data('t_sales_trans_hdr','".$postData['trans_no']."','".$data['username']."','')");
-                $dbCentral->query("call insert_log_data('t_sales_trans_dtl','".$postData['trans_no']."','".$data['username']."','')");
-                $dbCentral->query("call insert_log_data('t_paid','".$postData['trans_no']."','".$data['username']."','')");
+                $dbCentral->query("call insert_log_data('t_sales_trans_hdr','" . $postData['trans_no'] . "','" . $data['username'] . "','')");
+                $dbCentral->query("call insert_log_data('t_sales_trans_dtl','" . $postData['trans_no'] . "','" . $data['username'] . "','')");
+                $dbCentral->query("call insert_log_data('t_paid','" . $postData['trans_no'] . "','" . $data['username'] . "','')");
                 $data['status'] = 1;
                 // echo "Transaction successful!";
             }
-            
         } catch (Exception $e) {
             // In case of error, rollback
             $dbCentral->trans_rollback();
@@ -705,5 +727,4 @@ class Transaction extends My_Controller
 
         echo json_encode($data);
     }
-
 }
