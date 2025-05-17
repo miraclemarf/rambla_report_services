@@ -338,6 +338,11 @@
                         "params8": params8,
                         "params9": params9
                     },
+                    "error": function(xhr, error, thrown) {
+                        let response = xhr.responseJSON;
+                        let message = response && response.error ? response.error : 'Data gagal dimuat. silakan di refresh kembali!';
+                        swal("Oops !", message, "error");
+                    }
                 },
                 "scrollX": true,
                 "stateSave": true,

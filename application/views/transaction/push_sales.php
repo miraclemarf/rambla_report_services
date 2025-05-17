@@ -1,20 +1,21 @@
 <style>
     @media (max-width: 575.98px) {
-    .card {
-        height: 100%;
-        /* background: gold; */
-    }
+        .card {
+            height: 100%;
+            /* background: gold; */
+        }
 
-    .embed-responsive {
-        height: 100%;
+        .embed-responsive {
+            height: 100%;
+        }
+
+        .member-only {
+            padding: 15px;
+        }
     }
-    .member-only {
-        padding: 15px;
-    }
-}
 </style>
 <div class="content-wrapper">
-<?php $this->load->view('modal/filter-pushsales', true); ?>
+    <?php $this->load->view('modal/filter-pushsales', true); ?>
     <div class="row">
         <div class="col-sm-6">
             <h3 class="mb-0 font-weight-bold">List Transaction DB Server History</h3>
@@ -51,7 +52,7 @@
                             style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 35px, 0px);">
                             <h6 class="dropdown-header"></h6>
                             <?php foreach ($site as $row) : ?>
-                                <a class="dropdown-item" style="cursor:pointer" data-store= "<?= $row->branch_id; ?>" data="<?= $row->branch_id; ?>"><?= $row->branch_name; ?> (<?= $row->branch_id; ?>)</a>
+                                <a class="dropdown-item" style="cursor:pointer" data-store="<?= $row->branch_id; ?>" data="<?= $row->branch_id; ?>"><?= $row->branch_name; ?> (<?= $row->branch_id; ?>)</a>
                             <?php endforeach; ?>
                             <!-- <a class="dropdown-item" style="cursor:pointer" data="R001">Rambla Kelapa Gading</a>
                             <a class="dropdown-item" style="cursor:pointer" data="R002">Rambla Bandung</a>
@@ -74,11 +75,11 @@
         <div class="col-xl-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                <div class="d-flex flex-wrap justify-content-between mb-3">
+                    <div class="d-flex flex-wrap justify-content-between mb-3">
                         <div>
                             <!-- <h4 class="card-title mb-0">Laporan Penjualan By Artikel</h4>
                             <p class="text-muted mb-2">Terapkan filter untuk menampilkan data.</p> -->
-                        </div> 
+                        </div>
                         <div class="align-self-end">
                             <button type="button" class="btn btn-info btn-sm btn-icon-text btn-filter-pushsales" style="float:right">
                                 <i class="typcn typcn-filter"></i>
@@ -88,7 +89,7 @@
                     </div>
                     <!-- <h4 class="card-title">Target Today</h4> -->
                     <div class="table-responsive">
-                    <table class="table table-striped table-custom d-none" id="tb_saleshistory_list">
+                        <table class="table table-striped table-custom d-none" id="tb_saleshistory_list">
                             <thead class="table-rambla">
                                 <tr>
                                     <th>#</th>
@@ -310,6 +311,11 @@
                         "params3": params3,
                         "params4": params4
                     },
+                    "error": function(xhr, error, thrown) {
+                        let response = xhr.responseJSON;
+                        let message = response && response.error ? response.error : 'Data gagal dimuat. silakan di refresh kembali!';
+                        swal("Oops !", message , "error");
+                    }
                 },
                 "scrollX": true,
                 "deferRender": true,
@@ -431,5 +437,3 @@
     });
 
 </script>
-
-   
