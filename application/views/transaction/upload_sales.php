@@ -121,6 +121,9 @@
                                     <tr>
                                         <th><input type="checkbox" class="select-all"></th>
                                         <th>
+                                            <nobr>Trans No</nobr>
+                                        </th>
+                                        <th>
                                             <nobr>No Ref</nobr>
                                         </th>
                                         <th>
@@ -181,6 +184,9 @@
                                     <tr>
                                         <th><input type="checkbox" class="select-all"></th>
                                         <th>
+                                            <nobr>Trans No</nobr>
+                                        </th>
+                                        <th>
                                             <nobr>No Ref</nobr>
                                         </th>
                                         <th>
@@ -232,6 +238,9 @@
                                     <tr>
                                         <th><input type="checkbox" class="select-all"></th>
                                         <th>
+                                            <nobr>Trans No</nobr>
+                                        </th>
+                                        <th>
                                             <nobr>No Ref</nobr>
                                         </th>
                                         <th>
@@ -282,6 +291,9 @@
                                 <thead class="table-rambla">
                                     <tr>
                                         <th><input type="checkbox" class="select-all"></th>
+                                        <th>
+                                            <nobr>Trans No</nobr>
+                                        </th>
                                         <th>
                                             <nobr>No Ref</nobr>
                                         </th>
@@ -371,7 +383,19 @@
         $('.batal').click(function(){
             load_data_upload_sales_excel('B',store, params2, params3);
         }) 
-        
+
+        if(role == "3"){
+            $('.btn-hapus').show();
+            $('.btn-verif').show();
+            $('.btn-batal').hide();
+            $('.btn-approve').hide();
+        }
+        if(role == "4"){
+            $('.btn-hapus').hide();
+            $('.btn-verif').hide();
+            $('.btn-batal').show();
+            $('.btn-approve').show();
+        }
 
         $(function() {
             $('.opt-store .dropdown-item').on('click', function(){
@@ -478,6 +502,12 @@
                         // "render": function(data, type, row, meta) {
                         //     return meta.row + meta.settings._iDisplayStart + 1;
                         // },
+                    },
+                    {
+                        "data": "trans_no",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
                     },
                     {
                         "data": "no_ref",
@@ -589,6 +619,7 @@
 
             // Handle individual row checkbox change
             $('#'+id_table+' tbody').on('change', '.row-checkbox', function() {
+                // console.log($('.row-checkbox:checked').length);
                 var isChecked = $('.row-checkbox:checked').length == $('.row-checkbox').length;
                 $('.select-all').prop('checked', isChecked);
                 // console.log(isChecked);

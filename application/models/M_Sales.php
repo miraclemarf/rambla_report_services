@@ -1271,8 +1271,9 @@ class M_Sales extends CI_Model
             $whereClause .= " AND DATE_FORMAT(upload_date,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
         }
 
-        $query = "SELECT DISTINCT no_ref, marketplace, sum(quantity) as quantity, sum(price_item) as price_item, sum(disc_pct) as disc_pct, sum(more_disc_pct) as more_disc_pct, sum(net_price) as net_price, upload_date, upload_by, approve_by, approve_date, cancel_by, cancel_date, status from t_sales_trans_upload where 1=1
-        $whereClause GROUP BY no_ref order by date_format(upload_date,'%Y-%m-%d') desc";
+        $query = "SELECT DISTINCT b.trans_no, a.no_ref, marketplace, sum(a.quantity) as quantity, sum(a.price_item) as price_item, sum(a.disc_pct) as disc_pct, sum(a.more_disc_pct) as more_disc_pct, sum(a.net_price) as net_price, a.upload_date, a.upload_by, a.approve_by, a.approve_date, a.cancel_by, a.cancel_date, a.status from t_sales_trans_upload a
+        left join t_sales_trans_hdr b on a.no_ref = b.no_ref where 1=1
+        $whereClause GROUP BY a.no_ref order by date_format(a.upload_date,'%Y-%m-%d') desc";
 
         $searchQuery = "";
         if ($searchValue != '') {
@@ -1299,6 +1300,7 @@ class M_Sales extends CI_Model
             $data[] = array(
                 "no_ref"        => $record->no_ref,
                 "marketplace"   => $record->marketplace,
+                "trans_no"      => ($record->trans_no) ? $record->trans_no : "",
                 "quantity"      => $record->quantity,
                 "price_item"    => $record->price_item,
                 "disc_pct"      => ($record->disc_pct) ? $record->disc_pct . "%" : "",
@@ -1363,9 +1365,9 @@ class M_Sales extends CI_Model
             $whereClause .= " AND no_ref ='" . $no_ref . "'";
         }
 
-        $query = "SELECT DISTINCT a.barcode,quantity, article_name, price_item, disc_pct, more_disc_pct, net_price, payment_type, marketplace, no_ref, upload_date, upload_by, a.approve_by, a.approve_date, a.cancel_by, a.cancel_date, a.status from t_sales_trans_upload a
-        inner join m_codebar b
-        on a.barcode = b.barcode
+        $query = "SELECT DISTINCT case when left(a.barcode,2) = '25' and length(a.barcode) = '13' then left(a.barcode,7) else a.barcode end barcode, sum(quantity) as quantity, article_name, sum(price_item) as price_item, sum(disc_pct) as disc_pct, sum(more_disc_pct) as more_disc_pct, sum(net_price) as net_price, payment_type, marketplace, no_ref, upload_date, upload_by, a.approve_by, a.approve_date, a.cancel_by, a.cancel_date, a.status from t_sales_trans_upload a
+        left join m_codebar b
+        on b.barcode = case when left(a.barcode,2) = '25' and length(a.barcode) = '13' then left(a.barcode,7) else a.barcode end
         inner join m_item_master c
         on b.article_number = c.article_number where 1=1 $whereClause order by no_ref, date_format(upload_date,'%Y-%m-%d') desc";
 
