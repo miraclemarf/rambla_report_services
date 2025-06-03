@@ -136,12 +136,6 @@
                                             <nobr>Price Item</nobr>
                                         </th>
                                         <th>
-                                            <nobr>Disc Percentage</nobr>
-                                        </th>
-                                        <th>
-                                            <nobr>More Disc Percentage</nobr>
-                                        </th>
-                                        <th>
                                             <nobr>Net Price</nobr>
                                         </th>
                                         <th>
@@ -253,12 +247,6 @@
                                             <nobr>Price Item</nobr>
                                         </th>
                                         <th>
-                                            <nobr>Disc Percentage</nobr>
-                                        </th>
-                                        <th>
-                                            <nobr>More Disc Percentage</nobr>
-                                        </th>
-                                        <th>
                                             <nobr>Net Price</nobr>
                                         </th>
                                         <th>
@@ -305,12 +293,6 @@
                                         </th>
                                         <th>
                                             <nobr>Price Item</nobr>
-                                        </th>
-                                        <th>
-                                            <nobr>Disc Percentage</nobr>
-                                        </th>
-                                        <th>
-                                            <nobr>More Disc Percentage</nobr>
                                         </th>
                                         <th>
                                             <nobr>Net Price</nobr>
@@ -532,18 +514,6 @@
                         "data": "price_item",
                         "render": function(data, type, row) {
                             return '<nobr>Rp ' + rupiahjs(data) + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "disc_pct",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
-                        },
-                    },
-                    {
-                        "data": "more_disc_pct",
-                        "render": function(data, type, row) {
-                            return '<nobr>' + data + '</nobr>';
                         },
                     },
                     {

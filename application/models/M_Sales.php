@@ -1192,22 +1192,22 @@ class M_Sales extends CI_Model
 
     public function hapusSalesUpload($no_ref = null, $store = null)
     {
-        // if ($store == 'R002') {
-        //     $dbStore = $this->load->database('storeR002', TRUE);
-        // } else if ($store == 'V001') {
-        //     $dbStore = $this->load->database('storeV001', TRUE);
-        // } else if ($store == 'R001') {
-        //     $dbStore = $this->load->database('storeR001', TRUE);
-        // } else if ($store == 'S002') {
-        //     $dbStore = $this->load->database('storeS002', TRUE);
-        // } else if ($store == 'S003') {
-        //     $dbStore = $this->load->database('storeS003', TRUE);
-        // } else if ($store == 'V002') {
-        //     $dbStore = $this->load->database('storeV002', TRUE);
-        // } else if ($store == 'V003') {
-        //     $dbStore = $this->load->database('storeV003', TRUE);
-        // }
-        $dbStore = $this->load->database('dbserver_dev', TRUE);
+        if ($store == 'R002') {
+            $dbStore = $this->load->database('storeR002', TRUE);
+        } else if ($store == 'V001') {
+            $dbStore = $this->load->database('storeV001', TRUE);
+        } else if ($store == 'R001') {
+            $dbStore = $this->load->database('storeR001', TRUE);
+        } else if ($store == 'S002') {
+            $dbStore = $this->load->database('storeS002', TRUE);
+        } else if ($store == 'S003') {
+            $dbStore = $this->load->database('storeS003', TRUE);
+        } else if ($store == 'V002') {
+            $dbStore = $this->load->database('storeV002', TRUE);
+        } else if ($store == 'V003') {
+            $dbStore = $this->load->database('storeV003', TRUE);
+        }
+        // $dbStore = $this->load->database('dbserver_dev', TRUE);
         $query   = "DELETE FROM t_sales_trans_upload where no_ref ='" . $no_ref . "'";
         $dbStore->query($query);
         if ($dbStore->affected_rows()) {
@@ -1221,22 +1221,22 @@ class M_Sales extends CI_Model
     {
 
         $store = $postData['store'];
-        // if ($store == 'R002') {
-        //     $dbStore = $this->load->database('storeR002', TRUE);
-        // } else if ($store == 'V001') {
-        //     $dbStore = $this->load->database('storeV001', TRUE);
-        // } else if ($store == 'R001') {
-        //     $dbStore = $this->load->database('storeR001', TRUE);
-        // } else if ($store == 'S002') {
-        //     $dbStore = $this->load->database('storeS002', TRUE);
-        // } else if ($store == 'S003') {
-        //     $dbStore = $this->load->database('storeS003', TRUE);
-        // } else if ($store == 'V002') {
-        //     $dbStore = $this->load->database('storeV002', TRUE);
-        // } else if ($store == 'V003') {
-        //     $dbStore = $this->load->database('storeV003', TRUE);
-        // }
-        $dbStore = $this->load->database('dbserver_dev', TRUE);
+        if ($store == 'R002') {
+            $dbStore = $this->load->database('storeR002', TRUE);
+        } else if ($store == 'V001') {
+            $dbStore = $this->load->database('storeV001', TRUE);
+        } else if ($store == 'R001') {
+            $dbStore = $this->load->database('storeR001', TRUE);
+        } else if ($store == 'S002') {
+            $dbStore = $this->load->database('storeS002', TRUE);
+        } else if ($store == 'S003') {
+            $dbStore = $this->load->database('storeS003', TRUE);
+        } else if ($store == 'V002') {
+            $dbStore = $this->load->database('storeV002', TRUE);
+        } else if ($store == 'V003') {
+            $dbStore = $this->load->database('storeV003', TRUE);
+        }
+        // $dbStore = $this->load->database('dbserver_dev', TRUE);
 
         $response = array();
 
@@ -1277,7 +1277,7 @@ class M_Sales extends CI_Model
 
         $searchQuery = "";
         if ($searchValue != '') {
-            $searchQuery = " (marketplace like '%" . $searchValue . "%' or no_ref like '%" . $searchValue . "%' ) ";
+            $searchQuery = " (no_ref like '%" . $searchValue . "%' ) ";
         }
 
         $orderBy = "";
@@ -1330,22 +1330,22 @@ class M_Sales extends CI_Model
     {
 
         $store = $postData['store'];
-        // if ($store == 'R002') {
-        //     $dbStore = $this->load->database('storeR002', TRUE);
-        // } else if ($store == 'V001') {
-        //     $dbStore = $this->load->database('storeV001', TRUE);
-        // } else if ($store == 'R001') {
-        //     $dbStore = $this->load->database('storeR001', TRUE);
-        // } else if ($store == 'S002') {
-        //     $dbStore = $this->load->database('storeS002', TRUE);
-        // } else if ($store == 'S003') {
-        //     $dbStore = $this->load->database('storeS003', TRUE);
-        // } else if ($store == 'V002') {
-        //     $dbStore = $this->load->database('storeV002', TRUE);
-        // } else if ($store == 'V003') {
-        //     $dbStore = $this->load->database('storeV003', TRUE);
-        // }
-        $dbStore = $this->load->database('dbserver_dev', TRUE);
+        if ($store == 'R002') {
+            $dbStore = $this->load->database('storeR002', TRUE);
+        } else if ($store == 'V001') {
+            $dbStore = $this->load->database('storeV001', TRUE);
+        } else if ($store == 'R001') {
+            $dbStore = $this->load->database('storeR001', TRUE);
+        } else if ($store == 'S002') {
+            $dbStore = $this->load->database('storeS002', TRUE);
+        } else if ($store == 'S003') {
+            $dbStore = $this->load->database('storeS003', TRUE);
+        } else if ($store == 'V002') {
+            $dbStore = $this->load->database('storeV002', TRUE);
+        } else if ($store == 'V003') {
+            $dbStore = $this->load->database('storeV003', TRUE);
+        }
+        // $dbStore = $this->load->database('dbserver_dev', TRUE);
 
         $response = array();
 
@@ -1369,7 +1369,7 @@ class M_Sales extends CI_Model
         left join m_codebar b
         on b.barcode = case when left(a.barcode,2) = '25' and length(a.barcode) = '13' then left(a.barcode,7) else a.barcode end
         inner join m_item_master c
-        on b.article_number = c.article_number where 1=1 $whereClause order by no_ref, date_format(upload_date,'%Y-%m-%d') desc";
+        on b.article_number = c.article_number where 1=1 $whereClause GROUP BY barcode order by no_ref, date_format(upload_date,'%Y-%m-%d') desc";
 
         $searchQuery = "";
         if ($searchValue != '') {
@@ -1428,21 +1428,21 @@ class M_Sales extends CI_Model
     {
 
         $store = $postData['store'];
-        // if ($store == 'R002') {
-        //     $dbStore = $this->load->database('storeR002', TRUE);
-        // } else if ($store == 'V001') {
-        //     $dbStore = $this->load->database('storeV001', TRUE);
-        // } else if ($store == 'R001') {
-        //     $dbStore = $this->load->database('storeR001', TRUE);
-        // } else if ($store == 'S002') {
-        //     $dbStore = $this->load->database('storeS002', TRUE);
-        // } else if ($store == 'S003') {
-        //     $dbStore = $this->load->database('storeS003', TRUE);
-        // } else if ($store == 'V002') {
-        //     $dbStore = $this->load->database('storeV002', TRUE);
-        // } else if ($store == 'V003') {
-        //     $dbStore = $this->load->database('storeV003', TRUE);
-        // }
+        if ($store == 'R002') {
+            $dbStore = $this->load->database('storeR002', TRUE);
+        } else if ($store == 'V001') {
+            $dbStore = $this->load->database('storeV001', TRUE);
+        } else if ($store == 'R001') {
+            $dbStore = $this->load->database('storeR001', TRUE);
+        } else if ($store == 'S002') {
+            $dbStore = $this->load->database('storeS002', TRUE);
+        } else if ($store == 'S003') {
+            $dbStore = $this->load->database('storeS003', TRUE);
+        } else if ($store == 'V002') {
+            $dbStore = $this->load->database('storeV002', TRUE);
+        } else if ($store == 'V003') {
+            $dbStore = $this->load->database('storeV003', TRUE);
+        }
         $dbStore = $this->load->database('dbserver_dev', TRUE);
 
         $response = array();

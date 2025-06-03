@@ -88,7 +88,7 @@ class Transaction extends My_Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => $_ENV['APICENTRALDEV'] . 'ops/pos/sales/upload',
+            CURLOPT_URL => $_ENV['APICENTRALPROD'] . 'ops/pos/sales/upload',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -151,7 +151,7 @@ class Transaction extends My_Controller
                 $username   = $this->input->cookie('cookie_invent_user');
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => $_ENV['APICENTRALDEV'] . 'ops/pos/sales/upload/update',
+                    CURLOPT_URL => $_ENV['APICENTRALPROD'] . 'ops/pos/sales/upload/update',
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -210,7 +210,7 @@ class Transaction extends My_Controller
                 $username   = $this->input->cookie('cookie_invent_user');
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => $_ENV['APICENTRALDEV'] . 'ops/pos/sales/upload/submit',
+                    CURLOPT_URL => $_ENV['APICENTRALPROD'] . 'ops/pos/sales/upload/submit',
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
