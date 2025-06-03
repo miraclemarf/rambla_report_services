@@ -697,10 +697,10 @@ class Transaction extends My_Controller
             // INSERT REPORTING SALES
             $dbCentral->query("INSERT INTO report_service.r_sales (periode, trans_time, DIVISION, SUB_DIVISION, category_code, DEPT, SUB_DEPT, brand_code, brand_name, barcode, article_name, varian_option1, varian_option2, price, vendor_code, vendor_name,
             margin, tot_qty, disc_pct, total_disc_amt, moredisc_pct, total_moredisc_amt, gross, net_bf, net_af, gross_after_margin,tag_1, tag_2, tag_3, tag_4, tag_5, vendor_type, fee, trans_no, no_ref,
-            source_data, branch_id, article_code, tot_berat, trans_status, promo_id, sku_code, member_id, cashier_id, flag_return, trans_time, sa_no, flag_tax, tax, margin_code, category)
+            source_data, branch_id, article_code, tot_berat, trans_status, promo_id, sku_code, member_id, cashier_id, flag_return, sa_no, flag_tax, tax, margin_code, category)
             select periode,trans_time, DIVISION, SUB_DIVISION, category_code, DEPT, SUB_DEPT, brand_code, brand_name, barcode, article_name, varian_option1, varian_option2, price, vendor_code, vendor_name,
             margin, tot_qty, disc_pct, total_disc_amt, moredisc_pct, total_moredisc_amt, gross, net_bf, net_af, gross_after_margin, tag_1, tag_2, tag_3, tag_4, tag_5, vendor_type, fee, trans_no, no_ref,
-            source_data, branch_id, article_code, tot_berat, trans_status, promo_id, sku_code, member_id, cashier_id, flag_return, trans_time, sa_no, flag_tax, tax, margin_code, category from v_laporan_penjualan_perartikel_all
+            source_data, branch_id, article_code, tot_berat, trans_status, promo_id, sku_code, member_id, cashier_id, flag_return, sa_no, flag_tax, tax, margin_code, category from v_laporan_penjualan_perartikel_all
             where trans_no = '" . $postData['trans_no'] . "'");
 
             $dbCentral->trans_complete();
