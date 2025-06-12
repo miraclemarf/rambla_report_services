@@ -193,12 +193,6 @@
                                             <nobr>Price Item</nobr>
                                         </th>
                                         <th>
-                                            <nobr>Disc Percentage</nobr>
-                                        </th>
-                                        <th>
-                                            <nobr>More Disc Percentage</nobr>
-                                        </th>
-                                        <th>
                                             <nobr>Net Price</nobr>
                                         </th>
                                         <th>

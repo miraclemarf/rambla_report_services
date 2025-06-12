@@ -1271,8 +1271,9 @@ class M_Sales extends CI_Model
             $whereClause .= " AND DATE_FORMAT(upload_date,'%Y-%m-%d') BETWEEN '" . $fromdate . "' and '" . $todate . "'";
         }
 
-        $query = "SELECT DISTINCT b.trans_no, a.no_ref, marketplace, sum(a.quantity) as quantity, sum(a.price_item) as price_item, sum(a.disc_pct) as disc_pct, sum(a.more_disc_pct) as more_disc_pct, sum(a.net_price) as net_price, a.upload_date, a.upload_by, a.approve_by, a.approve_date, a.cancel_by, a.cancel_date, a.status from t_sales_trans_upload a
-        left join t_sales_trans_hdr b on a.no_ref = b.no_ref where 1=1
+        $query = "SELECT DISTINCT ifnull(b.trans_no,c.trans_no) as trans_no, a.no_ref, marketplace, sum(a.quantity) as quantity, sum(a.price_item) as price_item, sum(a.disc_pct) as disc_pct, sum(a.more_disc_pct) as more_disc_pct, sum(a.net_price) as net_price, a.upload_date, a.upload_by, a.approve_by, a.approve_date, a.cancel_by, a.cancel_date, a.status from t_sales_trans_upload a
+        left join t_sales_trans_hdr b on a.no_ref = b.no_ref 
+        left join dbserver_history.t_sales_trans_hdr c on a.no_ref = c.no_ref where 1=1
         $whereClause GROUP BY a.no_ref order by date_format(a.upload_date,'%Y-%m-%d') desc";
 
         $searchQuery = "";
