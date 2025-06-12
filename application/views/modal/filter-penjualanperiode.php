@@ -80,7 +80,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <!-- <div class="row mt-2">
+                                    <div class="row mt-2">
                                         <div class="col-md-4">
                                             <label class="mt-1">Dept</label>
                                         </div>
@@ -90,6 +90,7 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <!--
                                     <div class="row mt-2">
                                         <div class="col-md-4">
                                             <label class="mt-1">Sub Dept</label>
@@ -129,7 +130,7 @@
                                         <h4>Member Area</h4>
                                     </legend>
                                     <div class="row mt-2">
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <div class="form-check form-check-flat form-check-primary">
                                                 <label class=" form-check-label" style="padding-top: 6px;">
                                                     <input type="radio" class="form-check-input" name="member_area" id="member_area" value="1" checked>
@@ -137,7 +138,7 @@
                                                     <i class="input-helper"></i></label>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 member-only">
+                                        <div class="col-md-5 member-only">
                                             <div class="form-check form-check-flat form-check-primary">
                                                 <label class=" form-check-label" style="padding-top: 6px;">
                                                     <input type="radio" class="form-check-input" name="member_area" id="member_area" value="2">

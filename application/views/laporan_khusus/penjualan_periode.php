@@ -106,6 +106,7 @@
             params11 = $('input[name="max_purchase"]').val();
             params12 = $('input[name="excludevch"]:checked').val();
             params13 = units;
+            params14 = dept;
 
             if (params1 === "") {
                 params1 = null;
@@ -148,14 +149,17 @@
             if (params13 === "") {
                 params13 = null;
             }
+            if (params14 === "") {
+                params14 = null;
+            }
             // console.log('units:'+params13, 'store:'+params8);
 
-            if(params8 == null && params13 == null){
+            if (params8 == null && params13 == null) {
                 alert('Unit atau Store tidak boleh kosong!')
                 return false;
             }
 
-            load_data_penjualanperiod(params1, params2, params3, params4, params5, params6, params7, params8, params9, params10, params11, params12, params13);
+            load_data_penjualanperiod(params1, params2, params3, params4, params5, params6, params7, params8, params9, params10, params11, params12, params13, params14);
         });
 
         function resizeIframe() {
@@ -168,7 +172,7 @@
             resizeIframe();
         };
 
-        function load_data_penjualanperiod(params1, params2, params3, params4, params5, params6, params7, params8, params9, params10, params11, params12, params13) {
+        function load_data_penjualanperiod(params1, params2, params3, params4, params5, params6, params7, params8, params9, params10, params11, params12, params13, params14) {
             $.ajax({
                 url: "<?= base_url('LaporanKhusus/penjualan_periode_where'); ?>",
                 method: "POST",
@@ -186,6 +190,7 @@
                     params11: params11,
                     params12: params12,
                     params13: params13,
+                    params14: params14,
                 },
                 success: function(data) {
                     var iframe = document.getElementById('iFrameSalesMetaByPeriode');

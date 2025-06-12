@@ -148,11 +148,12 @@ class LaporanKhusus extends My_Controller
             }
         }
         // END CEK ADA DEPTNYA NGGA
-        $store = $postData["params8"] ? $postData["params8"]: null;
-        $units = $postData["params13"] ? $postData["params13"]: null;
+        $store = $postData["params8"] ? $postData["params8"] : null;
+        $units = $postData["params13"] ? $postData["params13"] : null;
         $periode =  ubahFormatTanggal($postData["params3"]);
         $division = $postData['params4'] ? $postData['params4'] : null;
         $sub_division = $postData['params5'] ? $postData['params5'] : null;
+        $dept = $postData['params14'] ? $postData['params14'] : null;
         $areatrx = $postData['params9'] ? $postData['params9'] : null;
         $category = $category ? $category : array(null);
         $payment_type = $postData['params2']  ? $postData['params2']  : null;
@@ -181,6 +182,7 @@ class LaporanKhusus extends My_Controller
                     'area_transaksi'    => $areatrx,
                     'division'          => $division,
                     'sub_division'      => $sub_division,
+                    'dept'              => $dept,
                     'payment_type'      => $payment_type,
                     'is_member'         => $is_member,
                     'start_time'        => $start_time,
@@ -203,6 +205,7 @@ class LaporanKhusus extends My_Controller
                     'area_transaksi'    => $areatrx,
                     'division'          => $division,
                     'sub_division'      => $sub_division,
+                    'dept'              => $dept,
                     'payment_type'      => $payment_type,
                     'is_member'         => $is_member,
                     'start_time'        => $start_time,
@@ -655,12 +658,12 @@ class LaporanKhusus extends My_Controller
         /* Excel Data */
         $row_number = 6;
         $lastRow = count($data) + $row_number;
-        $arrAmtCol = ['E','H','M','N','P','S','X','Y','AA','AD','AI','AJ','AL','AO','AT','AU'];
+        $arrAmtCol = ['E', 'H', 'M', 'N', 'P', 'S', 'X', 'Y', 'AA', 'AD', 'AI', 'AJ', 'AL', 'AO', 'AT', 'AU'];
         foreach ($arrAmtCol as $val) {
             $sheet->getStyle($val . $row_number . ':' . $val . $lastRow)->getNumberFormat()->setFormatCode('#,##0');
         }
 
-        $arrPctCol = ['J','K','L','U','V','W','AF','AG','AH','AQ','AR','AS'];
+        $arrPctCol = ['J', 'K', 'L', 'U', 'V', 'W', 'AF', 'AG', 'AH', 'AQ', 'AR', 'AS'];
         foreach ($arrPctCol as $val) {
             $sheet->getStyle($val . $row_number . ':' . $val . $lastRow)->getNumberFormat()->setFormatCode('0.0"%"');
         }
@@ -1164,7 +1167,7 @@ class LaporanKhusus extends My_Controller
             $this_period = " WHERE DATE_FORMAT(periode,'%Y-%m-%d') BETWEEN '" . $fromdate2 . "' and '" . $todate2 . "'";
         }
 
- $query = "SELECT 
+        $query = "SELECT 
         CASE WHEN LP.branch_id is null then TP.branch_id else LP.branch_id end as STORE, 
         CASE WHEN LP.SUB_DIVISION is null then  TP.SUB_DIVISION else LP.SUB_DIVISION end as SBU, 
         CASE WHEN LP.DEPT is null then  TP.DEPT else LP.DEPT end as DEPT,
