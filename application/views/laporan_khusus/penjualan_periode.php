@@ -48,6 +48,7 @@
         var payment_type = null;
         var division = null;
         var sub_division = null;
+        var dept = null;
         var start_time = null;
         var end_time = null;
         var store = null;
