@@ -51,7 +51,7 @@ class M_Store extends CI_Model
             $where .= " AND substring( tsth.trans_no, 9, 1 ) = '3'";
         }
 
-        $query = "SELECT date_format( trans_date, '%Y.%m.%d' ) periode, count( DISTINCT ( tsth.trans_no )) tot_trx, sum( tstd.qty ) tot_qty, format(round( sum( net_price ),0),0) AS gross,  format(round( sum( net_prc / 1.11 ),0),0) AS net FROM t_sales_trans_hdr tsth 
+        $query = "SELECT date_format( trans_date, '%Y.%m.%d' ) periode, count( DISTINCT ( tsth.trans_no )) tot_trx, sum( tstd.qty ) tot_qty, format(round( sum( net_price ),0),0) AS gross,  format(round( sum( net_prc ),0),0) AS net FROM t_sales_trans_hdr tsth 
             INNER JOIN (select *, case when flag_tax = 1 then net_price / 1.11
 		  		else net_price
 		  	end as net_prc, 	
