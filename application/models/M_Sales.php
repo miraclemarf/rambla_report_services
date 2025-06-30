@@ -1366,7 +1366,7 @@ class M_Sales extends CI_Model
             $whereClause .= " AND no_ref ='" . $no_ref . "'";
         }
 
-        $query = "SELECT DISTINCT case when left(a.barcode,2) = '25' and length(a.barcode) = '13' then left(a.barcode,7) else a.barcode end barcode, sum(quantity) as quantity, article_name, sum(price_item) as price_item, sum(disc_pct) as disc_pct, sum(more_disc_pct) as more_disc_pct, sum(net_price) as net_price, payment_type, marketplace, no_ref, upload_date, upload_by, a.approve_by, a.approve_date, a.cancel_by, a.cancel_date, a.status from t_sales_trans_upload a
+        $query = "SELECT DISTINCT case when left(a.barcode,2) = '25' and length(a.barcode) = '13' then left(a.barcode,7) else a.barcode end barcode, sum(quantity) as quantity, article_name, price_item, disc_pct,more_disc_pct, sum(net_price) as net_price, payment_type, marketplace, no_ref, upload_date, upload_by, a.approve_by, a.approve_date, a.cancel_by, a.cancel_date, a.status from t_sales_trans_upload a
         left join m_codebar b
         on b.barcode = case when left(a.barcode,2) = '25' and length(a.barcode) = '13' then left(a.barcode,7) else a.barcode end
         inner join m_item_master c

@@ -61,8 +61,8 @@ class M_Store extends CI_Model
                     when '2' then (net_price - fee)/ 1.11
                 end
             else 
-                case when flag_tax = 1 then net_price / 1.11
-                    else net_price
+                case when flag_tax='1' then case when extradisc_pct <> 0 then (net_price + fee)/ 1.11 else net_price / 1.11 end
+                    else case when extradisc_pct <> 0 then (net_price + fee) else net_price end
                 end
             end as net_all from t_sales_trans_dtl) tstd ON tsth.trans_no = tstd.trans_no WHERE trans_status = '1' AND date_format( trans_date, '%Y.%m.%d' ) BETWEEN ? AND ? AND tstd.category_code NOT IN ( 'RSOTMKVC01' ) $where AND substring( tsth.trans_no, 9, 1 ) NOT IN ('4','5')";
 
