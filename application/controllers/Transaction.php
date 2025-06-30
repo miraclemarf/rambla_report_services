@@ -79,8 +79,8 @@ class Transaction extends My_Controller
     public function import_process()
     {
         extract(populateform());
-        $unlink_file        = $_SERVER['DOCUMENT_ROOT'] . "/report-service/assets/excel/" . $namafile;
-        $file_path          = base_url() . '/assets/excel/' . $namafile;
+        //$unlink_file        = $_SERVER['DOCUMENT_ROOT'] . "assets/excel/" . $namafile;
+        $file_path          = $_SERVER['DOCUMENT_ROOT'] . "assets/excel/" . $namafile;
         $data['username']   = $this->input->cookie('cookie_invent_user');
         $data['status']     = 0;
         $data['message']    = "";
@@ -132,7 +132,7 @@ class Transaction extends My_Controller
             // $this->session->set_flashdata('failed-upload', $message);
             // redirect(base_url() . "Transaction/import_page/".$store);
         }
-        unlink($unlink_file);
+        unlink($file_path);
         echo json_encode($data);
     }
 
