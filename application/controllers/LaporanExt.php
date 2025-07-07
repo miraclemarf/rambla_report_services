@@ -120,4 +120,43 @@ class LaporanExt extends My_Controller
         $this->load->view('laporan/sa-lebaran-2025', $data);
         $this->load->view('template_member/footer');
     }
+    public function sa_target_monthly()
+    {
+        $this->ceklogin();
+        extract(populateform());
+        $data['title'] = 'SMJ Tools | Laporan Bulanan Target SA';
+        $data['username'] = $this->input->cookie('cookie_invent_user');
+        $data['vendor'] = $this->input->cookie('cookie_invent_vendor');
+
+
+        $cek_operation = $this->db->query("SELECT * from m_login where username ='" . $data['username'] . "'")->row();
+        $cek_operation = $cek_operation->login_type_id;
+
+        $cek_usersite = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "'")->result_array();
+        
+        $data['iframe'] = 'https://meta.rambla.id/public/dashboard/f89227d4-9dcf-4cb1-afad-5eeffa29e03e';
+        if(count($cek_usersite) == 1){
+            if($cek_usersite[0]['branch_id'] == 'R001'){
+                $data['iframe'] = 'https://meta.rambla.id/public/question/67514900-18be-4666-8b90-468acc3c5875';
+            }
+            if($cek_usersite[0]['branch_id'] == 'R002'){
+                $data['iframe'] = 'https://meta.rambla.id/public/question/6f6786c3-4d8b-471f-8f9b-813db4689697';
+            }
+            if($cek_usersite[0]['branch_id'] == 'S002'){
+                $data['iframe'] = 'https://meta.rambla.id/public/question/467d8034-8d9d-4dae-9da7-1c06c577f5ae';
+            }
+            if($cek_usersite[0]['branch_id'] == 'S003'){
+                $data['iframe'] = 'https://meta.rambla.id/public/question/a294ac3b-20bf-49d5-b78a-50515bed5d28';
+            }
+        }
+        
+
+        //$data['happyFreshSales'] = $this->M_Horeca->getHappyFreshSales();
+
+        $this->load->view('template_member/header', $data);
+        $this->load->view('template_member/navbar', $data);
+        $this->load->view('template_member/sidebar', $data);
+        $this->load->view('laporan/sa-lebaran-2025', $data);
+        $this->load->view('template_member/footer');
+    }
 }
