@@ -98,7 +98,7 @@ class Laporan extends My_Controller
 
         $username = $this->input->cookie('cookie_invent_user');
 
-        $data_item = $dbCentral->query("SELECT DISTINCT branch_id, isactive from m_item_master where article_number = '".$article_number."' and branch_id ='".$branch_id."'")->row();
+        $data_item = $dbCentral->query("SELECT DISTINCT branch_id, isactive from m_item_master where article_number = '" . $article_number . "' and branch_id ='" . $branch_id . "'")->row();
 
         $sql = "UPDATE report_service.r_item_master set status_article = '" . $status . "', last_update = CURRENT_TIMESTAMP() where article_number ='" . $article_number . "' and branch_id = '" . $branch_id . "'";
 
@@ -114,10 +114,10 @@ class Laporan extends My_Controller
         $sql_central = 'UPDATE m_item_master set isactive ="' . $active . '", last_update = CURRENT_TIMESTAMP(), update_by ="' . $username . '" where article_number ="' . $article_number . '" and branch_id ="' . $branch_id . '"';
         $this->db->query($sql);
         $dbCentral->query($sql_central);
-        
+
         if ($this->db->affected_rows()) {
-            $dbCentral->query("call update_log_data('m_item_master','isactive','".$data_item->isactive."','".$active."','".$username."','".$sql_central."')");
-        } 
+            $dbCentral->query("call update_log_data('m_item_master','isactive','" . $data_item->isactive . "','" . $active . "','" . $username . "','" . $sql_central . "')");
+        }
         // else {
         //     $data['status'] = false;
         // }
@@ -258,13 +258,13 @@ class Laporan extends My_Controller
         $config = Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($metabaseSecretKey));
         $builder = $config->builder();
 
-        if($postData['is_operation'] == 1){
+        if ($postData['is_operation'] == 1) {
             $kode_dashboard = 239;
-        }else{
+        } else {
             // CEK TIM ECOM
-            if($data['tipe'] == 3){
+            if ($data['tipe'] == 3) {
                 $kode_dashboard = 276;
-            }else{
+            } else {
                 $kode_dashboard = 238;
             }
         }
@@ -1650,7 +1650,7 @@ class Laporan extends My_Controller
         $data = $this->db->query("SELECT branch_id,article_number,article_code,barcode,supplier_pcode,category_code, article_name,supplier_pname, vendor_code, vendor_name, brand,brand_name, option1,varian_option1,option2,varian_option2, division, sub_division, dept, sub_dept, normal_price, current_price, tag_5, flag_2, SUBSTRING(add_date, 1, 10) as add_date,SUBSTRING(last_update, 1, 10) as last_update,ppn_jual,status_article FROM r_item_master where 1=1 $where")->result_array();
         $file = fopen('php://output', 'w');
 
-        $header = array('branch id', 'article number', 'article code', 'barcode', 'supplier_pcode', 'category code', 'article name', 'supplier pname', 'vendor code', 'vendor name', 'brand code', 'brand name', 'option1', 'varian option1', 'option2', 'varian option2', 'division', 'sub division', 'dept', 'sub dept', 'normal_price', 'current_price', 'tag 5', 'flag 2', 'add_date', 'last_update','ppn jual' ,'article status');
+        $header = array('branch id', 'article number', 'article code', 'barcode', 'supplier_pcode', 'category code', 'article name', 'supplier pname', 'vendor code', 'vendor name', 'brand code', 'brand name', 'option1', 'varian option1', 'option2', 'varian option2', 'division', 'sub division', 'dept', 'sub dept', 'normal_price', 'current_price', 'tag 5', 'flag 2', 'add_date', 'last_update', 'ppn jual', 'article status');
 
         fputcsv($file, $header, $delimiter);
 
@@ -1729,7 +1729,7 @@ class Laporan extends My_Controller
         $data = $this->db->query("SELECT branch_id, start_date,end_date,promo_id,promo_type,category_code,vendor_name,brand,barcode,pos_pname,varian_option1,varian_option2,promo_desc,promo_intdesc,current_price,min_qty,min_purchase,disc_percentage,disc_amount,add_disc_percentage,free_qty,Q0, price0, Q1, price1, Q2, price2, special_price,aktif,active_monday,active_tuesday,active_wednesday,active_thursday,active_friday,active_saturday,active_sunday,DIVISION, SUB_DIVISION, DEPT, SUB_DEPT FROM r_promo_aktif WHERE 1=1 $where")->result_array();
         $file = fopen('php://output', 'w');
 
-        $header = array('Store', 'Start Date', 'End Date', 'Promo Id', 'Promo Type', 'Category Code', 'Vendor Name', 'Brand', 'Barcode', 'Article Name', 'Varian Option1', 'Varian Option2', 'Promo desc (POS)','Promo desc (Internal)', 'Current Price', 'Min Qty', 'Min Purchase', 'Disc %', 'Disc Amount', 'Add Disc %', 'Free Qty', 'Q0', 'Price0', 'Q1', 'Price1', 'Q2', 'Price2', 'Special Price', 'Aktif', 'Monday', 'Tuesday', 'Wednesday', 'Thusday', 'Friday', 'Saturday', 'Sunday', 'Division', 'Sub Division', 'Dept', 'Sub Dept');
+        $header = array('Store', 'Start Date', 'End Date', 'Promo Id', 'Promo Type', 'Category Code', 'Vendor Name', 'Brand', 'Barcode', 'Article Name', 'Varian Option1', 'Varian Option2', 'Promo desc (POS)', 'Promo desc (Internal)', 'Current Price', 'Min Qty', 'Min Purchase', 'Disc %', 'Disc Amount', 'Add Disc %', 'Free Qty', 'Q0', 'Price0', 'Q1', 'Price1', 'Q2', 'Price2', 'Special Price', 'Aktif', 'Monday', 'Tuesday', 'Wednesday', 'Thusday', 'Friday', 'Saturday', 'Sunday', 'Division', 'Sub Division', 'Dept', 'Sub Dept');
 
         fputcsv($file, $header);
 
@@ -2238,7 +2238,7 @@ class Laporan extends My_Controller
             round(sum(td.gross_BF),0) gross_bf_floor, 0 gross_bf_bazzar,
             td.brand, mim.vendor_code
             from t_sales_trans_hdr th inner join 
-            (select *, case when flag_tax in(1) then net_price / 1.11				
+            (select *, case when flag_tax = '1' then net_price / 1.11				
                           else net_price
                       end as net_prc, 	
                           
@@ -2248,7 +2248,7 @@ class Laporan extends My_Controller
                         when '2' then (net_price - fee)/ 1.11
                     end		
                     else 		
-                      case when flag_tax in(1)  then net_price / 1.11	
+                      case when flag_tax = '1'  then net_price / 1.11	
                           else net_price
                       end	
                     end as net_all,
@@ -2281,7 +2281,7 @@ class Laporan extends My_Controller
             0 gross_bf_floor, round(sum(td.gross_BF),0) gross_bf_bazzar,
             td.brand, mim.vendor_code
             from t_sales_trans_hdr th inner join 
-            (select *, case when flag_tax in(1) then net_price / 1.11				
+            (select *, case when flag_tax = '1' then net_price / 1.11				
                           else net_price
                       end as net_prc, 	
                           
@@ -2291,7 +2291,7 @@ class Laporan extends My_Controller
                         when '2' then (net_price - fee)/ 1.11
                     end		
                     else 		
-                      case when flag_tax in(1)  then net_price / 1.11	
+                      case when flag_tax = '1'  then net_price / 1.11	
                           else net_price
                       end	
                     end as net_all,
@@ -2386,7 +2386,7 @@ class Laporan extends My_Controller
             round(sum(td.gross_BF),0) gross_bf_floor, 0 gross_bf_bazzar,
             td.brand, mim.vendor_code
             from t_sales_trans_hdr th inner join 
-            (select *, case when flag_tax in(1) then net_price / 1.11				
+            (select *, case when flag_tax = '1' then net_price / 1.11				
                           else net_price
                       end as net_prc, 	
                           
@@ -2396,9 +2396,9 @@ class Laporan extends My_Controller
                         when '2' then (net_price - fee)/ 1.11
                     end		
                     else 		
-                      case when flag_tax in(1)  then net_price / 1.11	
-                          else net_price
-                      end	
+                        case when flag_tax='1' then case when extradisc_pct <> 0 then (net_price + fee)/ 1.11 else net_price / 1.11 end
+                            else case when extradisc_pct <> 0 then (net_price + fee) else net_price end
+                        end	
                     end as net_all,
                     case flag_flexi when 1 then 		
                     case type_flex when '0' then net_price	
@@ -2429,7 +2429,7 @@ class Laporan extends My_Controller
             0 gross_bf_floor, round(sum(td.gross_BF),0) gross_bf_bazzar,
             td.brand, mim.vendor_code
             from t_sales_trans_hdr th inner join 
-            (select *, case when flag_tax in(1) then net_price / 1.11				
+            (select *, case when flag_tax = '1' then net_price / 1.11				
                           else net_price
                       end as net_prc, 	
                           
@@ -2439,9 +2439,9 @@ class Laporan extends My_Controller
                         when '2' then (net_price - fee)/ 1.11
                     end		
                     else 		
-                      case when flag_tax in(1)  then net_price / 1.11	
-                          else net_price
-                      end	
+                        case when flag_tax='1' then case when extradisc_pct <> 0 then (net_price + fee)/ 1.11 else net_price / 1.11 end
+                            else case when extradisc_pct <> 0 then (net_price + fee) else net_price end
+                        end		
                     end as net_all,
                     case flag_flexi when 1 then 		
                     case type_flex when '0' then net_price	

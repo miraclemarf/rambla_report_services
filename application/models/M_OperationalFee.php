@@ -70,7 +70,7 @@ class M_OperationalFee extends CI_Model
             round(sum(td.gross_BF),0) gross_bf_floor, 0 gross_bf_bazzar,
             td.brand, mim.vendor_code
             from t_sales_trans_hdr th inner join 
-            (select *, case when flag_tax in(1) then net_price / 1.11				
+            (select *, case when flag_tax = '1' then net_price / 1.11				
                           else net_price
                       end as net_prc, 	
                           
@@ -80,9 +80,9 @@ class M_OperationalFee extends CI_Model
                         when '2' then (net_price - fee)/ 1.11
                     end		
                     else 		
-                      case when flag_tax in(1)  then net_price / 1.11	
-                          else net_price
-                      end	
+                        case when flag_tax='1' then case when extradisc_pct <> 0 then (net_price + fee)/ 1.11 else net_price / 1.11 end
+                            else case when extradisc_pct <> 0 then (net_price + fee) else net_price end
+                        end	
                     end as net_all,
                     case flag_flexi when 1 then 		
                     case type_flex when '0' then net_price	
@@ -113,7 +113,7 @@ class M_OperationalFee extends CI_Model
             0 gross_bf_floor, round(sum(td.gross_BF),0) gross_bf_bazzar,
             td.brand, mim.vendor_code
             from t_sales_trans_hdr th inner join 
-            (select *, case when flag_tax in(1) then net_price / 1.11				
+            (select *, case when flag_tax = '1' then net_price / 1.11				
                           else net_price
                       end as net_prc, 	
                           
@@ -123,9 +123,9 @@ class M_OperationalFee extends CI_Model
                         when '2' then (net_price - fee)/ 1.11
                     end		
                     else 		
-                      case when flag_tax in(1)  then net_price / 1.11	
-                          else net_price
-                      end	
+                        case when flag_tax='1' then case when extradisc_pct <> 0 then (net_price + fee)/ 1.11 else net_price / 1.11 end
+                            else case when extradisc_pct <> 0 then (net_price + fee) else net_price end
+                        end
                     end as net_all,
                     case flag_flexi when 1 then 		
                     case type_flex when '0' then net_price	
