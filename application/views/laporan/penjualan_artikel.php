@@ -161,7 +161,6 @@
                     return false;
                 }
             }
-
             load_data_penjualanartikel(params1, params2, params3, params4, params5, params6, params7, params8, params9);
         });
 
