@@ -447,63 +447,85 @@ class Laporan extends My_Controller
     public function masteritem_where()
     {
         extract(populateform());
+
         $tables = "r_item_master";
-        $search = array('branch_id', 'article_code', 'barcode', 'supplier_pcode', 'article_name', 'supplier_pname', 'brand', 'brand_name', 'option1', 'varian_option1', 'option2', 'varian_option2', 'normal_price', 'tag_5');
-        // $vendor_code    = $this->input->post('vendor_code');
-        $data['username'] = $this->input->cookie('cookie_invent_user');
+        $search = [
+            'branch_id',
+            'article_code',
+            'barcode',
+            'supplier_pcode',
+            'article_name',
+            'supplier_pname',
+            'brand',
+            'brand_name',
+            'option1',
+            'varian_option1',
+            'option2',
+            'varian_option2',
+            'normal_price',
+            'tag_5'
+        ];
+
+        $username = $this->input->cookie('cookie_invent_user');
+        $data['username'] = $username;
         $where = array('');
+        $isWhere = '';
 
-        // START CEK ADA KATEGORINYA NGGA
-        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
-
-        // CEK ADA USER SITENYA NGGA
-        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
-        if ($cek_user_category) {
-            $filter = $this->M_Categories->get_category($data['username']);
-        } else if ($cek_user_site) {
-            $filter = $this->M_Division->get_division($data['username'], $params6);
+        // Cek apakah ada filter berdasarkan barcode
+        if ($params8) {
+            $isWhere = "AND barcode = '" . $params8 . "'";
         } else {
-            // UNTUK MD
-            $filter = "AND brand in (
-                select distinct brand from m_user_brand 
-                where username = '" . $data['username'] . "'
-            )";
-        }
-        // END CEK ADA KATEGORINYA NGGA
+            // Cek apakah user memiliki kategori
+            $cek_user_category = $this->db
+                ->query("SELECT * FROM m_user_category WHERE username = '$username'")
+                ->row();
 
-        if ($params1 || $params2 || $params3 || $params4 || $params5 || $params6 || $params7) {
+            // Cek apakah user memiliki site aktif
+            $cek_user_site = $this->db
+                ->query("SELECT * FROM m_user_site WHERE username = '$username' AND flagactv = '1' LIMIT 1")
+                ->row();
+
+            // Tentukan filter awal berdasarkan user
+            if ($cek_user_category) {
+                $filter = $this->M_Categories->get_category($username);
+            } elseif ($cek_user_site) {
+                $filter = $this->M_Division->get_division($username, $params6);
+            } else {
+                // Default untuk MD (Merchandising Department)
+                $filter = "AND brand IN (
+                SELECT DISTINCT brand 
+                FROM m_user_brand 
+                WHERE username = '$username'
+            )";
+            }
+
+            // Tambahkan filter berdasarkan parameter
             if ($params1) {
-                $filter1 = " AND brand = '" . $params1 . "'";
-                $filter .= $filter1;
+                $filter .= " AND brand = '$params1'";
             }
             if ($params2) {
-                $filter2 = " AND DIVISION = '" . $params2 . "'";
-                $filter .= $filter2;
+                $filter .= " AND DIVISION = '$params2'";
             }
             if ($params3) {
-                $filter3 = " AND SUB_DIVISION = '" . $params3 . "'";
-                $filter .= $filter3;
+                $filter .= " AND SUB_DIVISION = '$params3'";
             }
             if ($params4) {
-                $filter4 = " AND DEPT = '" . $params4 . "'";
-                $filter .= $filter4;
+                $filter .= " AND DEPT = '$params4'";
             }
             if ($params5) {
-                $filter5 = " AND SUB_DEPT = '" . $params5 . "'";
-                $filter .= $filter5;
+                $filter .= " AND SUB_DEPT = '$params5'";
             }
             if ($params6) {
-                $filter6 = " AND branch_id = '" . $params6 . "'";
-                $filter .= $filter6;
+                $filter .= " AND branch_id = '$params6'";
             }
             if ($params7) {
-                $filter7 = " AND status_article = '" . $params7 . "'";
-                $filter .= $filter7;
+                $filter .= " AND status_article = '$params7'";
             }
-            $isWhere = $filter;
-        } else {
+
             $isWhere = $filter;
         }
+
+        // Output JSON
         header('Content-Type: application/json');
         echo $this->M_Datatables->get_tables_where($tables, $search, $where, $isWhere);
     }
@@ -928,7 +950,7 @@ class Laporan extends My_Controller
         $writer->save('php://output');
     }
 
-    function export_excel_masteritem($brand_code, $division, $sub_division, $dept, $sub_dept, $store, $article_status)
+    function export_excel_masteritem($brand_code, $division, $sub_division, $dept, $sub_dept, $store, $article_status, $barcode)
     {
         /* Data */
         $data['username'] = $this->input->cookie('cookie_invent_user');
@@ -941,47 +963,51 @@ class Laporan extends My_Controller
         // START CEK ADA KATEGORINYA NGGA
         $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
 
-        // CEK ADA USER SITENYA NGGA
-        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
-        if ($cek_user_category) {
-            $where = $this->M_Categories->get_category($data['username']);
-        } else if ($cek_user_site) {
-            $where = $this->M_Division->get_division($data['username'], $store);
+        if ($barcode !== "null") {
+            $where = "AND barcode = '" . $barcode . "'";
         } else {
-            // UNTUK MD
-            $where = "AND brand in (
+            // CEK ADA USER SITENYA NGGA
+            $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+            if ($cek_user_category) {
+                $where = $this->M_Categories->get_category($data['username']);
+            } else if ($cek_user_site) {
+                $where = $this->M_Division->get_division($data['username'], $store);
+            } else {
+                // UNTUK MD
+                $where = "AND brand in (
                 select distinct brand from m_user_brand 
                 where username = '" . $data['username'] . "'
             )";
-        }
-        // END CEK ADA KATEGORINYA NGGA
+            }
+            // END CEK ADA KATEGORINYA NGGA
 
-        if ($brand_code !== "null") {
-            $where .= " AND brand = '" . $brand_code . "'";
-        }
+            if ($brand_code !== "null") {
+                $where .= " AND brand = '" . $brand_code . "'";
+            }
 
-        if ($division !== "null") {
-            $where .= " AND DIVISION = '" . $division . "'";
-        }
+            if ($division !== "null") {
+                $where .= " AND DIVISION = '" . $division . "'";
+            }
 
-        if ($sub_division !== "null") {
-            $where .= " AND SUB_DIVISION = '" . $sub_division . "'";
-        }
+            if ($sub_division !== "null") {
+                $where .= " AND SUB_DIVISION = '" . $sub_division . "'";
+            }
 
-        if ($dept !== "null") {
-            $where .= " AND DEPT = '" . $dept . "'";
-        }
+            if ($dept !== "null") {
+                $where .= " AND DEPT = '" . $dept . "'";
+            }
 
-        if ($sub_dept !== "null") {
-            $where .= " AND SUB_DEPT = '" . $sub_dept . "'";
-        }
+            if ($sub_dept !== "null") {
+                $where .= " AND SUB_DEPT = '" . $sub_dept . "'";
+            }
 
-        if ($store !== "null") {
-            $where .= " AND branch_id = '" . $store . "'";
-        }
+            if ($store !== "null") {
+                $where .= " AND branch_id = '" . $store . "'";
+            }
 
-        if ($article_status !== "null") {
-            $where .= " AND status_article = '" . $article_status . "'";
+            if ($article_status !== "null") {
+                $where .= " AND status_article = '" . $article_status . "'";
+            }
         }
 
         $data = $this->db->query("SELECT * FROM r_item_master WHERE 1=1 $where")->result_array();
@@ -1016,10 +1042,11 @@ class Laporan extends My_Controller
         $sheet->setCellValue('W1', 'Current Price');
         $sheet->setCellValue('X1', 'Tag 5');
         $sheet->setCellValue('Y1', 'Flag 2');
-        $sheet->setCellValue('Z1', 'Add Date');
-        $sheet->setCellValue('AA1', 'Last Update');
-        $sheet->setCellValue('AB1', 'PPN Jual');
-        $sheet->setCellValue('AC1', 'Article Status');
+        $sheet->setCellValue('Z1', 'Tag Kopi');
+        $sheet->setCellValue('AA1', 'Add Date');
+        $sheet->setCellValue('AB1', 'Last Update');
+        $sheet->setCellValue('AC1', 'PPN Jual');
+        $sheet->setCellValue('AD1', 'Article Status');
 
         /* Excel Data */
         $row_number = 2;
@@ -1049,10 +1076,11 @@ class Laporan extends My_Controller
             $sheet->setCellValue('W' . $row_number, $row['current_price']);
             $sheet->setCellValue('X' . $row_number, $row['tag_5']);
             $sheet->setCellValue('Y' . $row_number, $row['flag_2']);
-            $sheet->setCellValue('Z' . $row_number, substr($row['add_date'], 0, 10));
-            $sheet->setCellValue('AA' . $row_number, substr($row['last_update'], 0, 10));
-            $sheet->setCellValue('AB' . $row_number, $row['ppn_jual']);
-            $sheet->setCellValue('AC' . $row_number, $row['status_article']);
+            $sheet->setCellValue('Z' . $row_number, $row['tag_3']);
+            $sheet->setCellValue('AA' . $row_number, substr($row['add_date'], 0, 10));
+            $sheet->setCellValue('AB' . $row_number, substr($row['last_update'], 0, 10));
+            $sheet->setCellValue('AC' . $row_number, $row['ppn_jual']);
+            $sheet->setCellValue('AD' . $row_number, $row['status_article']);
             $row_number++;
         }
 
@@ -1585,7 +1613,7 @@ class Laporan extends My_Controller
         exit;
     }
 
-    function export_csv_masteritem($brand_code, $division, $sub_division, $dept, $sub_dept, $store, $article_status)
+    function export_csv_masteritem($brand_code, $division, $sub_division, $dept, $sub_dept, $store, $article_status, $barcode)
     {
         $filename = 'masteritem_report.csv';
 
@@ -1600,57 +1628,62 @@ class Laporan extends My_Controller
 
         $data['username'] = $this->input->cookie('cookie_invent_user');
 
-        // START CEK ADA KATEGORINYA NGGA
-        $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
-
-        // CEK ADA USER SITENYA NGGA
-        $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
-        if ($cek_user_category) {
-            $where = $this->M_Categories->get_category($data['username']);
-        } else if ($cek_user_site) {
-            $where = $this->M_Division->get_division($data['username'], $store);
+        if ($barcode !== "null") {
+            $where = "AND barcode = '" . $barcode . "'";
         } else {
-            // UNTUK MD
-            $where = "AND brand in (
+            // START CEK ADA KATEGORINYA NGGA
+            $cek_user_category = $this->db->query("SELECT * FROM m_user_category where username ='" . $data['username'] . "'")->row();
+
+            // CEK ADA USER SITENYA NGGA
+            $cek_user_site = $this->db->query("SELECT * from m_user_site where username ='" . $data['username'] . "' and flagactv = '1' limit 1")->row();
+            if ($cek_user_category) {
+                $where = $this->M_Categories->get_category($data['username']);
+            } else if ($cek_user_site) {
+                $where = $this->M_Division->get_division($data['username'], $store);
+            } else {
+                // UNTUK MD
+                $where = "AND brand in (
                 select distinct brand from m_user_brand 
                 where username = '" . $data['username'] . "'
             )";
-        }
-        // END CEK ADA KATEGORINYA NGGA
+            }
+            // END CEK ADA KATEGORINYA NGGA
 
-        if ($brand_code !== "null") {
-            $where .= " AND brand = '" . $brand_code . "'";
+            if ($brand_code !== "null") {
+                $where .= " AND brand = '" . $brand_code . "'";
+            }
+
+            if ($division !== "null") {
+                $where .= " AND DIVISION = '" . $division . "'";
+            }
+
+            if ($sub_division !== "null") {
+                $where .= " AND SUB_DIVISION = '" . $sub_division . "'";
+            }
+
+            if ($dept !== "null") {
+                $where .= " AND DEPT = '" . $dept . "'";
+            }
+
+            if ($sub_dept !== "null") {
+                $where .= " AND SUB_DEPT = '" . $sub_dept . "'";
+            }
+
+            if ($store !== "null") {
+                $where .= " AND branch_id = '" . $store . "'";
+            }
+
+            if ($article_status !== "null") {
+                $where .= " AND status_article = '" . $article_status . "'";
+            }
         }
 
-        if ($division !== "null") {
-            $where .= " AND DIVISION = '" . $division . "'";
-        }
-
-        if ($sub_division !== "null") {
-            $where .= " AND SUB_DIVISION = '" . $sub_division . "'";
-        }
-
-        if ($dept !== "null") {
-            $where .= " AND DEPT = '" . $dept . "'";
-        }
-
-        if ($sub_dept !== "null") {
-            $where .= " AND SUB_DEPT = '" . $sub_dept . "'";
-        }
-
-        if ($store !== "null") {
-            $where .= " AND branch_id = '" . $store . "'";
-        }
-
-        if ($article_status !== "null") {
-            $where .= " AND status_article = '" . $article_status . "'";
-        }
         $delimiter = ';';
 
-        $data = $this->db->query("SELECT branch_id,article_number,article_code,barcode,supplier_pcode,category_code, article_name,supplier_pname, vendor_code, vendor_name, brand,brand_name, option1,varian_option1,option2,varian_option2, division, sub_division, dept, sub_dept, normal_price, current_price, tag_5, flag_2, SUBSTRING(add_date, 1, 10) as add_date,SUBSTRING(last_update, 1, 10) as last_update,ppn_jual,status_article FROM r_item_master where 1=1 $where")->result_array();
+        $data = $this->db->query("SELECT branch_id,article_number,article_code,barcode,supplier_pcode,category_code, article_name,supplier_pname, vendor_code, vendor_name, brand,brand_name, option1,varian_option1,option2,varian_option2, division, sub_division, dept, sub_dept, normal_price, current_price, tag_5, flag_2, tag_3, SUBSTRING(add_date, 1, 10) as add_date,SUBSTRING(last_update, 1, 10) as last_update,ppn_jual,status_article FROM r_item_master where 1=1 $where")->result_array();
         $file = fopen('php://output', 'w');
 
-        $header = array('branch id', 'article number', 'article code', 'barcode', 'supplier_pcode', 'category code', 'article name', 'supplier pname', 'vendor code', 'vendor name', 'brand code', 'brand name', 'option1', 'varian option1', 'option2', 'varian option2', 'division', 'sub division', 'dept', 'sub dept', 'normal_price', 'current_price', 'tag 5', 'flag 2', 'add_date', 'last_update', 'ppn jual', 'article status');
+        $header = array('branch id', 'article number', 'article code', 'barcode', 'supplier_pcode', 'category code', 'article name', 'supplier pname', 'vendor code', 'vendor name', 'brand code', 'brand name', 'option1', 'varian option1', 'option2', 'varian option2', 'division', 'sub division', 'dept', 'sub dept', 'normal_price', 'current_price', 'tag 5', 'flag 2', 'tag kopi', 'add_date', 'last_update', 'ppn jual', 'article status');
 
         fputcsv($file, $header, $delimiter);
 

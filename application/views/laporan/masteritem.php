@@ -99,6 +99,9 @@
                                         <nobr>Flag 2</nobr>
                                     </th>
                                     <th>
+                                        <nobr>Tag Kopi</nobr>
+                                    </th>
+                                    <th>
                                         <nobr>Add Date</nobr>
                                     </th>
                                     <th>
@@ -124,17 +127,17 @@
     var tabel = null;
     var tipe = '<?= $tipe; ?>';
 
-
-
-
     $(document).ready(function() {
+        start();
 
-        get_user_brand();
-        get_division();
-        get_sub_division();
-        get_dept();
-        get_list_dept();
-        get_store();
+        function start() {
+            get_user_brand();
+            get_division();
+            get_sub_division();
+            get_dept();
+            get_list_dept();
+            get_store();
+        }
 
         var brand_code = null;
         var division = null;
@@ -143,6 +146,7 @@
         var sub_dept = null;
         var store = null;
         var article_status = null;
+        var codebar = null;
         var params1 = null;
         var params2 = null;
         var params3 = null;
@@ -150,6 +154,7 @@
         var params5 = null;
         var params6 = null;
         var params7 = null;
+        var params8 = null;
         var format = null;
 
         // load_data_masteritem(params1,params2,params3,params4,params5,params6);
@@ -175,12 +180,34 @@
             format = this.value;
         });
 
+        $('#text-barcode').on('keyup', function() {
+            codebar = $(this).val().trim();
+            if (codebar !== '') {
+                $('.list_store').prop('disabled', true).html("<option value=''>-- Pilih Data --</option>");
+                $('.list_division').prop('disabled', true).html("<option value=''>-- Pilih Data --</option>");
+                $('.list_sub_division').prop('disabled', true).html("<option value=''>-- Pilih Data --</option>");
+                $('.list_dept').prop('disabled', true).html("<option value=''>-- Pilih Data --</option>");
+                $('.list_sub_dept').prop('disabled', true).html("<option value=''>-- Pilih Data --</option>");
+                $('.list_user_brand').prop('disabled', true).html("<option value=''>-- Pilih Data --</option>");
+                $('.list_article_status').prop('disabled', true).html("<option value=''>-- Pilih Data --</option>");
+            } else {
+                $('.list_store').prop('disabled', false);
+                $('.list_division').prop('disabled', false);
+                $('.list_sub_division').prop('disabled', false);
+                $('.list_dept').prop('disabled', false);
+                $('.list_sub_dept').prop('disabled', false);
+                $('.list_user_brand').prop('disabled', false);
+                $('.list_article_status').prop('disabled', false);
+                start();
+            }
+        });
+
 
         $('.btn-export').on("click", function() {
             if (format == "csv") {
-                window.location.href = "<?= base_url('Laporan/export_csv_masteritem/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7;
+                window.location.href = "<?= base_url('Laporan/export_csv_masteritem/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7 + '/' + params8;
             } else if (format == "xls") {
-                window.location.href = "<?= base_url('Laporan/export_excel_masteritem/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7;
+                window.location.href = "<?= base_url('Laporan/export_excel_masteritem/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7 + '/' + params8;
             }
         });
 
@@ -191,10 +218,13 @@
         // })
 
         $('.btn-submit-filter').on("click", function() {
-            if (store === '' || store == null) {
-                alert('Harap Pilih Store Dahulu')
-                return false;
+            if (codebar == '') {
+                if (store === '' || store == null) {
+                    alert('Harap Pilih Store Dahulu')
+                    return false;
+                }
             }
+
             params1 = brand_code;
             params2 = division;
             params3 = sub_division;
@@ -202,6 +232,7 @@
             params5 = sub_dept;
             params6 = store;
             params7 = article_status;
+            params8 = codebar;
 
             if (params1 === "") {
                 params1 = null;
@@ -224,11 +255,15 @@
             if (params7 === "") {
                 params7 = null;
             }
+            if (params8 === "") {
+                params8 = null;
+            }
+            //console.log(params1, params2, params3, params4, params5, params6, params7, params8);
 
-            load_data_masteritem(params1, params2, params3, params4, params5, params6, params7);
+            load_data_masteritem(params1, params2, params3, params4, params5, params6, params7, params8);
         });
 
-        function load_data_masteritem(params1, params2, params3, params4, params5, params6, params7) {
+        function load_data_masteritem(params1, params2, params3, params4, params5, params6, params7, params8) {
             tabel = $('#tb_masteritem_list').DataTable({
                 "processing": true,
                 "responsive": true,
@@ -249,7 +284,8 @@
                         "params4": params4,
                         "params5": params5,
                         "params6": params6,
-                        "params7": params7
+                        "params7": params7,
+                        "params8": params8
                     },
                 },
                 "deferRender": true,
@@ -410,6 +446,12 @@
                     },
                     {
                         "data": "flag_2",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + data + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "tag_3",
                         "render": function(data, type, row) {
                             return '<nobr>' + data + '</nobr>';
                         },

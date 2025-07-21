@@ -15,7 +15,7 @@
                             <div id="filter-masteritem">
                                 <div class="row mt-2">
                                     <div class="col-md-4">
-                                        <label class="mt-1">Store <span class="text-danger">*</span></label>
+                                        <label class="mt-1">Store</label>
                                     </div>
                                     <div class="col-md-8">
                                         <select class="js-example-basic-single list_store">
@@ -86,11 +86,19 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <label class="mt-1">Barcode</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" id="text-barcode" name="barcode" class="form-control form-control-sm" autofocus>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class=" modal-footer">
                     <button type="button" class="btn btn-rambla btn-submit-filter" data-dismiss="modal">Submit</button>
                     <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                 </div>
