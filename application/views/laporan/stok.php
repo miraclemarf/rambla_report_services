@@ -178,17 +178,27 @@
                 $('.list_user_brand').prop('disabled', false);
                 $('.list_article_status').prop('disabled', false);
                 $('.list_article_type').prop('disabled', false);
+                brand_code = null;
+                division = null;
+                sub_division = null;
+                dept = null;
+                sub_dept = null;
+                store = null;
+                art_type = null;
+                article_status = null;
+                codebar = null;
                 start();
             }
         });
 
         $('.btn-submit-filter').on("click", function() {
-            if (codebar == '') {
+            if (codebar == '' || codebar == null) {
                 if (store === '' || store == null) {
                     alert('Harap Pilih Store Dahulu')
                     return false;
                 }
             }
+
 
             params1 = brand_code;
             params2 = division;
