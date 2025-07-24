@@ -15,7 +15,7 @@
                             <div id="filter-stock">
                                 <div class="row mt-2">
                                     <div class="col-md-4">
-                                        <label class="mt-1">Store <span class="text-danger">*</span></label>
+                                        <label class="mt-1">Store</label>
                                     </div>
                                     <div class="col-md-8">
                                         <select class="js-example-basic-single list_store">
@@ -96,6 +96,14 @@
                                             <option value='PURGE'>PURGE</option>
                                             <option value='DISCONTINUE'>DISCONTINUE</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <label class="mt-1">Barcode</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" id="text-barcode" name="barcode" class="form-control form-control-sm" autofocus>
                                     </div>
                                 </div>
                             </div>

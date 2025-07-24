@@ -151,7 +151,7 @@
 
             // console.log(hitungSelihBulan(params3));
             var userLoggedin = $('.nav-profile .nav-profile-name').text();
-            if (userLoggedin != "SITIM" && userLoggedin != "ADITYA" && userLoggedin != "MD11") {
+            if (userLoggedin != "SITIM" && userLoggedin != "ADITYA" && userLoggedin != "MD11" && userLoggedin != "HENRY") {
                 if (hitungSelihBulan(params3) > 3 && userLoggedin != 'MD09') {
                     alert('Range Tanggal Maksimal 4 Bulan')
                     return false;

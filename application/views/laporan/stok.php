@@ -85,6 +85,9 @@
                                         <nobr>Retail Value</nobr>
                                     </th>
                                     <th>
+                                        <nobr>Tag Kopi</nobr>
+                                    </th>
+                                    <th>
                                         <nobr>Article Status</nobr>
                                     </th>
                                 </tr>
@@ -100,12 +103,16 @@
 <script>
     var tabel = null;
     $(document).ready(function() {
-        get_user_brand();
-        get_division();
-        get_sub_division();
-        get_dept();
-        get_list_dept();
-        get_store();
+        start();
+
+        function start() {
+            get_user_brand();
+            get_division();
+            get_sub_division();
+            get_dept();
+            get_list_dept();
+            get_store();
+        }
 
         var brand_code = null;
         var division = null;
@@ -114,6 +121,7 @@
         var sub_dept = null;
         var store = null;
         var art_type = null;
+        var codebar = null;
         var article_status = null;
         var params1 = null;
         var params2 = null;
@@ -122,6 +130,8 @@
         var params5 = null;
         var params6 = null;
         var params7 = null;
+        var params8 = null;
+        var params9 = null;
         var format = null;
 
         //load_data_stock(params1,params2,params3,params4,params5,params6, params7);
@@ -148,10 +158,36 @@
             format = this.value;
         });
 
+        $('#text-barcode').on('keyup', function() {
+            codebar = $(this).val().trim();
+            if (codebar !== '') {
+                $('.list_store').prop('disabled', true).html("<option value=''>-- Pilih Data --</option>");
+                $('.list_division').prop('disabled', true).html("<option value=''>-- Pilih Data --</option>");
+                $('.list_sub_division').prop('disabled', true).html("<option value=''>-- Pilih Data --</option>");
+                $('.list_dept').prop('disabled', true).html("<option value=''>-- Pilih Data --</option>");
+                $('.list_sub_dept').prop('disabled', true).html("<option value=''>-- Pilih Data --</option>");
+                $('.list_user_brand').prop('disabled', true).html("<option value=''>-- Pilih Data --</option>");
+                $('.list_article_status').prop('disabled', true).html("<option value=''>-- Pilih Data --</option>");
+                $('.list_article_type').prop('disabled', true).html("<option value=''>-- Pilih Data --</option>");
+            } else {
+                $('.list_store').prop('disabled', false);
+                $('.list_division').prop('disabled', false);
+                $('.list_sub_division').prop('disabled', false);
+                $('.list_dept').prop('disabled', false);
+                $('.list_sub_dept').prop('disabled', false);
+                $('.list_user_brand').prop('disabled', false);
+                $('.list_article_status').prop('disabled', false);
+                $('.list_article_type').prop('disabled', false);
+                start();
+            }
+        });
+
         $('.btn-submit-filter').on("click", function() {
-            if (store === '' || store == null) {
-                alert('Harap Pilih Store Dahulu')
-                return false;
+            if (codebar == '') {
+                if (store === '' || store == null) {
+                    alert('Harap Pilih Store Dahulu')
+                    return false;
+                }
             }
 
             params1 = brand_code;
@@ -162,6 +198,7 @@
             params6 = store;
             params7 = art_type;
             params8 = article_status;
+            params9 = codebar;
 
             if (params1 === "") {
                 params1 = null;
@@ -187,19 +224,21 @@
             if (params8 === "") {
                 params8 = null;
             }
-
-            load_data_stock(params1, params2, params3, params4, params5, params6, params7, params8);
+            if (params9 === "") {
+                params9 = null;
+            }
+            load_data_stock(params1, params2, params3, params4, params5, params6, params7, params8, params9);
         });
 
         $('.btn-export').on("click", function() {
             if (format == "csv") {
-                window.location.href = "<?= base_url('Laporan/export_csv_stock/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7 + '/' + params8;
+                window.location.href = "<?= base_url('Laporan/export_csv_stock/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7 + '/' + params8 + '/' + params9;
             } else if (format == "xls") {
-                window.location.href = "<?= base_url('Laporan/export_excel_stock/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7 + '/' + params8;
+                window.location.href = "<?= base_url('Laporan/export_excel_stock/'); ?>" + params1 + '/' + params2 + '/' + params3 + '/' + params4 + '/' + params5 + '/' + params6 + '/' + params7 + '/' + params8 + '/' + params9;
             }
         });
 
-        function load_data_stock(params1, params2, params3, params4, params5, params6, params7, params8) {
+        function load_data_stock(params1, params2, params3, params4, params5, params6, params7, params8, params9) {
             tabel = $('#tb_stock_list').DataTable({
                 "processing": true,
                 "responsive": true,
@@ -220,7 +259,8 @@
                         "params5": params5,
                         "params6": params6,
                         "params7": params7,
-                        "params8": params8
+                        "params8": params8,
+                        "params9": params9,
                     },
                 },
                 "scrollX": true,
@@ -353,6 +393,12 @@
                         "data": "",
                         "render": function(data, type, row) {
                             return '<nobr>Rp ' + rupiahjs(Math.round(row.current_price) * row.last_stock) + '</nobr>';
+                        },
+                    },
+                    {
+                        "data": "tag_3",
+                        "render": function(data, type, row) {
+                            return '<nobr>' + (data === null ? '' : data) + '</nobr>';
                         },
                     },
                     {
