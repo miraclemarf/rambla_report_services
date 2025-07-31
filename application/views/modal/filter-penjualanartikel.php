@@ -76,7 +76,7 @@
                                         <label class="mt-1">Pilih Brand</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <select class="js-example-basic-single list_user_brand">
+                                        <select class="js-example-basic-single list_user_brand" multiple="multiple">
                                             <option value=''>Please Wait...</option>
                                         </select>
                                     </div>
