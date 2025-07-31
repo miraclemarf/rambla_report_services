@@ -1,35 +1,36 @@
 <style>
-    
-@media (min-width: 768px) {
-    .member-only {
-        padding: 0px;
-    }
-    .frame-meta {
-        height:550px;
-    }
-}
+    @media (min-width: 768px) {
+        .member-only {
+            padding: 0px;
+        }
 
-@media (min-width: 576px) and (max-width: 767.98px) {
-    .member-only {
-        padding: 0px;
-    }
-}
-
-
-/* Responsive columns */
-@media (max-width: 575.98px) {
-    .card {
-        min-height: 500px;
-        max-height: 100%;
+        .frame-meta {
+            height: 550px;
+        }
     }
 
-    .embed-responsive {
-        height: 100%;
+    @media (min-width: 576px) and (max-width: 767.98px) {
+        .member-only {
+            padding: 0px;
+        }
     }
-    .member-only {
-        padding: 15px;
+
+
+    /* Responsive columns */
+    @media (max-width: 575.98px) {
+        .card {
+            min-height: 500px;
+            max-height: 100%;
+        }
+
+        .embed-responsive {
+            height: 100%;
+        }
+
+        .member-only {
+            padding: 15px;
+        }
     }
-}
 </style>
 <div class="content-wrapper">
     <?php $this->load->view('modal/filter-penjualanartikel', true); ?>
@@ -69,7 +70,7 @@
         get_list_dept();
 
         // get_list_barcode();
-        var brand_code = null;
+        var brandselectedValues = null;
         var source = null;
         var division = null;
         var sub_division = null;
@@ -101,7 +102,14 @@
         });
 
         $('.list_user_brand').on('change', function(e) {
-            brand_code = this.value;
+            brandselectedValues = $(this).val();
+
+            if (brandselectedValues.length > 10) {
+                alert("Maksimal hanya bisa memilih 10 brand.");
+                // Kembalikan ke 10 pertama
+                brandselectedValues = brandselectedValues.slice(0, 10);
+                $(this).val(brandselectedValues).trigger('change');
+            }
         });
 
         // $('.list_source').on('change', function(e) {
@@ -109,7 +117,7 @@
         // });
 
         $('.btn-submit-filter').on("click", function() {
-            params1 = brand_code;
+            params1 = brandselectedValues;
             params2 = source;
             params3 = periode;
             params4 = division;
@@ -148,8 +156,22 @@
                 params9 = null;
             }
 
-            if (hitungSelihBulan(params3) > 3) {
-                alert('Range Tanggal Maksimal 4 Bulan')
+            if (
+                params8 !== "" && params3 !== "" && params1 == null
+            ) {
+                // Ambil batas bulan berdasarkan prefix "V" di params8
+                let maxRange = (params8.startsWith('V')) ? 3 : 11;
+                let storeName = params8.startsWith('V') ? 'Happy Harvest' : 'Rambla dan Star';
+
+                if (hitungSelihBulan(params3) > maxRange) {
+                    alert('Range tanggal maksimal untuk store ' + storeName + ' adalah ' + (maxRange + 1) + ' bulan. Gunakan filter berdasarkan brand untuk memperpanjang periode pencarian.');
+                    return false;
+                }
+            }
+
+            // Jika params1 ada, maksimal 12 bulan
+            if (params1 !== null && hitungSelihBulan(params3) > 11) {
+                alert('Range Tanggal Maksimal 12 Bulan');
                 return false;
             }
             //console.log(params9)
