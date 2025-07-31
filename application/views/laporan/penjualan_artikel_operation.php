@@ -126,7 +126,7 @@
             params7 = sub_dept;
             params8 = store;
             params9 = areatrx;
-            if (params1 === "") {
+            if (params1 === "" || (Array.isArray(params1) && params1.length === 0)) {
                 params1 = null;
             }
             if (params2 === "") {
